@@ -60,7 +60,6 @@ const Register = () => {
 
   const handleSignUp = () => {
     if (!Object.values(isValid).includes(false)) {
-      /** send/save registratin data */
       register.mutate(registrationData);
     }
   };
@@ -81,7 +80,7 @@ const Register = () => {
               row
               flex={0}
               justify="flex-start"
-              onPress={() => navigation.goBack()}>
+              onPress={() => navigation.navigate('SignIn')}>
               <Image
                 radius={0}
                 width={10}
@@ -181,17 +180,6 @@ const Register = () => {
                 disabled={Object.values(isValid).includes(false)}>
                 <Text bold white transform="uppercase">
                   {t('common.signup')}
-                </Text>
-              </Button>
-              <Button
-                primary
-                outlined
-                shadow={!isAndroid}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                onPress={() => navigation.navigate('Pro')}>
-                <Text bold primary transform="uppercase">
-                  {t('common.signin')}
                 </Text>
               </Button>
             </Block>

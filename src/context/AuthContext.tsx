@@ -36,7 +36,7 @@ export const AuthProvider = ({children}: any) => {
   }, []);
 
   const signOut = async () => {
-    AsyncStorage.removeItem('sessionData');
+    await AsyncStorage.removeItem('sessionData');
     setSessionData({role: undefined});
   };
 

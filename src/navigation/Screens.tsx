@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Articles, Components, Home, Profile, Register} from '../screens';
 import {useScreenOptions, useTranslation} from '../hooks';
 import {AuthContext} from '../context/AuthContext';
+import Configuration from '../screens/Configuration';
 
 const Stack = createStackNavigator();
 
@@ -35,6 +36,11 @@ export default () => {
             name="Profile"
             component={Profile}
             options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Configuration"
+            component={Configuration}
+            options={screenOptions.components}
           />
         </>
       ) : (

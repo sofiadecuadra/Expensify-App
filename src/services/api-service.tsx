@@ -21,4 +21,10 @@ export const api = {
         return response;
       });
   },
+  adminLogout: async () => {
+    return await axiosInstance.post('/users/log-out').then(async (response) => {
+      await CookieManager.clearAll();
+      return response;
+    });
+  },
 };

@@ -30,7 +30,7 @@ export const AuthProvider = ({children}: any) => {
   useEffect(() => {
     tryGetSessionData().then((data) => {
       if (data) {
-        //setSessionData(data);
+        setSessionData(data);
       }
     });
   }, []);

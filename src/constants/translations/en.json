@@ -65,6 +65,7 @@
     "profile": "Profile",
     "settings": "Settings",
     "register": "Create account",
+    "configuration": "Configuration",
     "extra": "Extra - Automotive"
   },
   "navigation": {
@@ -84,7 +85,8 @@
     "register": "Register",
     "login": "Login",
     "extra": "Automotive",
-    "shopping": "Shopping Cart"
+    "shopping": "Shopping Cart",
+    "configuration": "Configuration"
   },
   "menu": {
     "started": "Getting Started",

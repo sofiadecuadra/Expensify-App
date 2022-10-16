@@ -1,12 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
+import {AuthContext} from '../context/AuthContext';
 
 import {useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text} from '../components/';
+import ErrorCard from '../components/ErrorCard';
+import {AlertContext} from '../context/AlertContext';
 
 const isAndroid = Platform.OS === 'android';
 export interface IRegistration {
@@ -23,6 +26,8 @@ interface IRegistrationValidation {
 }
 
 const Register = () => {
+  const {signIn, isAdmin} = useContext(AuthContext);
+  const {errorMessage, setErrorMessage} = useContext(AlertContext);
   const {t} = useTranslation();
   const navigation = useNavigation();
   const [registrationData, setRegistration] = useState<IRegistration>({
@@ -40,10 +45,10 @@ const Register = () => {
 
   const register = useMutation(api.adminSignup, {
     onSuccess: (data) => {
-      console.log('success', data);
+      signIn(data.data);
     },
-    onError: (data) => {
-      console.log('error', data);
+    onError: (data: any) => {
+      setErrorMessage(data.response.data.message);
     },
   });
 
@@ -62,6 +67,7 @@ const Register = () => {
 
   return (
     <Block safe marginTop={sizes.md}>
+      {errorMessage !== '' && <ErrorCard errorMessage={errorMessage} />}
       <Block paddingHorizontal={sizes.s}>
         <Block flex={0} style={{zIndex: 0}}>
           <Image
@@ -94,6 +100,7 @@ const Register = () => {
             </Text>
           </Image>
         </Block>
+
         {/* register form */}
         <Block
           keyboard

@@ -1,5 +1,4 @@
-import React, {useEffect} from 'react';
-import {Platform, StatusBar} from 'react-native';
+import React from 'react';
 import {useFonts} from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
@@ -9,15 +8,6 @@ import {useData, ThemeProvider, TranslationProvider} from '../hooks';
 
 export default () => {
   const {isDark, theme, setTheme} = useData();
-
-  /* set the status bar based on isDark constant */
-  useEffect(() => {
-    Platform.OS === 'android' && StatusBar.setTranslucent(true);
-    StatusBar.setBarStyle(isDark ? 'light-content' : 'dark-content');
-    return () => {
-      StatusBar.setBarStyle('default');
-    };
-  }, [isDark]);
 
   // load custom fonts
   const [fontsLoaded] = useFonts({

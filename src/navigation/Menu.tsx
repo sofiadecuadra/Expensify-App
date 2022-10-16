@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {Alert, Animated, Linking, StyleSheet} from 'react-native';
 
 import {
@@ -12,6 +18,7 @@ import {
 import Screens from './Screens';
 import {Block, Text, Switch, Button, Image} from '../components';
 import {useData, useTheme, useTranslation} from '../hooks';
+import {AuthContext} from '../context/AuthContext';
 
 const Drawer = createDrawerNavigator();
 
@@ -65,6 +72,7 @@ const ScreensStack = () => {
 const DrawerContent = (
   props: DrawerContentComponentProps<DrawerContentOptions>,
 ) => {
+  const {signedIn} = useContext(AuthContext);
   const {navigation} = props;
   const {t} = useTranslation();
   const {isDark, handleIsDark} = useData();
@@ -83,16 +91,18 @@ const DrawerContent = (
   const handleWebLink = useCallback((url) => Linking.openURL(url), []);
 
   // screen list for Drawer menu
-  const screens = [
-    {name: t('screens.home'), to: 'Home', icon: assets.home},
-    {name: t('screens.components'), to: 'Components', icon: assets.components},
-    {name: t('screens.articles'), to: 'Articles', icon: assets.document},
-    {name: t('screens.rental'), to: 'Pro', icon: assets.rental},
-    {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
-    {name: t('screens.settings'), to: 'Pro', icon: assets.settings},
-    {name: t('screens.register'), to: 'Register', icon: assets.register},
-    {name: t('screens.extra'), to: 'Pro', icon: assets.extras},
-  ];
+  const screens = signedIn
+    ? [
+        {name: t('screens.home'), to: 'Home', icon: assets.home},
+        {
+          name: t('screens.components'),
+          to: 'Components',
+          icon: assets.components,
+        },
+        {name: t('screens.articles'), to: 'Articles', icon: assets.document},
+        {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
+      ]
+    : [{name: t('screens.register'), to: 'Register', icon: assets.register}];
 
   return (
     <DrawerContentScrollView

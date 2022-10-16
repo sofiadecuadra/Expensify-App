@@ -25,6 +25,8 @@
     "message": "Enter your message",
     "album": "Album",
     "or": "or",
+    "familyName": "Family name",
+    "familyNamePlaceholder": "Enter your family name",
     "name": "Name",
     "namePlaceholder": "Enter your full name",
     "email": "Email",

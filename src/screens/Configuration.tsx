@@ -26,18 +26,16 @@ const Buttons = () => {
       setSuccessMessage('');
     },
     onSuccess: (data) => {
-      console.log(data);
       onShare(data.data);
       setSuccessMessage('Invites sent successfully! ');
       setErrorMessage('');
     },
   });
 
-  const onShare = async (data) => {
+  const onShare = async (data: any) => {
     try {
       const {inviteToken} = data;
-      const url =
-        'https://ortisp.github.io/Expensify-Invitations/?inviteToken=';
+      const url = 'https://ortisp.github.io/Expensify-Invitations/?';
       const inviteLink = url + inviteToken;
       const result = await Share.share({
         message: `Hey, I am inviting you to join my family on expensify. Please use this link to register: ${inviteLink}`,

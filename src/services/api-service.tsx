@@ -32,4 +32,19 @@ export const api = {
       .post('/families/invitations', {...data, users: []})
       .then((response) => response);
   },
+  validateInviteToken: async ({queryKey}: any) => {
+    const [_, inviteToken] = queryKey;
+    if (!inviteToken) {
+      return undefined;
+    }
+    const params = inviteToken;
+    return await axiosInstance
+      .get('/families/' + params)
+      .then((response) => response.data);
+  },
+  inviteSignup: async (data: any) => {
+    return await axiosInstance
+      .post('/users/invitations', {...data})
+      .then((response) => response);
+  },
 };

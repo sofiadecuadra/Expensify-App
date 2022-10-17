@@ -1,7 +1,7 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
-import {useMutation} from 'react-query';
+import {useMutation, useQuery} from 'react-query';
 import {api} from '../services/api-service';
 import {AuthContext} from '../context/AuthContext';
 
@@ -25,12 +25,30 @@ interface IRegistrationValidation {
   password: boolean;
 }
 
-const Register = ({route}) => {
-  console.log(route);
+const Register = ({route: {params}}: {route: {params: any}}) => {
+  const inviteToken = params?.inviteToken;
+  const inviteData = useQuery(
+    ['validate-invite', inviteToken],
+    api.validateInviteToken,
+  ).data;
   const {signIn} = useContext(AuthContext);
   const {errorMessage, setErrorMessage} = useContext(AlertContext);
   const {t} = useTranslation();
   const navigation = useNavigation();
+  const [familyId, setFamilyId] = useState(-1);
+  const [role, setRole] = useState(0);
+
+  useEffect(() => {
+    setErrorMessage('');
+    setRegistration(
+      inviteData
+        ? {...registrationData, familyName: inviteData.inviteData.familyName}
+        : registrationData,
+    );
+    setRole(inviteData?.inviteData.userType == 'Administrator' ? 1 : 0);
+    setFamilyId(inviteData ? inviteData.inviteData.familyId : -1);
+  }, [inviteData]);
+
   const [registrationData, setRegistration] = useState<IRegistration>({
     familyName: '',
     name: '',
@@ -44,14 +62,17 @@ const Register = ({route}) => {
     password: regex.password.test(registrationData.password),
   };
 
-  const register = useMutation(api.adminSignup, {
-    onSuccess: (data) => {
-      signIn(data.data);
+  const register = useMutation(
+    inviteData ? api.inviteSignup : api.adminSignup,
+    {
+      onSuccess: (data: any) => {
+        signIn(data.data);
+      },
+      onError: (data: any) => {
+        setErrorMessage(data.response.data.message);
+      },
     },
-    onError: (data: any) => {
-      setErrorMessage(data.response.data.message);
-    },
-  });
+  );
 
   const {assets, colors, gradients, sizes} = useTheme();
 
@@ -60,7 +81,14 @@ const Register = ({route}) => {
   };
 
   const handleSignUp = () => {
-    if (!Object.values(isValid).includes(false)) {
+    if (inviteData && isValid.name && isValid.email && isValid.password) {
+      register.mutate({
+        ...registrationData,
+        familyId,
+        inviteToken,
+        role,
+      });
+    } else if (!Object.values(isValid).includes(false)) {
       register.mutate(registrationData);
     }
   };
@@ -123,24 +151,37 @@ const Register = ({route}) => {
               justify="space-evenly"
               tint={colors.blurTint}
               paddingVertical={sizes.sm}>
-              <Text p semibold center>
-                {t('register.subtitle')}
-              </Text>
+              {familyId === -1 ? (
+                <Text p semibold center>
+                  {t('register.subtitle')}
+                </Text>
+              ) : (
+                <Text p semibold center>
+                  {'Register to ' +
+                    registrationData.familyName +
+                    " family with role '" +
+                    (role == 0 ? 'Member' : 'Administrator') +
+                    "'"}
+                </Text>
+              )}
+
               {/* form inputs */}
               <Block paddingHorizontal={sizes.sm} paddingTop={sizes.sm}>
-                <Input
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.familyName')}
-                  placeholder={t('common.familyNamePlaceholder')}
-                  success={Boolean(
-                    registrationData.familyName && isValid.familyName,
-                  )}
-                  danger={Boolean(
-                    registrationData.familyName && !isValid.familyName,
-                  )}
-                  onChangeText={(value) => handleChange({familyName: value})}
-                />
+                {familyId === -1 && (
+                  <Input
+                    autoCapitalize="none"
+                    marginBottom={sizes.m}
+                    label={t('common.familyName')}
+                    placeholder={t('common.familyNamePlaceholder')}
+                    success={Boolean(
+                      registrationData.familyName && isValid.familyName,
+                    )}
+                    danger={Boolean(
+                      registrationData.familyName && !isValid.familyName,
+                    )}
+                    onChangeText={(value) => handleChange({familyName: value})}
+                  />
+                )}
                 <Input
                   autoCapitalize="none"
                   marginBottom={sizes.m}

@@ -8,7 +8,7 @@ import {AuthContext} from '../context/AuthContext';
 import {useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text} from '../components/';
-import ErrorCard from '../components/ErrorCard';
+import AlertCard from '../components/ErrorCard';
 import {AlertContext} from '../context/AlertContext';
 
 const isAndroid = Platform.OS === 'android';
@@ -25,8 +25,9 @@ interface IRegistrationValidation {
   password: boolean;
 }
 
-const Register = () => {
-  const {signIn, isAdmin} = useContext(AuthContext);
+const Register = ({route}) => {
+  console.log(route);
+  const {signIn} = useContext(AuthContext);
   const {errorMessage, setErrorMessage} = useContext(AlertContext);
   const {t} = useTranslation();
   const navigation = useNavigation();
@@ -66,7 +67,9 @@ const Register = () => {
 
   return (
     <Block safe marginTop={sizes.md}>
-      {errorMessage !== '' && <ErrorCard errorMessage={errorMessage} />}
+      {errorMessage !== '' && (
+        <AlertCard errorMessage={errorMessage} isSuccess={false} />
+      )}
       <Block paddingHorizontal={sizes.s}>
         <Block flex={0} style={{zIndex: 0}}>
           <Image

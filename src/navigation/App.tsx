@@ -43,6 +43,17 @@ export default () => {
 
   const linking = {
     prefixes: [prefix],
+    config: {
+      screens: {
+        Screens: {
+          path: 'screens',
+          screens: {
+            Register: 'register/:inviteToken',
+          },
+        },
+        NotFound: '*',
+      },
+    },
   };
 
   return (

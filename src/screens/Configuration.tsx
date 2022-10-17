@@ -1,5 +1,5 @@
 import React, {useContext, useLayoutEffect, useState} from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList, Share, View} from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
 import {useHeaderHeight} from '@react-navigation/stack';
@@ -10,103 +10,79 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
 import {AuthContext} from '../context/AuthContext';
+import RadioButtonGroup, {RadioButtonItem} from 'expo-radio-button';
+import {AlertContext} from '../context/AlertContext';
+import AlertCard from '../components/ErrorCard';
 
 // buttons example
 const Buttons = () => {
-  const [showModal, setModal] = useState(false);
-  const [quantity, setQuantity] = useState('01');
-  const {assets, colors, gradients, sizes} = useTheme();
+  const {gradients, sizes} = useTheme();
+  const [role, setRole] = useState('Member');
+  const {setSuccessMessage, setErrorMessage} = useContext(AlertContext);
+
+  const mutation = useMutation(api.createInvite, {
+    onError: (error: any) => {
+      setErrorMessage(error.response.data.message);
+      setSuccessMessage('');
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      onShare(data.data);
+      setSuccessMessage('Invites sent successfully! ');
+      setErrorMessage('');
+    },
+  });
+
+  const onShare = async (data) => {
+    try {
+      const {inviteToken} = data;
+      const url =
+        'https://ortisp.github.io/Expensify-Invitations/?inviteToken=';
+      const inviteLink = url + inviteToken;
+      const result = await Share.share({
+        message: `Hey, I am inviting you to join my family on expensify. Please use this link to register: ${inviteLink}`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   return (
     <Block>
       <Text p semibold marginBottom={sizes.s}>
-        Buttons
+        Invites
       </Text>
       <Block>
-        <Button flex={1} gradient={gradients.primary} marginBottom={sizes.base}>
-          <Text white bold transform="uppercase">
-            Primary
-          </Text>
-        </Button>
+        <View>
+          <Text bold>{'User role:'} </Text>
+          <RadioButtonGroup
+            containerStyle={{marginBottom: 10}}
+            selected={role}
+            onSelected={(value: string) => setRole(value)}
+            radioBackground="grey">
+            <RadioButtonItem value="Member" label="Member" />
+            <RadioButtonItem value="Administrator" label="Administrator" />
+          </RadioButtonGroup>
+        </View>
         <Button
           flex={1}
-          gradient={gradients.secondary}
-          marginBottom={sizes.base}>
+          gradient={gradients.info}
+          marginBottom={sizes.base}
+          onPress={() => mutation.mutate({userType: role})}>
           <Text white bold transform="uppercase">
-            Secondary
+            create invite
           </Text>
         </Button>
-        <Button flex={1} gradient={gradients.info} marginBottom={sizes.base}>
-          <Text white bold transform="uppercase">
-            info
-          </Text>
-        </Button>
-        <Button flex={1} gradient={gradients.success} marginBottom={sizes.base}>
-          <Text white bold transform="uppercase">
-            success
-          </Text>
-        </Button>
-        <Button flex={1} gradient={gradients.danger} marginBottom={sizes.base}>
-          <Text white bold transform="uppercase">
-            danger
-          </Text>
-        </Button>
-        <Button flex={1} gradient={gradients.light} marginBottom={sizes.base}>
-          <Text bold transform="uppercase">
-            light
-          </Text>
-        </Button>
-        <Button flex={1} gradient={gradients.dark} marginBottom={sizes.base}>
-          <Text white bold transform="uppercase">
-            dark
-          </Text>
-        </Button>
-        <Block row justify="space-between" marginBottom={sizes.base}>
-          <Button
-            flex={1}
-            row
-            gradient={gradients.dark}
-            onPress={() => setModal(true)}>
-            <Block
-              row
-              align="center"
-              justify="space-between"
-              paddingHorizontal={sizes.sm}>
-              <Text white bold transform="uppercase" marginRight={sizes.sm}>
-                {quantity}
-              </Text>
-              <Image
-                source={assets.arrow}
-                color={colors.white}
-                transform={[{rotate: '90deg'}]}
-              />
-            </Block>
-          </Button>
-          <Button gradient={gradients.dark}>
-            <Text white bold transform="uppercase" marginHorizontal={sizes.sm}>
-              Save for later
-            </Text>
-          </Button>
-        </Block>
       </Block>
-      <Modal visible={showModal} onRequestClose={() => setModal(false)}>
-        <FlatList
-          keyExtractor={(index) => `${index}`}
-          data={['01', '02', '03', '04', '05']}
-          renderItem={({item}) => (
-            <Button
-              marginBottom={sizes.sm}
-              onPress={() => {
-                setQuantity(item);
-                setModal(false);
-              }}>
-              <Text p white semibold transform="uppercase">
-                {item}
-              </Text>
-            </Button>
-          )}
-        />
-      </Modal>
     </Block>
   );
 };
@@ -117,6 +93,7 @@ const Configuration = () => {
   const headerHeight = useHeaderHeight();
   const logout = useMutation(api.adminLogout);
   const {signOut} = useContext(AuthContext);
+  const {errorMessage, successMessage} = useContext(AlertContext);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -145,6 +122,12 @@ const Configuration = () => {
           <Block>
             <Buttons />
           </Block>
+          {errorMessage !== '' && (
+            <AlertCard errorMessage={errorMessage} isSuccess={false} />
+          )}
+          {successMessage !== '' && (
+            <AlertCard errorMessage={successMessage} isSuccess={true} />
+          )}
         </Block>
         <SafeAreaView
           style={{

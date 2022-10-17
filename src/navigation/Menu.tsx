@@ -16,7 +16,7 @@ import {
 } from '@react-navigation/drawer';
 
 import Screens from './Screens';
-import {Block, Text, Switch, Button, Image} from '../components';
+import {Block, Text, Switch, Button, Image, Article} from '../components';
 import {useData, useTheme, useTranslation} from '../hooks';
 import {AuthContext} from '../context/AuthContext';
 

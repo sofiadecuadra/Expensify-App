@@ -5,18 +5,30 @@ import React, {useContext} from 'react';
 import {useTheme} from '../hooks';
 import {AlertContext} from '../context/AlertContext';
 
-const ErrorCard = ({errorMessage}: {errorMessage: string}) => {
-  const {setErrorMessage} = useContext(AlertContext);
+const AlertCard = ({
+  errorMessage,
+  isSuccess,
+}: {
+  errorMessage: string;
+  isSuccess: boolean;
+}) => {
+  const {setErrorMessage, setSuccessMessage} = useContext(AlertContext);
   const {colors, assets} = useTheme();
   return (
-    <View style={styles.container}>
+    <View
+      style={
+        (styles.container, {backgroundColor: isSuccess ? '#82D616' : '#EA0606'})
+      }>
       <View style={styles.width}>
         <Text size={16} bold color={'white'} style={styles.text}>
           {errorMessage}
         </Text>
       </View>
       <TouchableOpacity
-        onPress={() => setErrorMessage('')}
+        onPress={() => {
+          setErrorMessage('');
+          setSuccessMessage('');
+        }}
         style={styles.touchableOpacity}>
         <Image
           radius={0}
@@ -57,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ErrorCard;
+export default AlertCard;

@@ -2,6 +2,7 @@
   "expo": {
     "name": "rn-soft-ui-kit-free",
     "slug": "rn-soft-ui-kit-free",
+    "scheme": "expensify",
     "description": "React Native - Soft UI Kit - Free",
     "primaryColor": "#CB0C9F",
     "version": "1.0.0",
@@ -15,9 +16,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.agustinferrari.rnsoftuikitfree"

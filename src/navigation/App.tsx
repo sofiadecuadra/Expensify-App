@@ -6,6 +6,11 @@ import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import Menu from './Menu';
 import {useData, ThemeProvider, TranslationProvider} from '../hooks';
 
+import * as Linking from 'expo-linking';
+import {Text} from '../components';
+
+const prefix = Linking.createURL('/');
+
 export default () => {
   const {isDark, theme, setTheme} = useData();
 
@@ -36,10 +41,28 @@ export default () => {
     },
   };
 
+  const linking = {
+    prefixes: [prefix],
+    config: {
+      screens: {
+        Screens: {
+          path: 'screens',
+          screens: {
+            Register: 'register/:inviteToken',
+          },
+        },
+        NotFound: '*',
+      },
+    },
+  };
+
   return (
     <TranslationProvider>
       <ThemeProvider theme={theme} setTheme={setTheme}>
-        <NavigationContainer theme={navigationTheme}>
+        <NavigationContainer
+          linking={linking}
+          fallback={<Text>Loading...</Text>}
+          theme={navigationTheme}>
           <Menu />
         </NavigationContainer>
       </ThemeProvider>

@@ -27,4 +27,9 @@ export const api = {
       return response;
     });
   },
+  createInvite: async (data: {userType: string}) => {
+    return await axiosInstance
+      .post('/families/invitations', {...data, users: []})
+      .then((response) => response);
+  },
 };

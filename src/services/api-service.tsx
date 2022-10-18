@@ -5,7 +5,7 @@ import {IRegistration} from '../screens/Register';
 import CookieManager from '@react-native-cookies/cookies';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -30,6 +30,21 @@ export const api = {
   createInvite: async (data: {userType: string}) => {
     return await axiosInstance
       .post('/families/invitations', {...data, users: []})
+      .then((response) => response);
+  },
+  validateInviteToken: async ({queryKey}: any) => {
+    const [_, inviteToken] = queryKey;
+    if (!inviteToken) {
+      return undefined;
+    }
+    const params = inviteToken;
+    return await axiosInstance
+      .get('/families/' + params)
+      .then((response) => response.data);
+  },
+  inviteSignup: async (data: any) => {
+    return await axiosInstance
+      .post('/users/invitations', {...data})
       .then((response) => response);
   },
 };

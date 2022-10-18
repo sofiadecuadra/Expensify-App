@@ -5,7 +5,7 @@ import {IRegistration} from '../screens/Register';
 import CookieManager from '@react-native-cookies/cookies';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 

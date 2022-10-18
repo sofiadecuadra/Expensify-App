@@ -21,7 +21,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.agustinferrari.rnsoftuikitfree"
+      "bundleIdentifier": "com.agustinferrari.expensify"
     },
     "android": {
       "adaptiveIcon": {

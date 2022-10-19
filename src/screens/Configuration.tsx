@@ -1,11 +1,11 @@
 import React, {useContext, useLayoutEffect, useState} from 'react';
-import {FlatList, Share, View} from 'react-native';
+import {Share, View} from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
 import {useHeaderHeight} from '@react-navigation/stack';
 
 import {useTheme} from '../hooks/';
-import {Block, Button, Image, Modal, Text} from '../components/';
+import {Block, Button, Image, Text} from '../components/';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
@@ -108,44 +108,39 @@ const Configuration = () => {
   }, [assets.header, navigation, sizes.width, headerHeight]);
 
   return (
-    <>
-      <Block safe>
-        <Block
-          paddingHorizontal={sizes.padding}
-          scroll
-          showsVerticalScrollIndicator={false}
-          flex={1}
-          width="100%"
-          contentContainerStyle={{paddingVertical: sizes.padding}}>
-          <Block>
-            <Buttons />
-          </Block>
-          {errorMessage !== '' && (
-            <AlertCard errorMessage={errorMessage} isSuccess={false} />
-          )}
-          {successMessage !== '' && (
-            <AlertCard errorMessage={successMessage} isSuccess={true} />
-          )}
+    <Block>
+      <Block
+        paddingHorizontal={sizes.padding}
+        scroll
+        showsVerticalScrollIndicator={false}
+        flex={1}
+        width="100%"
+        contentContainerStyle={{paddingVertical: sizes.padding}}>
+        <Block>
+          <Buttons />
         </Block>
-        <SafeAreaView
-          style={{
-            paddingHorizontal: sizes.padding,
-          }}>
-          <Button
-            onPress={() => {
-              logout.mutate();
-              signOut();
-            }}
-            flex={1}
-            gradient={gradients.primary}
-            marginBottom={10}>
-            <Text white bold transform="uppercase">
-              Log out
-            </Text>
-          </Button>
-        </SafeAreaView>
+        {errorMessage !== '' && (
+          <AlertCard errorMessage={errorMessage} isSuccess={false} />
+        )}
+        {successMessage !== '' && (
+          <AlertCard errorMessage={successMessage} isSuccess={true} />
+        )}
       </Block>
-    </>
+      <Button
+        onPress={() => {
+          logout.mutate();
+          signOut();
+        }}
+        style={{
+          paddingHorizontal: sizes.padding,
+        }}
+        gradient={gradients.primary}
+        marginBottom={10}>
+        <Text white bold transform="uppercase">
+          Log out
+        </Text>
+      </Button>
+    </Block>
   );
 };
 

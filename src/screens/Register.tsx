@@ -26,7 +26,11 @@ interface IRegistrationValidation {
 }
 
 const Register = ({route: {params}}: {route: {params: any}}) => {
-  const inviteToken = params?.inviteToken;
+  let inviteToken = params?.inviteToken;
+  inviteToken =
+    inviteToken && Platform.OS === 'android'
+      ? inviteToken.split('#Intent')[0]
+      : inviteToken;
   const inviteData = useQuery(
     ['validate-invite', inviteToken],
     api.validateInviteToken,
@@ -220,8 +224,7 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
                 onPress={handleSignUp}
                 marginVertical={sizes.s}
                 marginHorizontal={sizes.sm}
-                gradient={gradients.primary}
-                disabled={Object.values(isValid).includes(false)}>
+                gradient={gradients.primary}>
                 <Text bold white transform="uppercase">
                   {t('common.signup')}
                 </Text>

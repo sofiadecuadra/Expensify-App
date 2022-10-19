@@ -6,6 +6,7 @@ import AppNavigation from './src/navigation/App';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {AuthProvider} from './src/context/AuthContext';
 import {AlertProvider} from './src/context/AlertContext';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 const queryClient = new QueryClient();
 
@@ -19,7 +20,9 @@ export default function App() {
       <DataProvider>
         <AuthProvider>
           <AlertProvider>
-            <AppNavigation />
+            <SafeAreaProvider>
+              <AppNavigation />
+            </SafeAreaProvider>
           </AlertProvider>
         </AuthProvider>
       </DataProvider>

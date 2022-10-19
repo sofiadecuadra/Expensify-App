@@ -16,16 +16,19 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.agustinferrari.rnsoftuikitfree"
+      "bundleIdentifier": "com.agustinferrari.expensify"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#CB0C9F"
-      }
+      },
+      "package": "com.agustinferrari.expensify"
     },
     "web": {
       "favicon": "./assets/favicon.png"

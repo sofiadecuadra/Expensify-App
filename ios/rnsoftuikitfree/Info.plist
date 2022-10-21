@@ -88,5 +88,10 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow $(PRODUCT_NAME) to use the camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow $(PRODUCT_NAME) to use the image gallery</string>
+	
 </dict>
 </plist>

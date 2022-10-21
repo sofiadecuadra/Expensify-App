@@ -60,6 +60,7 @@
   "screens": {
     "home": "Home",
     "components": "Components",
+    "add_categories": "Add categories",
     "articles": "Articles",
     "rental": "Rental",
     "profile": "Profile",
@@ -71,6 +72,7 @@
   "navigation": {
     "home": "Soft UI",
     "components": "Components",
+    "add_categories": "Add categories",
     "articles": "Soft UI",
     "rentals": "Soft UI",
     "rental": "Best Deal",

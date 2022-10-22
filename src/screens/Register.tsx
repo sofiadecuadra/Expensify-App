@@ -1,15 +1,15 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {Platform} from 'react-native';
-import {useNavigation} from '@react-navigation/core';
-import {useMutation, useQuery} from 'react-query';
-import {api} from '../services/api-service';
-import {AuthContext} from '../context/AuthContext';
+import React, { useState, useContext, useEffect } from 'react';
+import { Platform } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
+import { useMutation, useQuery } from 'react-query';
+import { api } from '../services/api-service';
+import { AuthContext } from '../context/AuthContext';
 
-import {useTheme, useTranslation} from '../hooks/';
+import { useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text} from '../components/';
+import { Block, Button, Input, Image, Text } from '../components/';
 import AlertCard from '../components/ErrorCard';
-import {AlertContext} from '../context/AlertContext';
+import { AlertContext } from '../context/AlertContext';
 
 const isAndroid = Platform.OS === 'android';
 export interface IRegistration {
@@ -25,7 +25,7 @@ interface IRegistrationValidation {
   password: boolean;
 }
 
-const Register = ({route: {params}}: {route: {params: any}}) => {
+const Register = ({ route: { params } }: { route: { params: any } }) => {
   let inviteToken = params?.inviteToken;
   inviteToken =
     inviteToken && Platform.OS === 'android'
@@ -35,9 +35,9 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
     ['validate-invite', inviteToken],
     api.validateInviteToken,
   ).data;
-  const {signIn} = useContext(AuthContext);
-  const {errorMessage, setErrorMessage} = useContext(AlertContext);
-  const {t} = useTranslation();
+  const { signIn } = useContext(AuthContext);
+  const { errorMessage, setErrorMessage } = useContext(AlertContext);
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const [familyId, setFamilyId] = useState(-1);
   const [role, setRole] = useState(0);
@@ -46,7 +46,7 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
     setErrorMessage('');
     setRegistration(
       inviteData
-        ? {...registrationData, familyName: inviteData.inviteData.familyName}
+        ? { ...registrationData, familyName: inviteData.inviteData.familyName }
         : registrationData,
     );
     setRole(inviteData?.inviteData.userType == 'Administrator' ? 1 : 0);
@@ -78,10 +78,10 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
     },
   );
 
-  const {assets, colors, gradients, sizes} = useTheme();
+  const { assets, colors, gradients, sizes } = useTheme();
 
   const handleChange = (value: any) => {
-    setRegistration((state) => ({...state, ...value}));
+    setRegistration((state) => ({ ...state, ...value }));
   };
 
   const handleSignUp = () => {
@@ -103,7 +103,7 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
         <AlertCard errorMessage={errorMessage} isSuccess={false} />
       )}
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{zIndex: 0}}>
+        <Block flex={0} style={{ zIndex: 0 }}>
           <Image
             background
             resizeMode="cover"
@@ -114,7 +114,7 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
             <Button
               row
               flex={0}
-              justify="flex-start"
+              justify="flex-end"
               onPress={() => navigation.navigate('SignIn')}>
               <Image
                 radius={0}
@@ -122,10 +122,9 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
                 height={18}
                 color={colors.white}
                 source={assets.arrow}
-                transform={[{rotate: '180deg'}]}
               />
               <Text p white marginLeft={sizes.s}>
-                {t('common.goBack')}
+                {t('common.signin')}
               </Text>
             </Button>
 
@@ -183,7 +182,7 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
                     danger={Boolean(
                       registrationData.familyName && !isValid.familyName,
                     )}
-                    onChangeText={(value) => handleChange({familyName: value})}
+                    onChangeText={(value) => handleChange({ familyName: value })}
                   />
                 )}
                 <Input
@@ -193,7 +192,7 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
                   placeholder={t('common.namePlaceholder')}
                   success={Boolean(registrationData.name && isValid.name)}
                   danger={Boolean(registrationData.name && !isValid.name)}
-                  onChangeText={(value) => handleChange({name: value})}
+                  onChangeText={(value) => handleChange({ name: value })}
                 />
                 <Input
                   autoCapitalize="none"
@@ -203,7 +202,7 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
                   placeholder={t('common.emailPlaceholder')}
                   success={Boolean(registrationData.email && isValid.email)}
                   danger={Boolean(registrationData.email && !isValid.email)}
-                  onChangeText={(value) => handleChange({email: value})}
+                  onChangeText={(value) => handleChange({ email: value })}
                 />
                 <Input
                   secureTextEntry
@@ -211,7 +210,7 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
                   marginBottom={sizes.m}
                   label={t('common.password')}
                   placeholder={t('common.passwordPlaceholder')}
-                  onChangeText={(value) => handleChange({password: value})}
+                  onChangeText={(value) => handleChange({ password: value })}
                   success={Boolean(
                     registrationData.password && isValid.password,
                   )}

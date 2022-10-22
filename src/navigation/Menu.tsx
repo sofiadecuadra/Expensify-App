@@ -95,6 +95,11 @@ const DrawerContent = (
     ? [
         {name: t('screens.home'), to: 'Home', icon: assets.home},
         {
+          name: t('screens.add_categories'),
+          to: 'AddCategories',
+          icon: assets.components,
+        },
+        {
           name: t('screens.components'),
           to: 'Components',
           icon: assets.components,

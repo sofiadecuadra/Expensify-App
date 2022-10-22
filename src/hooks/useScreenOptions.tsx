@@ -91,7 +91,7 @@ export default () => {
       ...menu,
       headerTitle: () => (
         <Text p white>
-          {t('navigation.configuration')}
+          {t('navigation.add_categories')}
         </Text>
       ),
       headerRight: () => null,

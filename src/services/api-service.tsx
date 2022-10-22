@@ -57,4 +57,20 @@ export const api = {
       .post('/users/invitations', {...data})
       .then((response) => response);
   },
+  addCategory: async (data: any) => {
+    const formData = new FormData();
+    formData.append('image', data.image);
+    formData.append('name', data.name);
+    formData.append('monthlyBudget', data.monthlyBudget);
+    formData.append('description', data.description);
+
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
+    return await axiosInstance
+      .post('/categories', formData, config)
+      .then((response) => response.data);
+  },
 };

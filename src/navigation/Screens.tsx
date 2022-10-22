@@ -1,8 +1,18 @@
 import React, { useContext } from 'react';
 
-import { Articles, Components, Home, Profile, Register, SignIn } from '../screens';
-import { useScreenOptions, useTranslation } from '../hooks';
-import { AuthContext } from '../context/AuthContext';
+
+import {
+  Articles,
+  Components,
+  Home,
+  Profile,
+  Register,
+  AddCategory,
+  SignIn
+} from '../screens';
+import {useScreenOptions, useTranslation} from '../hooks';
+import {AuthContext} from '../context/AuthContext';
+
 import Configuration from '../screens/Configuration';
 
 const Stack = createStackNavigator();
@@ -21,6 +31,11 @@ export default () => {
             name="Home"
             component={Home}
             options={{ title: t('navigation.home') }}
+          />
+          <Stack.Screen
+            name="AddCategories"
+            component={AddCategory}
+            options={screenOptions.components}
           />
           <Stack.Screen
             name="Components"

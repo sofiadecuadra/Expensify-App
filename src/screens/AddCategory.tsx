@@ -14,6 +14,7 @@ import {
 import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
 import {AlertContext} from '../context/AlertContext';
+import AlertCard from '../components/ErrorCard';
 
 const AddCategory = () => {
   const {assets, gradients, colors, sizes} = useTheme();
@@ -21,7 +22,8 @@ const AddCategory = () => {
   const [monthlyBudget, setMonthlyBudget] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
-  const {setSuccessMessage, setErrorMessage} = useContext(AlertContext);
+  const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
+    useContext(AlertContext);
 
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
@@ -56,7 +58,8 @@ const AddCategory = () => {
     <Block
       color={colors.card}
       paddingTop={sizes.m}
-      paddingHorizontal={sizes.padding}>
+      paddingHorizontal={sizes.padding}
+      scroll={true}>
       <Block>
         <Text p semibold marginBottom={sizes.s}>
           Name
@@ -182,7 +185,12 @@ const AddCategory = () => {
           placeholder="Monthly budget"
           marginBottom={sizes.sm}
         />
-
+        {errorMessage !== '' && (
+          <AlertCard errorMessage={errorMessage} isSuccess={false} />
+        )}
+        {successMessage !== '' && (
+          <AlertCard errorMessage={successMessage} isSuccess={true} />
+        )}
         <Block>
           <Button
             gradient={gradients.primary}

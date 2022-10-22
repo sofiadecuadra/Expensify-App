@@ -15,16 +15,6 @@ import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
 import {AlertContext} from '../context/AlertContext';
 
-function _base64ToArrayBuffer(base64: any) {
-  var binary_string = window.atob(base64);
-  var len = binary_string.length;
-  var bytes = new Uint8Array(len);
-  for (var i = 0; i < len; i++) {
-    bytes[i] = binary_string.charCodeAt(i);
-  }
-  return bytes.buffer;
-}
-
 const AddCategory = () => {
   const {assets, gradients, colors, sizes} = useTheme();
   const [name, setName] = useState('');
@@ -102,9 +92,13 @@ const AddCategory = () => {
                   includeExtra: true,
                 };
                 const result = await launchImageLibrary(options);
-                //const buffer = _base64ToArrayBuffer(result.)
-                setImage({result.assets[0]});
-                console.log(result);
+                const parsedImage = {
+                  size: result.assets[0].fileSize,
+                  name: result.assets[0].fileName,
+                  mimetype: result.assets[0].type,
+                  uri: result.assets[0].uri,
+                };
+                setImage(parsedImage);
               }}>
               <Block row align="center">
                 <Block
@@ -138,9 +132,13 @@ const AddCategory = () => {
                   includeExtra: true,
                 };
                 const result = await launchCamera(options);
-                setImage(result.assets[0]);
-
-                console.log(result);
+                const parsedImage = {
+                  size: result.assets[0].fileSize,
+                  name: result.assets[0].fileName,
+                  mimetype: result.assets[0].type,
+                  uri: result.assets[0].uri,
+                };
+                setImage(parsedImage);
               }}>
               <Block row align="center">
                 <Block
@@ -197,7 +195,6 @@ const AddCategory = () => {
                 description,
                 image: image,
               });
-              console.log('Hola');
             }}>
             <Text white bold transform="uppercase">
               Add category

@@ -5,7 +5,7 @@ import {IRegistration} from '../screens/Register';
 import CookieManager from '@react-native-cookies/cookies';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://172.29.2.212:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.1.3:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -17,10 +17,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse(
-          'http://172.29.2.212:3001/',
-          cookie,
-        );
+        await CookieManager.setFromResponse('http://192.168.1.3:3001/', cookie);
         return response;
       });
   },
@@ -53,15 +50,17 @@ export const api = {
   addCategory: async (data: any) => {
     const formData = new FormData();
     formData.append('image', data.image);
-    console.log(data.image);
-    console.log(formData);
+    formData.append('name', data.name);
+    formData.append('monthlyBudget', data.monthlyBudget);
+    formData.append('description', data.description);
+
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
       },
     };
     return await axiosInstance
-      .post('/categories', data, config)
+      .post('/categories', formData, config)
       .then((response) => response.data);
   },
 };

@@ -101,6 +101,10 @@
     "title": "Welcome",
     "subtitle": "Register with"
   },
+  "signIn": {
+    "title": "Welcome Back",
+    "subtitle": "Sign in with"
+  },
   "profile": {
     "title": "Profile",
     "posts": "Posts",

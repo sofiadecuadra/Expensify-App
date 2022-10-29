@@ -3,10 +3,10 @@ import axios from 'axios';
 import {IRegistration} from '../screens/Register';
 //dotenv.config();
 import CookieManager from '@react-native-cookies/cookies';
-import { ISignIn } from '../screens/SignIn';
+import {ISignIn} from '../screens/SignIn';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
+  baseURL: 'http://localhost:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -18,7 +18,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('192.168.0.180:3001/', cookie);
+        await CookieManager.setFromResponse('http://localhost:3001/', cookie);
         return response;
       });
   },
@@ -29,13 +29,15 @@ export const api = {
     });
   },
   signIn: async (data: ISignIn) => {
-    return await axiosInstance.post("/users/sign-in", data).then(async (response) => {
-      const cookie: string = response.headers['set-cookie']
+    return await axiosInstance
+      .post('/users/sign-in', data)
+      .then(async (response) => {
+        const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
         await CookieManager.setFromResponse('192.168.0.180:3001/', cookie);
-      return response;
-    });
+        return response;
+      });
   },
   createInvite: async (data: {userType: string}) => {
     return await axiosInstance

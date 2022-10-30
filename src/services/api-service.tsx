@@ -6,7 +6,7 @@ import CookieManager from '@react-native-cookies/cookies';
 import { ISignIn } from '../screens/SignIn';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.68.104:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -18,7 +18,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('192.168.0.180:3001/', cookie);
+        await CookieManager.setFromResponse('192.168.68.104:3001/', cookie);
         return response;
       });
   },
@@ -33,7 +33,7 @@ export const api = {
       const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('192.168.0.180:3001/', cookie);
+        await CookieManager.setFromResponse('192.168.68.104:3001/', cookie);
       return response;
     });
   },

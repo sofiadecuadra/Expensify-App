@@ -4786,11 +4786,6 @@
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
 
-"fsevents@^2.1.2", "fsevents@^2.3.2":
-  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
-  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  "version" "2.3.2"
-
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
   "resolved" "https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz"
@@ -6727,7 +6722,24 @@
     "metro-core" "0.67.0"
     "metro-runtime" "0.67.0"
 
-"metro-core@^0.67.0", "metro-core@0.67.0":
+"metro-core@^0.67.0":
+  "integrity" "sha512-TOa/ShE1bUq83fGNfV6rFwyfZ288M8ydmWN3g9C2OW8emOHLhJslYD/SIU4DhDkP/99yaJluIALdZ2g0+pCrvQ=="
+  "resolved" "https://registry.npmjs.org/metro-core/-/metro-core-0.67.0.tgz"
+  "version" "0.67.0"
+  dependencies:
+    "jest-haste-map" "^27.3.1"
+    "lodash.throttle" "^4.1.1"
+    "metro-resolver" "0.67.0"
+
+"metro-core@^0.73.3":
+  "integrity" "sha512-wsW2XyWU9QtWnNMrUIDnoTIKDHBvKa/uupY+91gYV9l6glKboP1F8AD0mpzNwFqOXtx48jm7iDa7xzEY25bgcA=="
+  "resolved" "https://registry.npmjs.org/metro-core/-/metro-core-0.73.3.tgz"
+  "version" "0.73.3"
+  dependencies:
+    "lodash.throttle" "^4.1.1"
+    "metro-resolver" "0.73.3"
+
+"metro-core@0.67.0":
   "integrity" "sha512-TOa/ShE1bUq83fGNfV6rFwyfZ288M8ydmWN3g9C2OW8emOHLhJslYD/SIU4DhDkP/99yaJluIALdZ2g0+pCrvQ=="
   "resolved" "https://registry.npmjs.org/metro-core/-/metro-core-0.67.0.tgz"
   "version" "0.67.0"
@@ -6821,6 +6833,13 @@
   "integrity" "sha512-d2KS/zAyOA/z/q4/ff41rAp+1txF4H6qItwpsls/RHStV2j6PqgRHUzq/3ga+VIeoUJntYJ8nGW3+3qSrhFlig=="
   "resolved" "https://registry.npmjs.org/metro-resolver/-/metro-resolver-0.67.0.tgz"
   "version" "0.67.0"
+  dependencies:
+    "absolute-path" "^0.0.0"
+
+"metro-resolver@0.73.3":
+  "integrity" "sha512-XbiZ22MaFFchaErNfqeW9ZPPRpiQEIylhtlja9/5QzNgAcAWbfIGY0Ok39XyVyWjX4Ab8YAwQUeCqyO48ojzZQ=="
+  "resolved" "https://registry.npmjs.org/metro-resolver/-/metro-resolver-0.73.3.tgz"
+  "version" "0.73.3"
   dependencies:
     "absolute-path" "^0.0.0"
 

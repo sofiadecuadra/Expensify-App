@@ -38,7 +38,7 @@ export default () => {
             options={screenOptions.components}
           />
           <Stack.Screen
-            name="Components"
+            name="AddExpenses"
             component={Components}
             options={screenOptions.components}
           />

@@ -15,7 +15,7 @@ import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
 import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
-
+import DatePicker from '../components/DatePicker';
 const AddExpense = () => {
   const {assets, gradients, colors, sizes} = useTheme();
   const [amount, setAmount] = useState('');
@@ -78,8 +78,11 @@ const AddExpense = () => {
           placeholder="Amount"
           marginBottom={sizes.sm}
         />
-
-
+  
+        <Text p semibold marginBottom={sizes.s}>
+          Produced date
+        </Text>
+        <DatePicker />
         <Text p semibold marginBottom={sizes.s}>
           Image
         </Text>

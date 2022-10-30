@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-
+import React, {useContext} from 'react';
 
 import {
   Articles,
@@ -8,7 +7,7 @@ import {
   Profile,
   Register,
   AddCategory,
-  SignIn
+  SignIn,
 } from '../screens';
 import {useScreenOptions, useTranslation} from '../hooks';
 import {AuthContext} from '../context/AuthContext';
@@ -16,11 +15,11 @@ import {AuthContext} from '../context/AuthContext';
 import Configuration from '../screens/Configuration';
 
 const Stack = createStackNavigator();
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 
 export default () => {
-  const { signedIn } = useContext(AuthContext);
-  const { t } = useTranslation();
+  const {signedIn} = useContext(AuthContext);
+  const {t} = useTranslation();
   const screenOptions = useScreenOptions();
 
   return (
@@ -30,7 +29,12 @@ export default () => {
           <Stack.Screen
             name="Home"
             component={Home}
-            options={{ title: t('navigation.home') }}
+            options={{title: t('navigation.home')}}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Home}
+            options={{title: t('navigation.home')}}
           />
           <Stack.Screen
             name="AddCategories"
@@ -45,12 +49,12 @@ export default () => {
           <Stack.Screen
             name="Articles"
             component={Articles}
-            options={{ title: t('navigation.articles') }}
+            options={{title: t('navigation.articles')}}
           />
           <Stack.Screen
             name="Profile"
             component={Profile}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="Configuration"
@@ -63,12 +67,12 @@ export default () => {
           <Stack.Screen
             name="Register"
             component={Register}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="SignIn"
             component={SignIn}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
         </>
       )}

@@ -9,7 +9,6 @@ export const axiosInstance = axios.create({
   baseURL: 'http://192.168.68.104:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
-
 export const api = {
   adminSignup: async (data: IRegistration) => {
     return await axiosInstance
@@ -72,13 +71,7 @@ export const api = {
     return await axiosInstance
       .post('/categories', formData, config)
       .then((response) => response.data);
-  },
-  getCategories: async ({queryKey}:any) => {
-    const [_, inviteToken] = queryKey;
-    if (!inviteToken) {
-      return undefined;
-    }
-    const params = inviteToken;
-    return await axiosInstance.get('/categories').then((response) => response.data);
-  }
+  }   , categories: async() => {
+    return await axiosInstance.get("./categories").then((response) => response.data);
+},
 };

@@ -15,6 +15,7 @@ import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
 import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
+import useQueryAuth from '../hooks/useQueryAuth';
 
 const AddExpense = () => {
   const {assets, gradients, colors, sizes} = useTheme();
@@ -24,7 +25,10 @@ const AddExpense = () => {
 	const [category, setCategory] = useState(null);
   const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
-  const categories =  api.getCategories();
+    const categories = useQueryAuth(['categories'], api.categories, {}).data;
+  const categoriesFormatted= categories.map((category:any) => ({label:category.name, value:category.id}));
+  console.log(categoriesFormatted);
+    console.log("CATEGORIES----------------",categories);
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
@@ -82,12 +86,12 @@ const AddExpense = () => {
         <Text p semibold marginBottom={sizes.s}>
           Produced date
         </Text>
-        <DatePicker />
+        <DatePicker/>
   
         <Text p semibold marginBottom={sizes.s}>
           Category
         </Text>
-        <Dropdown />
+        <Dropdown items={categoriesFormatted}></Dropdown>
         <Text p semibold marginBottom={sizes.s}>
           Image
         </Text>

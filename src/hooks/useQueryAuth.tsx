@@ -12,6 +12,7 @@ const useQueryAuth = (queryKey:any, queryFn:any, options:any) => {
         options.onError(error);
     }
     options.onError = onErrorToken;
+    console.log(queryKey, queryFn, options);
     return useQuery(queryKey, queryFn, options);
 }
 

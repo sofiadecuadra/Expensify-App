@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/core';
 import {Assets, useHeaderHeight} from '@react-navigation/stack';
 
 import {useTheme} from '../hooks/';
-import {Block, Button, Image, Input, Text} from '../components/';
+import {Block, Button, Image, Input, Text,DatePicker,Dropdown} from '../components/';
 import {View} from 'react-native';
 import {
   launchCamera,
@@ -15,7 +15,7 @@ import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
 import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
-import DatePicker from '../components/DatePicker';
+
 const AddExpense = () => {
   const {assets, gradients, colors, sizes} = useTheme();
   const [amount, setAmount] = useState('');
@@ -83,6 +83,11 @@ const AddExpense = () => {
           Produced date
         </Text>
         <DatePicker />
+  
+        <Text p semibold marginBottom={sizes.s}>
+          Category
+        </Text>
+        <Dropdown />
         <Text p semibold marginBottom={sizes.s}>
           Image
         </Text>

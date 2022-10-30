@@ -9,6 +9,7 @@ import Image from './Image';
 import Article from './Article';
 import Product from './Product';
 import DatePicker from './DatePicker';
+import Dropdown from './DropDown';
 export {
   Block,
   Button,
@@ -21,4 +22,5 @@ export {
   Product,
   Modal,
   DatePicker,
+  Dropdown,
 };

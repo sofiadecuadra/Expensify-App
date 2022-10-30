@@ -8,6 +8,7 @@ import {
   Profile,
   Register,
   AddCategory,
+  AddExpense,
   SignIn
 } from '../screens';
 import {useScreenOptions, useTranslation} from '../hooks';
@@ -39,7 +40,7 @@ export default () => {
           />
           <Stack.Screen
             name="AddExpenses"
-            component={Components}
+            component={AddExpense}
             options={screenOptions.components}
           />
           <Stack.Screen

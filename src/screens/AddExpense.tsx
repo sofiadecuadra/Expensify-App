@@ -16,12 +16,12 @@ import {api} from '../services/api-service';
 import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
 
-const AddCategory = () => {
+const AddExpense = () => {
   const {assets, gradients, colors, sizes} = useTheme();
-  const [name, setName] = useState('');
-  const [monthlyBudget, setMonthlyBudget] = useState('');
+  const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
+	const [category, setCategory] = useState(null);
   const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
 
@@ -62,11 +62,11 @@ const AddCategory = () => {
       scroll={true}>
       <Block>
         <Text p semibold marginBottom={sizes.s}>
-          Name
+				Description
         </Text>
         <Input
-          onChangeText={(value) => setName(value)}
-          placeholder="Name"
+          onChangeText={(value) => setDescription(value)}
+          placeholder="Description"
           marginBottom={sizes.sm}
         />
         <Text p semibold marginBottom={sizes.s}>
@@ -171,13 +171,13 @@ const AddCategory = () => {
         </Text>
 
         <Input
-          onChangeText={(value) => setDescription(value)}
-          placeholder="Description"
+          onChangeText={(value) => setAmount(value)}
+          placeholder="Amount"
           marginBottom={sizes.sm}
         />
 
         <Text p semibold marginBottom={sizes.s}>
-          Monthly budget
+          Amount
         </Text>
 
         <Input
@@ -214,4 +214,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default AddExpense;

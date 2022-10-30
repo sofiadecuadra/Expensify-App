@@ -4,6 +4,7 @@ export {default as Articles} from './Articles';
 export {default as Chat} from './Pro';
 export {default as Components} from './Components';
 export {default as AddCategory} from './AddCategory';
+export {default as AddExpense} from './AddExpense';
 export {default as Extras} from './Pro';
 export {default as Home} from './Home';
 export {default as Notifications} from './Pro';

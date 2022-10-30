@@ -1,11 +1,14 @@
 import RNPickerSelect from 'react-native-picker-select';
 
-const Dropdown = (items:any) => {
+const Dropdown = () => {
     return (
         <RNPickerSelect
             onValueChange={(value) => console.log(value)}
-            items={items}
-           
+            items={[
+                { label: 'Football', value: 'football' },
+                { label: 'Baseball', value: 'baseball' },
+                { label: 'Hockey', value: 'hockey' },
+            ]}
         />
     );
 };

@@ -74,6 +74,6 @@ export const api = {
       .then((response) => response.data);
   },
   getCategories: async () => {
-    return await axiosInstance.get('/categories').then((response) => response);
+    return await axiosInstance.get('/categories').then((response) => response.data);
   }
 };

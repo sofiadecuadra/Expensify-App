@@ -69,6 +69,17 @@ const AddExpense = () => {
           placeholder="Description"
           marginBottom={sizes.sm}
         />
+
+        <Text p semibold marginBottom={sizes.s}>
+          Amount
+        </Text>
+        <Input
+          onChangeText={(value) => setAmount(value)}
+          placeholder="Amount"
+          marginBottom={sizes.sm}
+        />
+
+
         <Text p semibold marginBottom={sizes.s}>
           Image
         </Text>
@@ -171,16 +182,6 @@ const AddExpense = () => {
         </Text>
 
         <Input
-          onChangeText={(value) => setAmount(value)}
-          placeholder="Amount"
-          marginBottom={sizes.sm}
-        />
-
-        <Text p semibold marginBottom={sizes.s}>
-          Amount
-        </Text>
-
-        <Input
           onChangeText={(value) => setMonthlyBudget(value)}
           placeholder="Monthly budget"
           marginBottom={sizes.sm}
@@ -205,7 +206,7 @@ const AddExpense = () => {
               });
             }}>
             <Text white bold transform="uppercase">
-              Add category
+              Add expense
             </Text>
           </Button>
         </Block>

@@ -73,7 +73,12 @@ export const api = {
       .post('/categories', formData, config)
       .then((response) => response.data);
   },
-  getCategories: async () => {
+  getCategories: async ({queryKey}:any) => {
+    const [_, inviteToken] = queryKey;
+    if (!inviteToken) {
+      return undefined;
+    }
+    const params = inviteToken;
     return await axiosInstance.get('/categories').then((response) => response.data);
   }
 };

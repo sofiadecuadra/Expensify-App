@@ -24,7 +24,7 @@ const AddExpense = () => {
 	const [category, setCategory] = useState(null);
   const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
-  const categories = await api.getCategories();
+  const categories =  api.getCategories();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 

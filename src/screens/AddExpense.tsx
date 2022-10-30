@@ -179,16 +179,6 @@ const AddExpense = () => {
             </Text>
           </View>
         </View>
-
-        <Text p semibold marginBottom={sizes.s}>
-          Description
-        </Text>
-
-        <Input
-          onChangeText={(value) => setMonthlyBudget(value)}
-          placeholder="Monthly budget"
-          marginBottom={sizes.sm}
-        />
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />
         )}

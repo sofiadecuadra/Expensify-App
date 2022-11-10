@@ -4,11 +4,7 @@ const Dropdown = (items:any) => {
     return (
         <RNPickerSelect
             onValueChange={(value) => console.log(value)}
-            items={[
-                { label: 'Football', value: 'football' },
-                { label: 'Baseball', value: 'baseball' },
-                { label: 'Hockey', value: 'hockey' },
-            ]}
+            items={items}
         />
     );
 };

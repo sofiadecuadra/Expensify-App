@@ -26,7 +26,7 @@ const AddExpense = () => {
   const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
     const categories = useQueryAuth(['categories'], api.categories, {}).data;
-  const categoriesFormatted= categories.map((category:any) => ({label:category.name, value:category.id}));
+  const categoriesFormatted= categories?.map((category:any) => ({label:category.name, value:category.id}));
   console.log(categoriesFormatted);
     console.log("CATEGORIES----------------",categories);
   const navigation = useNavigation();
@@ -46,7 +46,7 @@ const AddExpense = () => {
     });
   }, [assets.header, navigation, sizes.width, headerHeight]);
 
-  const addCategory = useMutation(api.addCategory, {
+  const addExpense = useMutation(api.addExpense, {
     onError: (error: any) => {
       setSuccessMessage('');
       setErrorMessage(error.response.data.message);
@@ -54,7 +54,7 @@ const AddExpense = () => {
     onSuccess: () => {
       //invalidateQueries(['categories']);
       setErrorMessage('');
-      setSuccessMessage('Category created successfully! ');
+      setSuccessMessage('Expense created successfully! ');
     },
   });
 
@@ -78,6 +78,7 @@ const AddExpense = () => {
           Amount
         </Text>
         <Input
+            
           onChangeText={(value) => setAmount(value)}
           placeholder="Amount"
           marginBottom={sizes.sm}
@@ -86,7 +87,8 @@ const AddExpense = () => {
         <Text p semibold marginBottom={sizes.s}>
           Produced date
         </Text>
-        <DatePicker/>
+      
+        <DatePicker />
   
         <Text p semibold marginBottom={sizes.s}>
           Category
@@ -200,10 +202,9 @@ const AddExpense = () => {
             marginBottom={sizes.base}
             marginTop={10}
             onPress={() => {
-              addCategory.mutate({
-                name,
-                monthlyBudget,
+              addExpense.mutate({
                 description,
+                amount,
                 image: image,
               });
             }}>

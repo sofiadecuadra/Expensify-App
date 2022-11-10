@@ -6,7 +6,7 @@ import CookieManager from '@react-native-cookies/cookies';
 import { ISignIn } from '../screens/SignIn';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.68.104:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 export const api = {
@@ -17,7 +17,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('localhost:3001/', cookie);
+        await CookieManager.setFromResponse('192.168.68.104:3001/', cookie);
         return response;
       });
   },
@@ -32,7 +32,7 @@ export const api = {
       const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('localhost:3001/', cookie);
+        await CookieManager.setFromResponse('192.168.68.104:3001/', cookie);
       return response;
     });
   },
@@ -73,5 +73,24 @@ export const api = {
       .then((response) => response.data);
   }   , categories: async() => {
     return await axiosInstance.get("./categories").then((response) => response.data);
+},
+addExpense: async (data: any) => {
+  console.log(data);
+  const formData = new FormData();
+  formData.append('image', data.image);
+  formData.append('description', data.name);
+  formData.append('amount', data.amount);
+  formData.append('description', data.description);
+
+  const config = {
+    headers: {
+      'content-type': 'multipart/form-data',
+    },
+  };
+  return await axiosInstance
+    .post('/expenses', formData, config)
+    .then((response) => response.data);
+}   , expense: async() => {
+  return await axiosInstance.get("./expenses").then((response) => response.data);
 },
 };

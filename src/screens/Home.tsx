@@ -13,7 +13,7 @@ const Home = ({
 }) => {
   console.log(params);
   useEffect(() => {
-    if (params.inviteToken) {
+    if (params?.inviteToken) {
       navigation.setParams({inviteToken: undefined});
       Alert.alert(
         'Expensify Invite',

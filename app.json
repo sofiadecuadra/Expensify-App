@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "rn-soft-ui-kit-free",
-    "slug": "rn-soft-ui-kit-free",
+    "name": "expensify",
+    "slug": "expensify",
     "scheme": "expensify",
-    "description": "React Native - Soft UI Kit - Free",
+    "description": "Expensify app for iOS and Android",
     "primaryColor": "#CB0C9F",
+    "owner": "agustinferrari",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,14 +17,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.agustinferrari.expensify"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#CB0C9F"

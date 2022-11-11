@@ -1,12 +1,15 @@
 import axios from 'axios';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
 //import dotenv from 'dotenv';
 import {IRegistration} from '../screens/Register';
 //dotenv.config();
 import CookieManager from '@react-native-cookies/cookies';
 import {ISignIn} from '../screens/SignIn';
+import {Platform} from 'react-native';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.1.6:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -18,7 +21,9 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.1.6:3001/', cookie);
+        const token = await registerForPushNotificationsAsync();
+        api.updateToken({token});
         return response;
       });
   },
@@ -35,7 +40,9 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.1.6:3001/', cookie);
+        const token = await registerForPushNotificationsAsync();
+        api.updateToken({token});
         return response;
       });
   },
@@ -80,4 +87,37 @@ export const api = {
       .post('/categories', formData, config)
       .then((response) => response.data);
   },
+  updateToken: async (data: any) => {
+    return await axiosInstance
+      .put('/users/update-token', data)
+      .then((response) => response.data);
+  },
+};
+
+const registerForPushNotificationsAsync = async () => {
+  if (Device.isDevice) {
+    const {status: existingStatus} = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const {status} = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+    return token;
+  } else {
+    alert('Must use physical device for Push Notifications');
+    return null;
+  }
 };

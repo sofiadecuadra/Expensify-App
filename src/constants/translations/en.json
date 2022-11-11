@@ -43,6 +43,7 @@
     "addToCart": "Add to cart",
     "checkout": "Proceed to checkout",
     "readArticle": "Read Article",
+    "details": "Details",
     "send": "Send",
     "guests": {
       "one": "1 guest",
@@ -51,7 +52,7 @@
     }
   },
   "app": {
-    "name": "Soft UI",
+    "name": "Expensify",
     "fullname": "Soft UI Kit",
     "native": "React Native",
     "link": "creative-tim.com"
@@ -60,7 +61,8 @@
   "screens": {
     "home": "Home",
     "components": "Components",
-    "add_categories": "Add categories",
+    "add_category": "Add category",
+    "categories": "Categories",
     "articles": "Articles",
     "rental": "Rental",
     "profile": "Profile",
@@ -70,10 +72,11 @@
     "extra": "Extra - Automotive"
   },
   "navigation": {
-    "home": "Soft UI",
+    "home": "Expensify",
     "components": "Components",
-    "add_categories": "Add categories",
-    "articles": "Soft UI",
+    "categories": "Categories",
+    "add_category": "Add category",
+    "articles": "Articles",
     "rentals": "Soft UI",
     "rental": "Best Deal",
     "booking": "Booking",

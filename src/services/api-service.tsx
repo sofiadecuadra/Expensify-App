@@ -6,7 +6,7 @@ import CookieManager from '@react-native-cookies/cookies';
 import {ISignIn} from '../screens/SignIn';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -18,7 +18,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://localhost:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
         return response;
       });
   },
@@ -35,7 +35,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('192.168.0.180:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
         return response;
       });
   },
@@ -58,6 +58,11 @@ export const api = {
     return await axiosInstance
       .post('/users/invitations', {...data})
       .then((response) => response);
+  },
+  getCategories: async () => {
+    return await axiosInstance
+    .get("/categories")
+    .then((response) => { console.log("getCategories", response.data); return response.data});
   },
   addCategory: async (data: any) => {
     const formData = new FormData();

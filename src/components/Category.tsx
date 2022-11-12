@@ -1,60 +1,41 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
-
 import Block from './Block';
 import Image from './Image';
 import Text from './Text';
-import {IProduct} from '../constants/types';
-import {useTheme, useTranslation} from '../hooks/';
+import { useTheme } from '../hooks/';
 
-const Category = ({image, name, description, type, linkLabel}: any) => {
-  const {t} = useTranslation();
-  const {assets, colors, sizes} = useTheme();
+const Category = ({ image, name, description }: any) => {
+  const { sizes } = useTheme();
 
-  const isHorizontal = type !== 'vertical';
   const CARD_WIDTH = (sizes.width - sizes.padding * 2 - sizes.sm) / 2;
 
   return (
     <Block
       card
       flex={0}
-      row={isHorizontal}
+      row={true}
       marginBottom={sizes.sm}
-      width={isHorizontal ? CARD_WIDTH * 2 + sizes.sm : CARD_WIDTH}>
+      width={CARD_WIDTH * 2 + sizes.sm}>
       <Image
         resizeMode="cover"
-        source={{uri: image}}
+        source={{ uri: image }}
         style={{
-          height: isHorizontal ? 114 : 110,
-          width: !isHorizontal ? '100%' : sizes.width / 2.435,
+          height: sizes.width / 4,
+          width: sizes.width / 4,
         }}
       />
       <Block
         paddingTop={sizes.s}
-        justify="space-between"
-        paddingLeft={isHorizontal ? sizes.sm : 0}
-        paddingBottom={isHorizontal ? sizes.s : 0}>
-        <Text p marginBottom={sizes.s}>
+        paddingLeft={sizes.sm}
+        paddingBottom={ sizes.s}>
+        <Text p >
           {name}
         </Text>
         <Text
-        size = {12}
-        p marginBottom={sizes.s}>
+          size={12}
+          p >
           {description}
         </Text>
-        <TouchableOpacity>
-          <Block row flex={0} align="center">
-            <Text
-              p
-              color={colors.link}
-              semibold
-              size={sizes.linkSize}
-              marginRight={sizes.s}>
-              {linkLabel || t('common.details')}
-            </Text>
-            <Image source={assets.arrow} color={colors.link} />
-          </Block>
-        </TouchableOpacity>
       </Block>
     </Block>
   );

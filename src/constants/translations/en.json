@@ -63,6 +63,7 @@
     "components": "Components",
     "add_category": "Add category",
     "categories": "Categories",
+    "category_details": "Category details",
     "articles": "Articles",
     "rental": "Rental",
     "profile": "Profile",
@@ -76,6 +77,7 @@
     "components": "Components",
     "categories": "Categories",
     "add_category": "Add category",
+    "category_details": "Category details",
     "articles": "Articles",
     "rentals": "Soft UI",
     "rental": "Best Deal",
@@ -101,6 +103,9 @@
     "title": "Soft UI",
     "following": "Following",
     "trending": "Trending"
+  },
+  "categories": {
+    "title": "Categories"
   },
   "register": {
     "title": "Welcome",

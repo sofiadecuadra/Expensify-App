@@ -9,6 +9,7 @@ import {
   AddCategory,
   Categories,
   SignIn,
+  CategoryDetails,
 } from '../screens';
 import { useScreenOptions, useTranslation } from '../hooks';
 import { AuthContext } from '../context/AuthContext';
@@ -48,6 +49,11 @@ export default () => {
                 </Text>
               )
             }}
+          />
+          <Stack.Screen
+            name="CategoryDetails"
+            component={CategoryDetails}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="Categories"

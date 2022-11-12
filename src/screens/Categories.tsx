@@ -65,7 +65,11 @@ const Categories = ({ route: { params } }: { route: { params: any } }) => {
                             data={categories}
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => (
-                                <Category {...item} key={`card-${item?.id}`} />
+                                <Button
+                                    onPress={() => navigation.navigate('CategoryDetails', { category: item })}
+                                >
+                                    <Category {...item} key={`card-${item?.id}`} />
+                                </Button>
                             )}
                         />
                     </Block>

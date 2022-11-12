@@ -11,7 +11,6 @@ const Home = ({
   navigation: any;
   route: {params: any};
 }) => {
-  console.log(params);
   useEffect(() => {
     if (params?.inviteToken) {
       navigation.setParams({inviteToken: undefined});

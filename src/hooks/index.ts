@@ -7,3 +7,4 @@ export {
   TranslationProvider,
   useTranslation,
 } from './useTranslation';
+export {default as useQueryAuth} from './useQueryAuth';

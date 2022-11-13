@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 
-
 import {
   Articles,
   Components,
@@ -9,15 +8,18 @@ import {
   Register,
   AddCategory,
   AddExpense,
-  SignIn
+  Categories,
+  SignIn,
+  CategoryDetails,
 } from '../screens';
-import {useScreenOptions, useTranslation} from '../hooks';
-import {AuthContext} from '../context/AuthContext';
+import { useScreenOptions, useTranslation } from '../hooks';
+import { AuthContext } from '../context/AuthContext';
 
 import Configuration from '../screens/Configuration';
 
 const Stack = createStackNavigator();
 import { createStackNavigator } from '@react-navigation/stack';
+import { Text } from '../components';
 
 export default () => {
   const { signedIn } = useContext(AuthContext);
@@ -34,9 +36,36 @@ export default () => {
             options={{ title: t('navigation.home') }}
           />
           <Stack.Screen
-            name="AddCategories"
+            name="Register"
+            component={Home}
+            options={{ title: t('navigation.home') }}
+          />
+          <Stack.Screen
+            name="AddCategory"
             component={AddCategory}
-            options={screenOptions.components}
+            options={{
+              ...screenOptions.components, headerTitle: () => (
+                <Text p white>
+                  {t('navigation.add_category')}
+                </Text>
+              )
+            }}
+          />
+          <Stack.Screen
+            name="CategoryDetails"
+            component={CategoryDetails}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Categories"
+            component={Categories}
+            options={{
+              ...screenOptions.components, headerTitle: () => (
+                <Text p white>
+                  {t('navigation.categories')}
+                </Text>
+              )
+            }}
           />
           <Stack.Screen
             name="AddExpenses"
@@ -56,7 +85,13 @@ export default () => {
           <Stack.Screen
             name="Configuration"
             component={Configuration}
-            options={screenOptions.components}
+            options={{
+              ...screenOptions.components, headerTitle: () => (
+                <Text p white>
+                  {t('navigation.configuration')}
+                </Text>
+              )
+            }}
           />
         </>
       ) : (

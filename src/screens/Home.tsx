@@ -1,9 +1,42 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {useData, useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Image, Input, Product, Text} from '../components/';
+import {Alert} from 'react-native';
 
-const Home = () => {
+const Home = ({
+  navigation,
+  route: {params},
+}: {
+  navigation: any;
+  route: {params: any};
+}) => {
+  useEffect(() => {
+    if (params?.inviteToken) {
+      navigation.setParams({inviteToken: undefined});
+      Alert.alert(
+        'Expensify Invite',
+        'Please log out from this account in order to accept this invite.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Accept',
+            style: 'default',
+          },
+        ],
+        {
+          cancelable: true,
+          onDismiss: () =>
+            Alert.alert(
+              'This alert was dismissed by tapping outside of the alert dialog.',
+            ),
+        },
+      );
+    }
+  }, []);
   const {t} = useTranslation();
   const [tab, setTab] = useState<number>(0);
   const {following, trending} = useData();

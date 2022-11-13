@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/core';
 import {Assets, useHeaderHeight} from '@react-navigation/stack';
 
 import {useTheme} from '../hooks/';
-import {Block, Button, Image, Input, Text} from '../components/';
+import {Block, Button, Image, Input, Text,DatePicker,Dropdown} from '../components/';
 import {View} from 'react-native';
 import {
   launchCamera,
@@ -15,15 +15,20 @@ import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
 import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
+import useQueryAuth from '../hooks/useQueryAuth';
 
-const AddCategory = () => {
+const AddExpense = () => {
   const {assets, gradients, colors, sizes} = useTheme();
-  const [name, setName] = useState('');
-  const [monthlyBudget, setMonthlyBudget] = useState('');
+  const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
+	const [category, setCategory] = useState(null);
   const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
+    const categories = useQueryAuth(['categories'], api.categories, {}).data;
+  const categoriesFormatted= categories?.map((category:any) => ({label:category.name, value:category.id}));
+  console.log(categoriesFormatted);
+    console.log("CATEGORIES----------------",categories);
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
@@ -41,7 +46,7 @@ const AddCategory = () => {
     });
   }, [assets.header, navigation, sizes.width, headerHeight]);
 
-  const addCategory = useMutation(api.addCategory, {
+  const addExpense = useMutation(api.addExpense, {
     onError: (error: any) => {
       setSuccessMessage('');
       setErrorMessage(error.response.data.message);
@@ -49,7 +54,7 @@ const AddCategory = () => {
     onSuccess: () => {
       //invalidateQueries(['categories']);
       setErrorMessage('');
-      setSuccessMessage('Category created successfully! ');
+      setSuccessMessage('Expense created successfully! ');
     },
   });
 
@@ -61,13 +66,34 @@ const AddCategory = () => {
       scroll={true}>
       <Block>
         <Text p semibold marginBottom={sizes.s}>
-          Name
+				Description
         </Text>
         <Input
-          onChangeText={(value) => setName(value)}
-          placeholder="Name"
+          onChangeText={(value) => setDescription(value)}
+          placeholder="Description"
           marginBottom={sizes.sm}
         />
+
+        <Text p semibold marginBottom={sizes.s}>
+          Amount
+        </Text>
+        <Input
+            
+          onChangeText={(value) => setAmount(value)}
+          placeholder="Amount"
+          marginBottom={sizes.sm}
+        />
+  
+        <Text p semibold marginBottom={sizes.s}>
+          Produced date
+        </Text>
+      
+        <DatePicker />
+  
+        <Text p semibold marginBottom={sizes.s}>
+          Category
+        </Text>
+        <Dropdown items={categoriesFormatted}></Dropdown>
         <Text p semibold marginBottom={sizes.s}>
           Image
         </Text>
@@ -164,26 +190,6 @@ const AddCategory = () => {
             </Text>
           </View>
         </View>
-
-        <Text p semibold marginBottom={sizes.s}>
-          Description
-        </Text>
-
-        <Input
-          onChangeText={(value) => setDescription(value)}
-          placeholder="Description"
-          marginBottom={sizes.sm}
-        />
-
-        <Text p semibold marginBottom={sizes.s}>
-          Monthly budget
-        </Text>
-
-        <Input
-          onChangeText={(value) => setMonthlyBudget(value)}
-          placeholder="Monthly budget"
-          marginBottom={sizes.sm}
-        />
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />
         )}
@@ -196,15 +202,14 @@ const AddCategory = () => {
             marginBottom={sizes.base}
             marginTop={10}
             onPress={() => {
-              addCategory.mutate({
-                name,
-                monthlyBudget,
+              addExpense.mutate({
                 description,
+                amount,
                 image: image,
               });
             }}>
             <Text white bold transform="uppercase">
-              Add category
+              Add expense
             </Text>
           </Button>
         </Block>
@@ -213,4 +218,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default AddExpense;

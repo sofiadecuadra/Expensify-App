@@ -100,8 +100,8 @@ const DrawerContent = (
           icon: assets.components,
         },
         {
-          name: t('screens.components'),
-          to: 'Components',
+          name: t('screens.add_expenses'),
+          to: 'AddExpenses',
           icon: assets.components,
         },
         {name: t('screens.articles'), to: 'Articles', icon: assets.document},

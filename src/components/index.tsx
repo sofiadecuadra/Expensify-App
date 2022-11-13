@@ -8,6 +8,8 @@ import Checkbox from './Checkbox';
 import Image from './Image';
 import Article from './Article';
 import Product from './Product';
+import DatePicker from './DatePicker';
+import Dropdown from './DropDown';
 import Category from './Category';
 
 export {
@@ -21,5 +23,7 @@ export {
   Article,
   Product,
   Modal,
+  DatePicker,
+  Dropdown,
   Category,
 };

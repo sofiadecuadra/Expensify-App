@@ -7,6 +7,7 @@ import {
   Profile,
   Register,
   AddCategory,
+  AddExpense,
   Categories,
   SignIn,
   CategoryDetails,
@@ -67,8 +68,8 @@ export default () => {
             }}
           />
           <Stack.Screen
-            name="Components"
-            component={Components}
+            name="AddExpenses"
+            component={AddExpense}
             options={screenOptions.components}
           />
           <Stack.Screen

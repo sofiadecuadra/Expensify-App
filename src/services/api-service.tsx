@@ -69,7 +69,7 @@ export const api = {
   getCategories: async () => {
     return await axiosInstance
     .get("/categories")
-    .then((response) => { console.log("getCategories", response.data); return response.data});
+    .then((response) => response.data);
   },
   addCategory: async (data: any) => {
     const formData = new FormData();
@@ -87,13 +87,17 @@ export const api = {
       .post('/categories', formData, config)
       .then((response) => response.data);
   },
+  deleteCategory: async (id: any) => {
+    return await axiosInstance
+      .delete('/categories/' + id)
+      .then((response) => response.data);
+  },
   updateToken: async (data: any) => {
     return await axiosInstance
       .put('/users/update-token', data)
       .then((response) => response.data);
   },
 };
-
 const registerForPushNotificationsAsync = async () => {
   if (Device.isDevice) {
     const {status: existingStatus} = await Notifications.getPermissionsAsync();

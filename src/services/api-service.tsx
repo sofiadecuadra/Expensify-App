@@ -9,7 +9,7 @@ import {ISignIn} from '../screens/SignIn';
 import {Platform} from 'react-native';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.6:3001/', //TODO Deshardcodear
+  baseURL: 'http://localhost:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 export const api = {
@@ -20,7 +20,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.1.6:3001/', cookie);
+        await CookieManager.setFromResponse('http://localhost:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -66,9 +66,10 @@ export const api = {
       .then((response) => response);
   },
   getCategories: async () => {
-    return await axiosInstance
-    .get("/categories")
-    .then((response) => { console.log("getCategories", response.data); return response.data});
+    return await axiosInstance.get('/categories').then((response) => {
+      console.log('getCategories', response.data);
+      return response.data;
+    });
   },
   addCategory: async (data: any) => {
     const formData = new FormData();
@@ -85,28 +86,34 @@ export const api = {
     return await axiosInstance
       .post('/categories', formData, config)
       .then((response) => response.data);
-  }   , categories: async() => {
-    return await axiosInstance.get("./categories").then((response) => response.data);
-},
-addExpense: async (data: any) => {
-  console.log(data);
-  const formData = new FormData();
-  formData.append('image', data.image);
-  formData.append('description', data.name);
-  formData.append('amount', data.amount);
-  formData.append('description', data.description);
+  },
+  categories: async () => {
+    return await axiosInstance
+      .get('./categories')
+      .then((response) => response.data);
+  },
+  addExpense: async (data: any) => {
+    console.log(data);
+    const formData = new FormData();
+    formData.append('image', data.image);
+    formData.append('description', data.name);
+    formData.append('amount', data.amount);
+    formData.append('description', data.description);
 
-  const config = {
-    headers: {
-      'content-type': 'multipart/form-data',
-    },
-  };
-  return await axiosInstance
-    .post('/expenses', formData, config)
-    .then((response) => response.data);
-}   , expense: async() => {
-  return await axiosInstance.get("./expenses").then((response) => response.data);
-},
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
+    return await axiosInstance
+      .post('/expenses', formData, config)
+      .then((response) => response.data);
+  },
+  expense: async () => {
+    return await axiosInstance
+      .get('./expenses')
+      .then((response) => response.data);
+  },
   updateToken: async (data: any) => {
     return await axiosInstance
       .put('/users/update-token', data)

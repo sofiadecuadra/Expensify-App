@@ -17,12 +17,23 @@ import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-const AddCategory = () => {
+const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
+  const category = params?.category;
   const {assets, gradients, colors, sizes} = useTheme();
-  const [name, setName] = useState('');
-  const [monthlyBudget, setMonthlyBudget] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
+  const [name, setName] = useState(category ? category.name : '');
+  const [monthlyBudget, setMonthlyBudget] = useState(
+    category ? `${category.monthlyBudget}` : '',
+  );
+  const [description, setDescription] = useState(
+    category ? category.description : '',
+  );
+  const [image, setImage] = useState(
+    category
+      ? category.image.uri
+        ? category.image
+        : {uri: category.image, alreadyUploaded: true}
+      : '',
+  );
   const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
 
@@ -49,13 +60,50 @@ const AddCategory = () => {
       setErrorMessage(error.response.data.message);
     },
     onSuccess: () => {
-      //invalidateQueries(['categories']);
       setErrorMessage('');
       setSuccessMessage('Category created successfully! ');
     },
   });
 
-  console.log(image);
+  const modifyCategory = useMutation(api.modifyCategory, {
+    onError: (error, variables, context) => {
+      setSuccessMessage('');
+      setErrorMessage(error.response.data.message);
+    },
+    onSuccess: (data) => {
+      setErrorMessage('');
+      setSuccessMessage('Category updated successfully! ');
+    },
+  });
+
+  const onSubmit = () => {
+    let errorMessage = '';
+    if (name == '') errorMessage = 'Please enter a name!';
+    else if (!image) errorMessage = 'Please select a image!';
+    else if (description == '') errorMessage = 'Please enter a description!';
+    else if (Number.parseInt(monthlyBudget) < 0)
+      errorMessage = 'Please enter a valid monthly budget!';
+    setSuccessMessage('');
+    setErrorMessage(errorMessage);
+    if (errorMessage == '') {
+      if (!category) {
+        addCategory.mutate({
+          name,
+          monthlyBudget,
+          description,
+          image,
+        });
+      } else {
+        modifyCategory.mutate({
+          id: category.id,
+          name,
+          monthlyBudget,
+          description,
+          image,
+        });
+      }
+    }
+  };
 
   return (
     <Block
@@ -68,6 +116,7 @@ const AddCategory = () => {
           Name
         </Text>
         <Input
+          value={name}
           onChangeText={(value) => setName(value)}
           placeholder="Name"
           marginBottom={sizes.sm}
@@ -201,7 +250,7 @@ const AddCategory = () => {
                 height={200}
                 radius={10}
                 source={{
-                  uri: 'file:///data/user/0/com.agustinferrari.expensify/cache/rn_image_picker_lib_temp_1d500ccf-ad42-4b09-b488-c3bd20ea02ed.jpg',
+                  uri: image.uri,
                 }}
               />
             </>
@@ -214,14 +263,17 @@ const AddCategory = () => {
           onChangeText={(value) => setDescription(value)}
           placeholder="Description"
           marginBottom={sizes.sm}
+          value={description}
         />
         <Text p semibold marginBottom={sizes.s}>
           Monthly budget
         </Text>
         <Input
+          value={monthlyBudget}
           onChangeText={(value) => setMonthlyBudget(value)}
           placeholder="Monthly budget"
           marginBottom={sizes.sm}
+          keyboardType="numeric"
         />
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />
@@ -235,15 +287,10 @@ const AddCategory = () => {
             marginBottom={sizes.base}
             marginTop={10}
             onPress={() => {
-              addCategory.mutate({
-                name,
-                monthlyBudget,
-                description,
-                image: image,
-              });
+              onSubmit();
             }}>
             <Text white bold transform="uppercase">
-              Add category
+              {category ? 'Modify category' : 'Add category'}
             </Text>
           </Button>
         </Block>
@@ -252,4 +299,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default CategoryForm;

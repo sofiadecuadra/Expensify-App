@@ -1,14 +1,29 @@
-import React, { useContext, useEffect, useLayoutEffect } from 'react';
 import { useNavigation } from '@react-navigation/core';
+import { api } from '../services/api-service';
+import { useMutation } from 'react-query';
 
 import { useTheme, useTranslation } from '../hooks/';
-import { Block, Button, Input, Image, Text, Category } from '../components/';
+import { Block, Button, Image, Text, DialogBox } from '../components/';
+import { Icon } from 'react-native-elements';
+import { useState } from 'react';
+import React from 'react';
 
 const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
     const category = params.category;
+    const [openDialogBox, setDialogBoxOpen] = useState(false);
     const { assets, colors, sizes } = useTheme();
     const navigation = useNavigation();
     const { t } = useTranslation();
+
+    const deleteCategory = useMutation(api.deleteCategory, {
+        onError: (error: any) => {
+            console.log(error);
+        },
+        onSuccess: () => {
+            // TODO: invalidateQueries(['categories']);
+            navigation.navigate('Categories');
+        },
+    });
 
     return (
         <Block safe marginTop={sizes.md}>
@@ -18,6 +33,7 @@ const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: sizes.padding }}>
                 <Block flex={0}>
+                    <DialogBox open={openDialogBox} cancel={() => setDialogBoxOpen(false)} confirm={() => deleteCategory.mutate(category.id)} />
                     <Image
                         background
                         resizeMode="cover"
@@ -25,23 +41,36 @@ const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
                         paddingBottom={sizes.l}
                         radius={sizes.cardRadius}
                         source={assets.background}>
-                        <Button
+                        <Block
                             row
-                            flex={0}
-                            justify="flex-start"
-                            onPress={() => navigation.goBack()}>
-                            <Image
-                                radius={0}
-                                width={10}
-                                height={18}
+                            justify="space-between"
+                        >
+                            <Button
+                                row
+                                flex={0}
+                                justify="flex-start"
+                                onPress={() => navigation.goBack()}>
+                                <Image
+                                    radius={0}
+                                    width={10}
+                                    height={18}
+                                    color={colors.white}
+                                    source={assets.arrow}
+                                    transform={[{ rotate: '180deg' }]}
+                                />
+                                <Text p white marginLeft={sizes.s}>
+                                    {t('categories.title')}
+                                </Text>
+                            </Button>
+                            <Button
+                                round
                                 color={colors.white}
-                                source={assets.arrow}
-                                transform={[{ rotate: '180deg' }]}
-                            />
-                            <Text p white marginLeft={sizes.s}>
-                                {t('categories.title')}
-                            </Text>
-                        </Button>
+                                marginBottom={sizes.base}
+                                onPress={() => setDialogBoxOpen(true)}
+                            >
+                                <Icon name="delete" size={20} color="red" />
+                            </Button>
+                        </Block>
                         <Block flex={0} align="center">
                             <Text h5 center white marginBottom={sizes.sm}>
                                 {`${category?.name}`}
@@ -68,7 +97,9 @@ const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
                     </Image>
                 </Block>
             </Block>
+
         </Block>
+
     );
 };
 

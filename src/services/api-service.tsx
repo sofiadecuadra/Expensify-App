@@ -9,7 +9,7 @@ import {ISignIn} from '../screens/SignIn';
 import {Platform} from 'react-native';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.6:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -21,7 +21,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.1.6:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -40,7 +40,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.1.6:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -69,7 +69,7 @@ export const api = {
   getCategories: async () => {
     return await axiosInstance
     .get("/categories")
-    .then((response) => { console.log("getCategories", response.data); return response.data});
+    .then((response) => response.data);
   },
   addCategory: async (data: any) => {
     const formData = new FormData();
@@ -87,13 +87,17 @@ export const api = {
       .post('/categories', formData, config)
       .then((response) => response.data);
   },
+  deleteCategory: async (id: any) => {
+    return await axiosInstance
+      .delete('/categories/' + id)
+      .then((response) => response.data);
+  },
   updateToken: async (data: any) => {
     return await axiosInstance
       .put('/users/update-token', data)
       .then((response) => response.data);
   },
 };
-
 const registerForPushNotificationsAsync = async () => {
   if (Device.isDevice) {
     const {status: existingStatus} = await Notifications.getPermissionsAsync();

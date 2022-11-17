@@ -100,6 +100,11 @@ const DrawerContent = (
           icon: assets.components,
         },
         {
+          name: t('screens.add_expense'),
+          to: 'AddExpense',
+          icon: assets.components,
+        },
+        {
           name: t('screens.components'),
           to: 'Components',
           icon: assets.components,

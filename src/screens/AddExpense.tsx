@@ -25,9 +25,7 @@ const AddExpense = () => {
 	const [category, setCategory] = useState(null);
   const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
-    const categories = useQueryAuth(['categories'], api.categories, {}).data;
-  const categoriesFormatted= categories?.map((category:any) => ({label:category.name, value:category.id}));
-  console.log(categoriesFormatted);
+    const categories = useQueryAuth(['categories'], api.getCategories, {}).data;
     console.log("CATEGORIES----------------",categories);
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();

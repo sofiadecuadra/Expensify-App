@@ -7,6 +7,7 @@ import {
   Profile,
   Register,
   AddCategory,
+  AddExpense,
   Categories,
   SignIn,
   CategoryDetails,
@@ -42,6 +43,17 @@ export default () => {
           <Stack.Screen
             name="AddCategory"
             component={AddCategory}
+            options={{
+              ...screenOptions.components, headerTitle: () => (
+                <Text p white>
+                  {t('navigation.add_category')}
+                </Text>
+              )
+            }}
+          />
+           <Stack.Screen
+            name="AddExpense"
+            component={AddExpense}
             options={{
               ...screenOptions.components, headerTitle: () => (
                 <Text p white>

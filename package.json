@@ -57,6 +57,7 @@
     "eslint": "7.28.0",
     "eslint-plugin-react-hooks": "4.6.0",
     "jest-expo": "45.0.0",
+    "react-native-picker-select": "^8.0.4",
     "typescript": "4.3.5"
   },
   "private": true,

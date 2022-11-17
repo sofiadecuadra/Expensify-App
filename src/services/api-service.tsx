@@ -9,7 +9,7 @@ import {ISignIn} from '../screens/SignIn';
 import {Platform} from 'react-native';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.1.3:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -21,7 +21,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.1.3:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -40,7 +40,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.1.3:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -68,12 +68,37 @@ export const api = {
   },
   getCategories: async () => {
     return await axiosInstance
-    .get("/categories")
-    .then((response) => response.data);
+      .get('/categories')
+      .then((response) => response.data);
   },
   addCategory: async (data: any) => {
     const formData = new FormData();
-    formData.append('image', data.image);
+    formData.append('image', {...data.image, type: data.image.mimetype});
+    formData.append('name', data.name);
+    formData.append('monthlyBudget', data.monthlyBudget);
+    formData.append('description', data.description);
+
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+    return await axiosInstance
+      .post('/categories', formData, config)
+      .then((response) => response.data);
+  },
+  modifyCategory: async (data) => {
+    const formData = new FormData();
+    console.log(data);
+    if (!data.image.alreadyUploaded) {
+      formData.append('image', {
+        ...data.image,
+        type: data.image.mimetype,
+      });
+    } else {
+      formData.append('imageAlreadyUploaded', 'true');
+    }
+
     formData.append('name', data.name);
     formData.append('monthlyBudget', data.monthlyBudget);
     formData.append('description', data.description);
@@ -83,9 +108,11 @@ export const api = {
         'content-type': 'multipart/form-data',
       },
     };
+    const {id} = data;
+    const params = `/${id}`;
     return await axiosInstance
-      .post('/categories', formData, config)
-      .then((response) => response.data);
+      .put('./categories' + params, formData, config)
+      .then((response) => response);
   },
   deleteCategory: async (id: any) => {
     return await axiosInstance
@@ -99,29 +126,29 @@ export const api = {
   },
 };
 const registerForPushNotificationsAsync = async () => {
-  if (Device.isDevice) {
-    const {status: existingStatus} = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const {status} = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
-    }
-    const token = (await Notifications.getExpoPushTokenAsync()).data;
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
-    }
-    return token;
-  } else {
-    alert('Must use physical device for Push Notifications');
-    return null;
-  }
+  //   if (Device.isDevice) {
+  //     const {status: existingStatus} = await Notifications.getPermissionsAsync();
+  //     let finalStatus = existingStatus;
+  //     if (existingStatus !== 'granted') {
+  //       const {status} = await Notifications.requestPermissionsAsync();
+  //       finalStatus = status;
+  //     }
+  //     if (finalStatus !== 'granted') {
+  //       alert('Failed to get push token for push notification!');
+  //       return;
+  //     }
+  //     const token = (await Notifications.getExpoPushTokenAsync()).data;
+  //     if (Platform.OS === 'android') {
+  //       Notifications.setNotificationChannelAsync('default', {
+  //         name: 'default',
+  //         importance: Notifications.AndroidImportance.MAX,
+  //         vibrationPattern: [0, 250, 250, 250],
+  //         lightColor: '#FF231F7C',
+  //       });
+  //     }
+  //     return token;
+  //   } else {
+  //     alert('Must use physical device for Push Notifications');
+  //     return null;
+  //   }
 };

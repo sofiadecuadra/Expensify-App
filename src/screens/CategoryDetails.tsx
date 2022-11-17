@@ -4,8 +4,9 @@ import { useMutation } from 'react-query';
 
 import { useTheme, useTranslation } from '../hooks/';
 import { Block, Button, Image, Text, DialogBox } from '../components/';
-import { Icon } from '@rneui/themed'
+import { Icon } from 'react-native-elements';
 import { useState } from 'react';
+import React from 'react';
 
 const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
     const category = params.category;

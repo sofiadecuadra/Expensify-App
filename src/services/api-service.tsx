@@ -9,7 +9,7 @@ import {ISignIn} from '../screens/SignIn';
 import {Platform} from 'react-native';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.6:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -21,7 +21,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.1.6:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -40,7 +40,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.1.6:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;

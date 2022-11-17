@@ -9,7 +9,7 @@ import AlertCard from '../components/ErrorCard';
 import { AlertContext } from '../context/AlertContext';
 import { useHeaderHeight } from '@react-navigation/stack';
 import useQueryAuth from '../hooks/useQueryAuth';
-import { Icon } from '@rneui/themed'
+import { Icon } from 'react-native-elements';
 
 const Categories = ({ route: { params } }: { route: { params: any } }) => {
     const { assets, gradients, sizes } = useTheme();
@@ -58,8 +58,7 @@ const Categories = ({ route: { params } }: { route: { params: any } }) => {
                 <Block
                     scroll
                     paddingHorizontal={sizes.padding}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: sizes.l }}>
+                    >
                     <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
                         <FlatList
                             data={categories}

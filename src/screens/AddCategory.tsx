@@ -15,6 +15,7 @@ import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
 import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const AddCategory = () => {
   const {assets, gradients, colors, sizes} = useTheme();
@@ -54,6 +55,8 @@ const AddCategory = () => {
     },
   });
 
+  console.log(image);
+
   return (
     <Block
       color={colors.card}
@@ -75,111 +78,146 @@ const AddCategory = () => {
         <View
           style={{
             borderColor: 'b5b5ba',
-            borderWidth: 0.5,
+            borderWidth: !image ? 0.5 : 0,
             borderRadius: 10,
             alignContent: 'center',
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-            paddingBottom: 25,
-            paddingTop: 40,
+            paddingBottom: !image ? 25 : 0,
+            paddingTop: !image ? 40 : 0,
             marginBottom: 15,
           }}>
-          <View style={{flex: 1}}>
-            <Button
-              onPress={async () => {
-                const type: MediaType = 'photo';
-                const options = {
-                  selectionLimit: 0,
-                  mediaType: type,
-                  includeBase64: true,
-                  includeExtra: true,
-                };
-                const result = await launchImageLibrary(options);
-                const parsedImage = {
-                  size: result.assets[0].fileSize,
-                  name: result.assets[0].fileName,
-                  mimetype: result.assets[0].type,
-                  uri: result.assets[0].uri,
-                };
-                setImage(parsedImage);
-              }}>
-              <Block row align="center">
-                <Block
-                  flex={0}
-                  radius={6}
-                  align="center"
-                  justify="center"
-                  width={sizes.xxl * 1.5}
-                  height={sizes.xxl * 1.5}
-                  gradient={gradients?.secondary}>
-                  <Image
-                    source={assets.extras}
-                    color={colors.white}
-                    radius={0}
-                  />
-                </Block>
+          {!image ? (
+            <>
+              <View style={{flex: 1}}>
+                <Button
+                  onPress={async () => {
+                    const type: MediaType = 'photo';
+                    const options = {
+                      selectionLimit: 0,
+                      mediaType: type,
+                      includeBase64: true,
+                      includeExtra: true,
+                    };
+                    const result = await launchImageLibrary(options);
+                    const parsedImage = {
+                      size: result.assets[0].fileSize,
+                      name: result.assets[0].fileName,
+                      mimetype: result.assets[0].type,
+                      uri: result.assets[0].uri,
+                    };
+                    setImage(parsedImage);
+                  }}>
+                  <Block row align="center">
+                    <Block
+                      flex={0}
+                      radius={6}
+                      align="center"
+                      justify="center"
+                      width={sizes.xxl * 1.5}
+                      height={sizes.xxl * 1.5}
+                      gradient={gradients?.secondary}>
+                      <Image
+                        source={assets.extras}
+                        color={colors.white}
+                        radius={0}
+                      />
+                    </Block>
+                  </Block>
+                </Button>
+                <Text style={{marginTop: 15, alignSelf: 'center'}} size={11}>
+                  {'Upload image from gallery'}
+                </Text>
+              </View>
+              <View style={{flex: 1}}>
+                <Button
+                  onPress={async () => {
+                    const type: MediaType = 'photo';
+                    const options = {
+                      includeBase64: true,
+                      saveToPhotos: true,
+                      mediaType: type,
+                      includeExtra: true,
+                    };
+                    const result = await launchCamera(options);
+                    const parsedImage = {
+                      size: result.assets[0].fileSize,
+                      name: result.assets[0].fileName,
+                      mimetype: result.assets[0].type,
+                      uri: result.assets[0].uri,
+                    };
+                    setImage(parsedImage);
+                  }}>
+                  <Block row align="center">
+                    <Block
+                      flex={0}
+                      radius={6}
+                      align="center"
+                      justify="center"
+                      width={sizes.xxl * 1.5}
+                      height={sizes.xxl * 1.5}
+                      gradient={gradients?.secondary}>
+                      <Image
+                        source={assets.extras}
+                        color={colors.white}
+                        radius={0}
+                      />
+                    </Block>
+                  </Block>
+                </Button>
+                <Text style={{marginTop: 15, alignSelf: 'center'}} size={11}>
+                  {'Open camera'}
+                </Text>
+              </View>
+            </>
+          ) : (
+            <>
+              <Block
+                style={{
+                  zIndex: 2,
+                  position: 'absolute',
+                  right: 3,
+                  top: 3,
+                }}>
+                <TouchableOpacity onPress={() => setImage(null)}>
+                  <Block
+                    flex={0}
+                    radius={6}
+                    align="center"
+                    justify="center"
+                    width={sizes.md}
+                    height={sizes.md}
+                    gradient={gradients?.secondary}>
+                    <Image
+                      source={assets.close}
+                      color={colors.white}
+                      radius={0}
+                    />
+                  </Block>
+                </TouchableOpacity>
               </Block>
-            </Button>
-            <Text style={{marginTop: 15, alignSelf: 'center'}} size={11}>
-              {'Upload image from gallery'}
-            </Text>
-          </View>
-          <View style={{flex: 1}}>
-            <Button
-              onPress={async () => {
-                const type: MediaType = 'photo';
-                const options = {
-                  includeBase64: true,
-                  saveToPhotos: true,
-                  mediaType: type,
-                  includeExtra: true,
-                };
-                const result = await launchCamera(options);
-                const parsedImage = {
-                  size: result.assets[0].fileSize,
-                  name: result.assets[0].fileName,
-                  mimetype: result.assets[0].type,
-                  uri: result.assets[0].uri,
-                };
-                setImage(parsedImage);
-              }}>
-              <Block row align="center">
-                <Block
-                  flex={0}
-                  radius={6}
-                  align="center"
-                  justify="center"
-                  width={sizes.xxl * 1.5}
-                  height={sizes.xxl * 1.5}
-                  gradient={gradients?.secondary}>
-                  <Image
-                    source={assets.extras}
-                    color={colors.white}
-                    radius={0}
-                  />
-                </Block>
-              </Block>
-            </Button>
-            <Text style={{marginTop: 15, alignSelf: 'center'}} size={11}>
-              {'Open camera'}
-            </Text>
-          </View>
+              <Image
+                width="100%"
+                height={200}
+                radius={10}
+                source={{
+                  uri: 'file:///data/user/0/com.agustinferrari.expensify/cache/rn_image_picker_lib_temp_1d500ccf-ad42-4b09-b488-c3bd20ea02ed.jpg',
+                }}
+              />
+            </>
+          )}
         </View>
-
         <Text p semibold marginBottom={sizes.s}>
           Description
         </Text>
-
         <Input
           onChangeText={(value) => setDescription(value)}
           placeholder="Description"
           marginBottom={sizes.sm}
         />
-
         <Text p semibold marginBottom={sizes.s}>
           Monthly budget
         </Text>
-
         <Input
           onChangeText={(value) => setMonthlyBudget(value)}
           placeholder="Monthly budget"

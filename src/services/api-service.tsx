@@ -12,6 +12,7 @@ export const axiosInstance = axios.create({
   baseURL: 'http://192.168.1.6:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
+
 export const api = {
   adminSignup: async (data: IRegistration) => {
     return await axiosInstance
@@ -85,28 +86,7 @@ export const api = {
     return await axiosInstance
       .post('/categories', formData, config)
       .then((response) => response.data);
-  }   , categories: async() => {
-    return await axiosInstance.get("./categories").then((response) => response.data);
-},
-addExpense: async (data: any) => {
-  console.log(data);
-  const formData = new FormData();
-  formData.append('image', data.image);
-  formData.append('description', data.name);
-  formData.append('amount', data.amount);
-  formData.append('description', data.description);
-
-  const config = {
-    headers: {
-      'content-type': 'multipart/form-data',
-    },
-  };
-  return await axiosInstance
-    .post('/expenses', formData, config)
-    .then((response) => response.data);
-}   , expense: async() => {
-  return await axiosInstance.get("./expenses").then((response) => response.data);
-},
+  },
   updateToken: async (data: any) => {
     return await axiosInstance
       .put('/users/update-token', data)

@@ -2,9 +2,9 @@ import { useQuery } from "react-query";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-const useQueryAuth = (queryKey:any, queryFn:any, options:any) => {
+const useQueryAuth = (queryKey, queryFn, options) => {
     const { signOut } = useContext(AuthContext);
-    const onErrorToken = (error:any) => {
+    const onErrorToken = (error) => {
         if (error.response.data.errorType === "TOKEN_ERROR" || error.response.status === 401) {
             signOut();
             return;
@@ -12,9 +12,7 @@ const useQueryAuth = (queryKey:any, queryFn:any, options:any) => {
         options.onError(error);
     }
     options.onError = onErrorToken;
-    console.log(queryKey, queryFn, options);
     return useQuery(queryKey, queryFn, options);
 }
 
 export default useQueryAuth;
-

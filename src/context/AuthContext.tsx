@@ -14,7 +14,6 @@ export const AuthContext = React.createContext({
 const tryGetSessionData = async () => {
   try {
     const sessionData = await AsyncStorage.getItem('sessionData');
-    console.log(sessionData) ;
     if (sessionData) {
       return JSON.parse(sessionData);
     }

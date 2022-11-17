@@ -24,6 +24,7 @@ const AddCategory = () => {
   const [image, setImage] = useState(null);
   const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
+
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 

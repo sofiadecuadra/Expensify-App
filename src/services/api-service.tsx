@@ -4,12 +4,12 @@ import * as Device from 'expo-device';
 //import dotenv from 'dotenv';
 import {IRegistration} from '../screens/Register';
 //dotenv.config();
-import CookieManager from '@react-native-cookies/cookies';
+// import CookieManager from '@react-native-cookies/cookies';
 import {ISignIn} from '../screens/SignIn';
 import {Platform} from 'react-native';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.68.103:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -21,7 +21,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
+        // await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -29,7 +29,7 @@ export const api = {
   },
   adminLogout: async () => {
     return await axiosInstance.post('/users/log-out').then(async (response) => {
-      await CookieManager.clearAll();
+      // await CookieManager.clearAll();
       return response;
     });
   },
@@ -40,7 +40,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
+        // await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -96,6 +96,25 @@ export const api = {
     return await axiosInstance
       .put('/users/update-token', data)
       .then((response) => response.data);
+  },
+  addExpense: async (data: any) => {
+    console.log(data);
+    const formData = new FormData();
+    formData.append('image', data.image);
+    formData.append('description', data.name);
+    formData.append('amount', data.amount);
+    formData.append('description', data.description);
+  
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
+    return await axiosInstance
+      .post('/expenses', formData, config)
+      .then((response) => response.data);
+  }   , expense: async() => {
+    return await axiosInstance.get("./expenses").then((response) => response.data);
   },
 };
 const registerForPushNotificationsAsync = async () => {

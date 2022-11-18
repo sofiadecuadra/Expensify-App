@@ -1,20 +1,68 @@
-import { useNavigation } from '@react-navigation/core';
-import { api } from '../services/api-service';
-import { useMutation } from 'react-query';
+import {useNavigation} from '@react-navigation/core';
+import {api} from '../services/api-service';
+import {useMutation} from 'react-query';
 
-import { useTheme, useTranslation } from '../hooks/';
-import { Block, Button, Image, Text, DialogBox } from '../components/';
-import { Icon } from 'react-native-elements';
-import { useState } from 'react';
+import {useQueryAuth, useTheme, useTranslation} from '../hooks/';
+import {Block, Button, Image, Text, DialogBox} from '../components/';
+import {Icon} from 'react-native-elements';
+import {useMemo, useState} from 'react';
 import React from 'react';
-import { View } from 'react-native';
+import {View} from 'react-native';
+import {BarChart} from 'react-native-chart-kit';
 
-const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
-  const { assets, gradients, colors, sizes } = useTheme();
+const getMonth = (number) => {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  return months[number - 1];
+};
+
+const parseChartMonthData = (data) => {
+  if (!data) return [];
+  let result = {labels: [], datasets: []};
+  for (let item of data) {
+    if (item.month) result.labels.push(getMonth(item.month));
+    else result.labels.push(item.week);
+    result.datasets.push({
+      data: [Number.parseInt(item.total)],
+    });
+  }
+  return result;
+};
+
+const chartConfig = {
+  backgroundColor: '#ffffff',
+  backgroundGradientFrom: '#ffffff',
+  backgroundGradientTo: '#ffffff',
+  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+};
+
+const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
+  const {assets, gradients, colors, sizes} = useTheme();
   const category = params.category;
   const [openDialogBox, setDialogBoxOpen] = useState(false);
   const navigation = useNavigation();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
+  const {data} = useQueryAuth(
+    ['categoryExpenses', category.id],
+    api.getCategoryExpenses,
+    {},
+  );
+
+  const parsedChartMonthData = useMemo(() => parseChartMonthData(data), [data]);
+
+  console.log(parsedChartMonthData);
 
   const deleteCategory = useMutation(api.deleteCategory, {
     onError: (error: any) => {
@@ -32,7 +80,7 @@ const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
         scroll
         paddingHorizontal={sizes.s}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: sizes.padding }}>
+        contentContainerStyle={{paddingBottom: sizes.padding}}>
         <Block flex={0}>
           <DialogBox
             resource="category"
@@ -59,7 +107,7 @@ const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
                   height={18}
                   color={colors.white}
                   source={assets.arrow}
-                  transform={[{ rotate: '180deg' }]}
+                  transform={[{rotate: '180deg'}]}
                 />
                 <Text p white marginLeft={sizes.s}>
                   {t('categories.title')}
@@ -79,7 +127,7 @@ const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
               </Text>
               <Image
                 resizeMode="cover"
-                source={{ uri: category.image }}
+                source={{uri: category.image}}
                 style={{
                   height: sizes.width / 2.435,
                   width: sizes.width / 2.435,
@@ -98,7 +146,7 @@ const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
                   marginBottom={sizes.base}
                   marginTop={10}
                   onPress={() => {
-                    navigation.navigate('CategoryForm', { category: category });
+                    navigation.navigate('CategoryForm', {category: category});
                   }}>
                   <View
                     style={{
@@ -115,6 +163,22 @@ const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
                   </View>
                 </Button>
               </Block>
+              {parsedChartMonthData.datasets?.length > 0 ? (
+                <>
+                  <Text p white>
+                    {`Expenses by month`}
+                  </Text>
+                  <BarChart
+                    style={chartConfig}
+                    data={parsedChartMonthData}
+                    width={300}
+                    height={200}
+                    yAxisLabel="$"
+                    chartConfig={chartConfig}
+                    verticalLabelRotation={15}
+                  />
+                </>
+              ) : null}
             </Block>
           </Image>
         </Block>

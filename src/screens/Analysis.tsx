@@ -153,13 +153,4 @@ const Analysis = () => {
   );
 };
 
-const data1 = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-  datasets: [
-    {
-      data: [20, 45, 28, 80, 99, 43],
-    },
-  ],
-};
-
 export default Analysis;

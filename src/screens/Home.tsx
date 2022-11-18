@@ -3,15 +3,16 @@ import React, { useEffect, useContext, useState } from 'react';
 import { useTheme } from '../hooks/';
 import { Alert } from 'react-native';
 
-import { FlatList } from 'react-native';
+import { FlatList, View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { api } from '../services/api-service';
 
-import { Block, Button, Text, Expense } from '../components/';
+import { Block, Button, Text, Expense, DateRangePicker, Modal } from '../components/';
 import AlertCard from '../components/ErrorCard';
 import { AlertContext } from '../context/AlertContext';
 import useQueryAuth from '../hooks/useQueryAuth';
 import { Icon } from 'react-native-elements';
+import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 
 const pageSize = 6;
 
@@ -45,28 +46,55 @@ const Home = ({ route: { params } }: { route: { params: any } }) => {
   }, []);
   const { gradients, sizes } = useTheme();
   const { errorMessage, setErrorMessage } = useContext(AlertContext);
-  const fromDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  const toDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+  const [fromDate, setFromDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth() + 0, 1));
+  const [toDate, setToDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+
   const [page, setPage] = useState(0);
   const expensesCount = useQueryAuth(['expensesCount', fromDate, toDate], api.getExpensesCount, {}).data;
   //const pageCount = !expensesCount ? 0 : Math.ceil(expensesCount.total / pageSize);
   const expenses = useQueryAuth(['expenses', fromDate, toDate, page, pageSize], api.getExpenses, {}).data;
   const navigation = useNavigation();
+  const [openCalendar, setOpenCalendar] = useState(false);
 
   return (
+
     <Block>
+
       <Block
         style={{
           marginTop: 20,
-        }}>
+        }}
+        align="center">
+
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />
         )}
-        <Text center h5 marginHorizontal={sizes.m}>
-          {new Date().toLocaleString('en-us', { month: 'long' }) + ' '}
-          expenses
-        </Text>
 
+        <Text center h5 marginHorizontal={sizes.m}
+          paddingBottom={10}>
+          Expenses
+        </Text>
+        <Button
+          style={{
+            borderWidth: 1,
+            borderColor: '#808080',
+            margin: 10,
+          }}
+          onPress={() => setOpenCalendar(true)}
+        >
+          <Text center p marginHorizontal={sizes.m}
+            color="#808080">
+            {fromDate.toDateString()} - {toDate.toDateString()}
+          </Text>
+        </Button>
+          <Modal id="Calendar" open={openCalendar} onRequestClose={() => setOpenCalendar(false)}>
+          <DateRangePicker
+            onSuccess={(start, end) => {
+              setFromDate(new Date(start + 'T00:00:00'));
+              setToDate(new Date(end + 'T00:00:00'));
+            }}
+            theme={{ markColor: '#808080', markTextColor: 'white' }} />
+        </Modal>
         <Block paddingHorizontal={sizes.padding}>
           <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
             <FlatList

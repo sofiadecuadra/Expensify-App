@@ -12,6 +12,7 @@ import Category from './Category';
 import DialogBox from './DialogBox';
 import Expense from './Expense';
 import ExpenseDetails from '../screens/ExpenseDetails';
+import DateRangePicker from './DateRangePicker';
 
 export {
   Block,
@@ -28,4 +29,5 @@ export {
   DialogBox,
   Expense,
   ExpenseDetails,
+  DateRangePicker,
 };

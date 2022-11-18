@@ -158,22 +158,22 @@ export const api = {
       .put('/users/update-token', data)
       .then((response) => response.data);
   },
-  expenseByCategory: async ({queryKey}) => {
+  expenseByCategory: async ({queryKey}:any) => {
     const [_, fromDate, toDate] = queryKey;
     let params = '?';
     params += fromDate ? `startDate=${fromDate.toISOString()}&` : '';
-    params += toDate ? `endDate=${toDate.toISOString()}&` : '';
+    params += toDate ? `endDate=${toDate.toISOString()}` : '';
     return await axiosInstance
-      .get('./categories/expenses/period' + params)
+      .get('/categories/expenses/period' + params)
       .then((response) => response.data);
   },
-  expenseByMonth: async ({queryKey}) => {
+  expenseByMonth: async ({queryKey}:any) => {
     const [_, fromDate, toDate] = queryKey;
     let params = '?';
     params += fromDate ? `startDate=${fromDate.toISOString()}&` : '';
-    params += toDate ? `endDate=${toDate.toISOString()}&` : '';
+    params += toDate ? `endDate=${toDate.toISOString()}` : '';
     return await axiosInstance
-      .get('./expenses/month' + params)
+      .get('/expenses/month' + params)
       .then((response) => response.data);
   },
 };

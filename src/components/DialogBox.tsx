@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import Dialog from "react-native-dialog";
 
-const DialogBox = ({ open, confirm, cancel }: any) => {
+const DialogBox = ({ resource, open, confirm, cancel }: any) => {
 
     const handleDelete = () => {
         confirm();
@@ -15,9 +15,9 @@ const DialogBox = ({ open, confirm, cancel }: any) => {
         open ? (
             <View style={styles.container}>
             <Dialog.Container visible={open}>
-              <Dialog.Title>Category delete</Dialog.Title>
+              <Dialog.Title>{resource} delete</Dialog.Title>
               <Dialog.Description>
-                Do you want to delete this category? You cannot undo this action.
+                Do you want to delete this {resource}? You cannot undo this action.
               </Dialog.Description>
               <Dialog.Button label="Cancel" onPress={handleCancel} />
               <Dialog.Button label="Delete" onPress={handleDelete} />

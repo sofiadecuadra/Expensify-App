@@ -1,20 +1,20 @@
-import {useNavigation} from '@react-navigation/core';
-import {api} from '../services/api-service';
-import {useMutation} from 'react-query';
+import { useNavigation } from '@react-navigation/core';
+import { api } from '../services/api-service';
+import { useMutation } from 'react-query';
 
-import {useTheme, useTranslation} from '../hooks/';
-import {Block, Button, Image, Text, DialogBox} from '../components/';
-import {Icon} from 'react-native-elements';
-import {useState} from 'react';
+import { useTheme, useTranslation } from '../hooks/';
+import { Block, Button, Image, Text, DialogBox } from '../components/';
+import { Icon } from 'react-native-elements';
+import { useState } from 'react';
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 
-const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
-  const {assets, gradients, colors, sizes} = useTheme();
+const CategoryDetails = ({ route: { params } }: { route: { params: any } }) => {
+  const { assets, gradients, colors, sizes } = useTheme();
   const category = params.category;
   const [openDialogBox, setDialogBoxOpen] = useState(false);
   const navigation = useNavigation();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const deleteCategory = useMutation(api.deleteCategory, {
     onError: (error: any) => {
@@ -32,9 +32,10 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
         scroll
         paddingHorizontal={sizes.s}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: sizes.padding}}>
+        contentContainerStyle={{ paddingBottom: sizes.padding }}>
         <Block flex={0}>
           <DialogBox
+            resource="category"
             open={openDialogBox}
             cancel={() => setDialogBoxOpen(false)}
             confirm={() => deleteCategory.mutate(category.id)}
@@ -58,7 +59,7 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
                   height={18}
                   color={colors.white}
                   source={assets.arrow}
-                  transform={[{rotate: '180deg'}]}
+                  transform={[{ rotate: '180deg' }]}
                 />
                 <Text p white marginLeft={sizes.s}>
                   {t('categories.title')}
@@ -78,7 +79,7 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
               </Text>
               <Image
                 resizeMode="cover"
-                source={{uri: category.image}}
+                source={{ uri: category.image }}
                 style={{
                   height: sizes.width / 2.435,
                   width: sizes.width / 2.435,
@@ -97,7 +98,7 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
                   marginBottom={sizes.base}
                   marginTop={10}
                   onPress={() => {
-                    navigation.navigate('CategoryForm', {category: category});
+                    navigation.navigate('CategoryForm', { category: category });
                   }}>
                   <View
                     style={{

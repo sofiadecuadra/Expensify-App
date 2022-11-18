@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useLayoutEffect} from 'react';
+import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {api} from '../services/api-service';
@@ -11,10 +11,15 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import useQueryAuth from '../hooks/useQueryAuth';
 import {Icon} from 'react-native-elements';
 
+const pageSize = 6;
+
 const Categories = ({route: {params}}: {route: {params: any}}) => {
+  const [page, setPage] = useState(0);
+  const categoriesCount = useQueryAuth(['categoriesCount'], api.getCategoriesCount, {}).data;
+  //const pageCount = !categoriesCount ? 0 : Math.ceil(categoriesCount.total / pageSize);
   const {assets, gradients, sizes} = useTheme();
   const {errorMessage, setErrorMessage} = useContext(AlertContext);
-  const categories = useQueryAuth('categories', api.getCategories, {}).data;
+  const categories = useQueryAuth(['categories', page, pageSize], api.getCategories, {}).data;
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 

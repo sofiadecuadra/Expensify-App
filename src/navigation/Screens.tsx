@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import {
-  Articles,
+  Analysis,
   Components,
   Home,
   Profile,
@@ -81,8 +81,8 @@ export default () => {
           />
           <Stack.Screen
             name="Articles"
-            component={Articles}
-            options={{ title: t('navigation.articles') }}
+            component={Analysis}
+            options={{title: t('navigation.articles')}}
           />
           <Stack.Screen
             name="Profile"

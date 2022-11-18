@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Block, Text} from '../components';
 import {
   LineChart,
@@ -12,7 +12,18 @@ import {Dimensions} from 'react-native';
 import {useQueryAuth, useTheme} from '../hooks';
 import {api} from '../services/api-service';
 
-const data = [
+const availableColors = [
+  '#cb0c9f',
+  '#8392ab',
+  '#17c1e8',
+  '#82d616',
+  '#fbcf33',
+  '#ea0606',
+  '#e9ecef',
+  '#344767',
+];
+
+const data1 = [
   {
     name: 'Seoul',
     population: 21500000,
@@ -74,17 +85,32 @@ export const getToDate = () => {
   return date;
 };
 
+const parseChartData = (data) => {
+  if (!data) return [];
+  let result = [];
+  for (let item of data) {
+    result.push({
+      name: item.Category.name,
+      total: Number.parseInt(item.total),
+      color: availableColors[result.length % availableColors.length],
+      legendFontColor: '#7F7F7F',
+      legendFontSize: 15,
+    });
+  }
+  return result;
+};
+
 const Analysis = () => {
   const {sizes} = useTheme();
   const [toDate, setToDate] = useState(getToDate());
   const [fromDate, setFromDate] = useState(getFromDate());
   const {data} = useQueryAuth(
-    ['categories', fromDate, toDate],
+    ['categoriesExpenses', fromDate, toDate],
     api.expenseByCategory,
     {},
   );
 
-  console.log(data);
+  const parsedChartData = useMemo(() => parseChartData(data), [data]);
 
   return (
     <Block>
@@ -92,14 +118,16 @@ const Analysis = () => {
         <Text h5 semibold marginVertical={sizes.s} center>
           Expense distribution by category
         </Text>
-        <PieChart
-          data={data}
-          width={400}
-          height={220}
-          chartConfig={chartConfig}
-          accessor={'population'}
-          backgroundColor={'transparent'}
-        />
+        {parseChartData.length > 0 ? (
+          <PieChart
+            data={parsedChartData}
+            width={400}
+            height={220}
+            chartConfig={chartConfig}
+            accessor={'total'}
+            backgroundColor={'transparent'}
+          />
+        ) : null}
       </Block>
     </Block>
   );

@@ -1,19 +1,25 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 
-import {useData, useTheme, useTranslation} from '../hooks/';
-import {Block, Button, Image, Input, Product, Text} from '../components/';
-import {Alert} from 'react-native';
+import { useTheme } from '../hooks/';
+import { Alert } from 'react-native';
 
-const Home = ({
-  navigation,
-  route: {params},
-}: {
-  navigation: any;
-  route: {params: any};
-}) => {
+import { FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
+import { api } from '../services/api-service';
+
+import { Block, Button, Text, Expense } from '../components/';
+import AlertCard from '../components/ErrorCard';
+import { AlertContext } from '../context/AlertContext';
+import useQueryAuth from '../hooks/useQueryAuth';
+import { Icon } from 'react-native-elements';
+
+const pageSize = 6;
+
+const Home = ({ route: { params } }: { route: { params: any } }) => {
   useEffect(() => {
+    setErrorMessage('');
     if (params?.inviteToken) {
-      navigation.setParams({inviteToken: undefined});
+      navigation.setParams({ inviteToken: undefined });
       Alert.alert(
         'Expensify Invite',
         'Please log out from this account in order to accept this invite.',
@@ -37,95 +43,60 @@ const Home = ({
       );
     }
   }, []);
-  const {t} = useTranslation();
-  const [tab, setTab] = useState<number>(0);
-  const {following, trending} = useData();
-  const [products, setProducts] = useState(following);
-  const {assets, colors, fonts, gradients, sizes} = useTheme();
-
-  const handleProducts = useCallback(
-    (tab: number) => {
-      setTab(tab);
-      setProducts(tab === 0 ? following : trending);
-    },
-    [following, trending, setTab, setProducts],
-  );
+  const { gradients, sizes } = useTheme();
+  const { errorMessage, setErrorMessage } = useContext(AlertContext);
+  const fromDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const toDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+  const [page, setPage] = useState(0);
+  const expensesCount = useQueryAuth(['expensesCount', fromDate, toDate], api.getExpensesCount, {}).data;
+  //const pageCount = !expensesCount ? 0 : Math.ceil(expensesCount.total / pageSize);
+  const expenses = useQueryAuth(['expenses', fromDate, toDate, page, pageSize], api.getExpenses, {}).data;
+  const navigation = useNavigation();
 
   return (
     <Block>
-      {/* search input */}
-      <Block color={colors.card} flex={0} padding={sizes.padding}>
-        <Input search placeholder={t('common.search')} />
-      </Block>
-
-      {/* toggle products list */}
       <Block
-        row
-        flex={0}
-        align="center"
-        justify="center"
-        color={colors.card}
-        paddingBottom={sizes.sm}>
-        <Button onPress={() => handleProducts(0)}>
-          <Block row align="center">
-            <Block
-              flex={0}
-              radius={6}
-              align="center"
-              justify="center"
-              marginRight={sizes.s}
-              width={sizes.socialIconSize}
-              height={sizes.socialIconSize}
-              gradient={gradients?.[tab === 0 ? 'primary' : 'secondary']}>
-              <Image source={assets.extras} color={colors.white} radius={0} />
-            </Block>
-            <Text p font={fonts?.[tab === 0 ? 'medium' : 'normal']}>
-              {t('home.following')}
-            </Text>
-          </Block>
-        </Button>
-        <Block
-          gray
-          flex={0}
-          width={1}
-          marginHorizontal={sizes.sm}
-          height={sizes.socialIconSize}
-        />
-        <Button onPress={() => handleProducts(1)}>
-          <Block row align="center">
-            <Block
-              flex={0}
-              radius={6}
-              align="center"
-              justify="center"
-              marginRight={sizes.s}
-              width={sizes.socialIconSize}
-              height={sizes.socialIconSize}
-              gradient={gradients?.[tab === 1 ? 'primary' : 'secondary']}>
-              <Image
-                radius={0}
-                color={colors.white}
-                source={assets.documentation}
-              />
-            </Block>
-            <Text p font={fonts?.[tab === 1 ? 'medium' : 'normal']}>
-              {t('home.trending')}
-            </Text>
-          </Block>
-        </Button>
-      </Block>
+        style={{
+          marginTop: 20,
+        }}>
+        {errorMessage !== '' && (
+          <AlertCard errorMessage={errorMessage} isSuccess={false} />
+        )}
+        <Text center h5 marginHorizontal={sizes.m}>
+          {new Date().toLocaleString('en-us', { month: 'long' }) + ' '}
+          expenses
+        </Text>
 
-      {/* products list */}
-      <Block
-        scroll
-        paddingHorizontal={sizes.padding}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: sizes.l}}>
-        <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-          {products?.map((product) => (
-            <Product {...product} key={`card-${product?.id}`} />
-          ))}
+        <Block paddingHorizontal={sizes.padding}>
+          <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
+            <FlatList
+              data={expenses}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <Button
+                  onPress={() =>
+                    navigation.navigate('ExpenseDetails', { expense: item })
+                  }>
+
+                  <Expense item={item} key={`card-${item?.id}`} />
+                </Button>
+              )}
+            />
+          </Block>
         </Block>
+      </Block>
+      <Block
+        marginRight={5}
+        bottom={sizes.m}
+        position="absolute"
+        right={sizes.m}>
+        <Button
+          round
+          gradient={gradients.primary}
+          marginBottom={sizes.base}
+          onPress={() => navigation.navigate('ExpenseForm')}>
+          <Icon name="add" size={20} color="white" />
+        </Button>
       </Block>
     </Block>
   );

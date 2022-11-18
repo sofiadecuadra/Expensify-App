@@ -9,7 +9,7 @@ import {ISignIn} from '../screens/SignIn';
 import {Platform} from 'react-native';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.3:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -21,7 +21,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.1.3:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -40,7 +40,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.1.3:3001/', cookie);
+        await CookieManager.setFromResponse('http://192.168.0.180:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -66,9 +66,38 @@ export const api = {
       .post('/users/invitations', {...data})
       .then((response) => response);
   },
-  getCategories: async () => {
+  getCategories: async ({queryKey}:any) => {
+    const [_, page, pageSize] = queryKey;
+    let params = "?";
+    params += page ? `page=${page}&` : 'page=0&';
+    params += pageSize ? `pageSize=${pageSize}` : 'pageSize=6';
     return await axiosInstance
       .get('/categories')
+      .then((response) => response.data);
+  },
+  getCategoriesCount: async () => {
+    return await axiosInstance
+      .get('/categories/count')
+      .then((response) => response.data);
+  },
+  getExpenses: async ({queryKey}:any) => {
+    const [_, fromDate, toDate, page, pageSize] = queryKey;
+    let params = "?";
+    params += fromDate ? `startDate=${fromDate.toISOString()}&` : '';
+    params += toDate ? `endDate=${toDate.toISOString()}&` : '';
+    params += page ? `page=${page}&` : 'page=0&';
+    params += pageSize ? `pageSize=${pageSize}` : 'pageSize=6';
+    return await axiosInstance
+      .get('/expenses' + params)
+      .then((response) => response.data);
+  },
+  getExpensesCount: async ({queryKey}:any) => {
+    const [_, fromDate, toDate] = queryKey;
+    let params = "?";
+    params += fromDate ? `startDate=${fromDate.toISOString()}&` : '';
+    params += toDate ? `endDate=${toDate.toISOString()}` : '';
+    return await axiosInstance
+      .get('/expenses/count' + params)
       .then((response) => response.data);
   },
   addCategory: async (data: any) => {
@@ -117,6 +146,11 @@ export const api = {
   deleteCategory: async (id: any) => {
     return await axiosInstance
       .delete('/categories/' + id)
+      .then((response) => response.data);
+  },
+  deleteExpense: async (id: any) => {
+    return await axiosInstance
+      .delete('/expenses/' + id)
       .then((response) => response.data);
   },
   updateToken: async (data: any) => {

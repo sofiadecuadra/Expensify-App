@@ -6,6 +6,7 @@ export {default as Components} from './Components';
 export {default as CategoryForm} from './CategoryForm';
 export {default as Categories} from './Categories';
 export {default as CategoryDetails} from './CategoryDetails';
+export {default as ExpenseDetails} from './ExpenseDetails';
 export {default as Extras} from './Pro';
 export {default as Home} from './Home';
 export {default as Notifications} from './Pro';

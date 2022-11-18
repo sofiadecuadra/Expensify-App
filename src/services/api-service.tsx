@@ -129,9 +129,17 @@ export const api = {
     let params = '?';
     params += fromDate ? `startDate=${fromDate.toISOString()}&` : '';
     params += toDate ? `endDate=${toDate.toISOString()}&` : '';
-    console.log(params);
     return await axiosInstance
       .get('./categories/expenses/period' + params)
+      .then((response) => response.data);
+  },
+  expenseByMonth: async ({queryKey}) => {
+    const [_, fromDate, toDate] = queryKey;
+    let params = '?';
+    params += fromDate ? `startDate=${fromDate.toISOString()}&` : '';
+    params += toDate ? `endDate=${toDate.toISOString()}&` : '';
+    return await axiosInstance
+      .get('./expenses/month' + params)
       .then((response) => response.data);
   },
 };

@@ -8,7 +8,7 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from 'react-native-chart-kit';
-import {Dimensions} from 'react-native';
+import {Dimensions, useWindowDimensions} from 'react-native';
 import {useQueryAuth, useTheme} from '../hooks';
 import {api} from '../services/api-service';
 
@@ -23,53 +23,11 @@ const availableColors = [
   '#344767',
 ];
 
-const data1 = [
-  {
-    name: 'Seoul',
-    population: 21500000,
-    color: 'rgba(131, 167, 234, 1)',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Toronto',
-    population: 2800000,
-    color: '#F00',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Beijing',
-    population: 527612,
-    color: 'red',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'New York',
-    population: 8538000,
-    color: '#ffffff',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: 'Moscow',
-    population: 11920000,
-    color: 'rgb(0, 0, 255)',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-];
-
 const chartConfig = {
-  backgroundGradientFrom: '#1E2923',
-  backgroundGradientFromOpacity: 1,
-  backgroundGradientTo: '#08130D',
-  backgroundGradientToOpacity: 1,
-  color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-  strokeWidth: 3, // optional, default 3
-  barPercentage: 0.5,
-  useShadowColorFromDataset: false, // optional
+  backgroundColor: '#ffffff',
+  backgroundGradientFrom: '#ffffff',
+  backgroundGradientTo: '#ffffff',
+  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
 };
 
 export const getFromDate = () => {
@@ -85,7 +43,7 @@ export const getToDate = () => {
   return date;
 };
 
-const parseChartData = (data) => {
+const parseChartCategoryData = (data) => {
   if (!data) return [];
   let result = [];
   for (let item of data) {
@@ -100,17 +58,65 @@ const parseChartData = (data) => {
   return result;
 };
 
+//get month from number
+const getMonth = (number) => {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  return months[number - 1];
+};
+
+const parseChartMonthData = (data) => {
+  if (!data) return [];
+  let result = {labels: [], datasets: []};
+  for (let item of data) {
+    if (item.month) result.labels.push(getMonth(item.month));
+    else result.labels.push(item.week);
+    result.datasets.push({
+      data: [Number.parseInt(item.amount)],
+    });
+  }
+  return result;
+};
+
 const Analysis = () => {
   const {sizes} = useTheme();
   const [toDate, setToDate] = useState(getToDate());
   const [fromDate, setFromDate] = useState(getFromDate());
-  const {data} = useQueryAuth(
+  const {data: expensesByCategory} = useQueryAuth(
     ['categoriesExpenses', fromDate, toDate],
     api.expenseByCategory,
     {},
   );
+  const {data: expensesByMonth} = useQueryAuth(
+    ['monthExpenses', fromDate, toDate],
+    api.expenseByMonth,
+    {},
+  );
+  const {width} = useWindowDimensions();
 
-  const parsedChartData = useMemo(() => parseChartData(data), [data]);
+  const parsedChartCategoryData = useMemo(
+    () => parseChartCategoryData(expensesByCategory),
+    [expensesByCategory],
+  );
+
+  const parsedChartMonthData = useMemo(
+    () => parseChartMonthData(expensesByMonth),
+    [expensesByMonth],
+  );
+
+  console.log(expensesByMonth);
 
   return (
     <Block>
@@ -118,19 +124,42 @@ const Analysis = () => {
         <Text h5 semibold marginVertical={sizes.s} center>
           Expense distribution by category
         </Text>
-        {parseChartData.length > 0 ? (
+        {parsedChartCategoryData.length > 0 ? (
           <PieChart
-            data={parsedChartData}
-            width={400}
+            data={parsedChartCategoryData}
+            width={width}
             height={220}
             chartConfig={chartConfig}
             accessor={'total'}
             backgroundColor={'transparent'}
           />
         ) : null}
+        <Text h5 semibold marginVertical={sizes.s} center>
+          Expense distribution by category
+        </Text>
+        {expensesByMonth?.length > 0 ? (
+          <BarChart
+            style={chartConfig}
+            data={parsedChartMonthData}
+            width={width}
+            height={300}
+            yAxisLabel="$"
+            chartConfig={chartConfig}
+            verticalLabelRotation={15}
+          />
+        ) : null}
       </Block>
     </Block>
   );
+};
+
+const data1 = {
+  labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+  datasets: [
+    {
+      data: [20, 45, 28, 80, 99, 43],
+    },
+  ],
 };
 
 export default Analysis;

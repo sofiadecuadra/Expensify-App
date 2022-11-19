@@ -4,6 +4,7 @@ export {default as Analysis} from './Analysis';
 export {default as Chat} from './Pro';
 export {default as Components} from './Components';
 export {default as CategoryForm} from './CategoryForm';
+export {default as ExpenseForm} from './ExpenseForm';
 export {default as Categories} from './Categories';
 export {default as CategoryDetails} from './CategoryDetails';
 export {default as ExpenseDetails} from './ExpenseDetails';

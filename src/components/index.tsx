@@ -13,6 +13,7 @@ import DialogBox from './DialogBox';
 import Expense from './Expense';
 import ExpenseDetails from '../screens/ExpenseDetails';
 import DateRangePicker from './DateRangePicker';
+import Select from './Select';
 
 export {
   Block,
@@ -30,4 +31,5 @@ export {
   Expense,
   ExpenseDetails,
   DateRangePicker,
+  Select,
 };

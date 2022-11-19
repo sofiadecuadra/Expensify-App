@@ -25,7 +25,7 @@ const Categories = ({route: {params}}: {route: {params: any}}) => {
   const {errorMessage, setErrorMessage} = useContext(AlertContext);
   const categories = useQueryAuth(
     ['categories', page, pageSize],
-    api.getCategories,
+    api.getCategoriesPaginated,
     {},
   ).data;
   const navigation = useNavigation();

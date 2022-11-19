@@ -72,7 +72,12 @@ export const api = {
       .post('/users/invitations', {...data})
       .then((response) => response);
   },
-  getCategories: async ({queryKey}: any) => {
+  getCategories: async () => {
+    return await axiosInstance.get('/categories').then((response) => {
+      return response.data;
+    });
+  },
+  getCategoriesPaginated: async ({queryKey}: any) => {
     const [_, page, pageSize] = queryKey;
     let params = '?';
     params += page ? `page=${page}&` : 'page=0&';
@@ -111,6 +116,51 @@ export const api = {
     return await axiosInstance
       .get('/expenses/count' + params)
       .then((response) => response.data);
+  },
+  addExpense: async (data: any) => {
+    const formData = new FormData();
+    formData.append('image', {...data.image, type: data.image.mimetype});
+    formData.append('amount', data.amount);
+    formData.append('producedDate', data.producedDate);
+    formData.append('description', data.description);
+    formData.append('categoryId', data.categoryId);
+
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+    return await axiosInstance
+      .post('/expenses', formData, config)
+      .then((response) => response.data);
+  },
+  modifyExpense: async (data) => {
+    const formData = new FormData();
+    console.log(data);
+    if (!data.image.alreadyUploaded) {
+      formData.append('image', {
+        ...data.image,
+        type: data.image.mimetype,
+      });
+    } else {
+      formData.append('imageAlreadyUploaded', 'true');
+    }
+
+    formData.append('amount', data.amount);
+    formData.append('producedDate', data.producedDate);
+    formData.append('description', data.description);
+    formData.append('categoryId', data.categoryId);
+
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
+    const {id} = data;
+    const params = `/${id}`;
+    return await axiosInstance
+      .put('/expenses' + params, formData, config)
+      .then((response) => response);
   },
   addCategory: async (data: any) => {
     const formData = new FormData();

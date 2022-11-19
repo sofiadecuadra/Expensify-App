@@ -44,7 +44,7 @@ const Home = ({ route: { params } }: { route: { params: any } }) => {
       );
     }
   }, []);
-  const { gradients, sizes } = useTheme();
+  const { gradients, colors, sizes } = useTheme();
   const { errorMessage, setErrorMessage } = useContext(AlertContext);
   const [fromDate, setFromDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth() + 0, 1));
   const [toDate, setToDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
@@ -75,11 +75,12 @@ const Home = ({ route: { params } }: { route: { params: any } }) => {
           Expenses
         </Text>
         <Button
+          light
           style={{
-            borderWidth: 1,
-            borderColor: '#808080',
-            margin: 10,
-          }}
+            borderWidth: 0.8,
+            borderColor: colors.gray,
+        }}
+          height={sizes.xl}
           onPress={() => setOpenCalendar(true)}
         >
           <Text center p marginHorizontal={sizes.m}

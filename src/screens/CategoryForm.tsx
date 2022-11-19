@@ -15,7 +15,6 @@ import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
 import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
-import Select from '../components/Select';
 
 const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
   const category = params?.category;
@@ -274,15 +273,6 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
           placeholder="Monthly budget"
           marginBottom={sizes.sm}
           keyboardType="numeric"
-        />
-        <Select
-          title={'Category'}
-          data={[
-            {id: '1', name: 'Food'},
-            {id: '2', name: 'Transport'},
-            {id: '3', name: 'Clothes'},
-            {id: '4', name: 'Entertainment'},
-          ]}
         />
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />

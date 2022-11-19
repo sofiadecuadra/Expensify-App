@@ -7,6 +7,7 @@ import {
   Profile,
   Register,
   CategoryForm,
+  ExpenseForm,
   Categories,
   SignIn,
   CategoryDetails,
@@ -53,6 +54,18 @@ export default () => {
               headerTitle: () => (
                 <Text p white>
                   {t('navigation.add_category')}
+                </Text>
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="ExpenseForm"
+            component={ExpenseForm}
+            options={{
+              ...screenOptions.components,
+              headerTitle: () => (
+                <Text p white>
+                  {t('navigation.add_expense')}
                 </Text>
               ),
             }}

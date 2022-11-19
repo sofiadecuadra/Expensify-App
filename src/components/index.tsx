@@ -10,8 +10,8 @@ import Article from './Article';
 import Product from './Product';
 import Category from './Category';
 import DialogBox from './DialogBox';
-import Dropdown from './Dropdown';
-import DatePicker from './DatePicker';
+import Dropdown from './DropDown';
+import Picker from './DatePicker';
 export {
   Block,
   Button,
@@ -25,4 +25,6 @@ export {
   Modal,
   Category,
   DialogBox,
+  Dropdown,
+  Picker,
 };

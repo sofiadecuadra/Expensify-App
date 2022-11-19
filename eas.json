@@ -1,30 +1,30 @@
 {
-  "cli": {
-    "version": ">= 0.60.0"
-  },
-  "build": {
-    "preview": {
-      "env": {
-        "ANDROID_SDK_ROOT": "/Users/agustin.ferrari/Library/Android/sdk"
-      },
-      "android": {
-        "buildType": "apk"
-      },
-      "ios": {
-        "simulator": true
-      }
+    "cli": {
+        "version": ">= 0.60.0"
     },
-    "preview2": {
-      "android": {
-        "gradleCommand": ":app:assembleRelease"
-      }
+    "build": {
+        "preview": {
+            "env": {
+                "ANDROID_SDK_ROOT": "C:\\Users\\PC\\AppData\\Local\\Android\\Sdk"
+            },
+            "android": {
+                "buildType": "apk"
+            },
+            "ios": {
+                "simulator": true
+            }
+        },
+        "preview2": {
+            "android": {
+                "gradleCommand": ":app:assembleRelease"
+            }
+        },
+        "preview3": {
+            "developmentClient": true
+        },
+        "production": {}
     },
-    "preview3": {
-      "developmentClient": true
-    },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
-  }
+    "submit": {
+        "production": {}
+    }
 }

@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/core';
 import {Assets, useHeaderHeight} from '@react-navigation/stack';
 
 import {useTheme} from '../hooks/';
-import {Block, Button, Image, Input, Text,DatePicker,Dropdown} from '../components/';
+import {Block, Button, Image, Input, Text,Picker,Dropdown} from '../components/';
 import {View} from 'react-native';
 import {
   launchCamera,
@@ -25,8 +25,8 @@ const AddExpense = () => {
 	const [category, setCategory] = useState(null);
   const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
-    const categories = useQueryAuth(['categories'], api.getCategories, {}).data;
-    console.log("CATEGORIES----------------",categories);
+    // const categories = useQueryAuth(['categories'], api.getCategories, {}).data;
+    // console.log("CATEGORIES----------------",categories);
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
@@ -86,12 +86,12 @@ const AddExpense = () => {
           Produced date
         </Text>
       
-        <DatePicker />
+        {/* <Picker /> */}
   
         <Text p semibold marginBottom={sizes.s}>
           Category
         </Text>
-        <Dropdown items={categoriesFormatted}></Dropdown>
+        <Dropdown items={[]}></Dropdown>
         <Text p semibold marginBottom={sizes.s}>
           Image
         </Text>

@@ -5,7 +5,7 @@ import {Assets, useHeaderHeight} from '@react-navigation/stack';
 
 import {useTheme} from '../hooks/';
 import {Block, Button, Image, Input, Text} from '../components/';
-import {View} from 'react-native';
+import {Pressable, TouchableOpacity, View} from 'react-native';
 import {
   launchCamera,
   launchImageLibrary,
@@ -15,7 +15,7 @@ import {useMutation} from 'react-query';
 import {api} from '../services/api-service';
 import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import Select from '../components/Select';
 
 const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
   const category = params?.category;
@@ -126,8 +126,8 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
         </Text>
         <View
           style={{
-            borderColor: 'b5b5ba',
-            borderWidth: !image ? 0.5 : 0,
+            borderColor: colors.gray,
+            borderWidth: !image ? 1 : 0,
             borderRadius: 10,
             alignContent: 'center',
             flexDirection: 'row',
@@ -274,6 +274,15 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
           placeholder="Monthly budget"
           marginBottom={sizes.sm}
           keyboardType="numeric"
+        />
+        <Select
+          title={'Category'}
+          data={[
+            {id: '1', name: 'Food'},
+            {id: '2', name: 'Transport'},
+            {id: '3', name: 'Clothes'},
+            {id: '4', name: 'Entertainment'},
+          ]}
         />
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />

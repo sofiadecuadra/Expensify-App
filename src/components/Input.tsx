@@ -29,7 +29,9 @@ const Input = ({
   success,
   info,
   search,
+  select,
   disabled,
+  close,
   label,
   icon,
   marginBottom,
@@ -132,6 +134,7 @@ const Input = ({
             style={{marginLeft: sizes.inputPadding, tintColor: colors.icon}}
           />
         )}
+
         {icon && (
           <Image
             source={assets?.[icon]}
@@ -147,6 +150,18 @@ const Input = ({
           onFocus={(event) => handleFocus(event, true)}
           onBlur={(event) => handleFocus(event, false)}
         />
+        {select && assets.arrow && (
+          <Image
+            source={assets.arrow}
+            style={{marginRight: sizes.inputPadding, tintColor: colors.icon}}
+          />
+        )}
+        {close && assets.close && (
+          <Image
+            source={assets.close}
+            style={{marginRight: sizes.inputPadding, tintColor: colors.icon}}
+          />
+        )}
         {danger && assets.warning && (
           <Image
             source={assets.warning}

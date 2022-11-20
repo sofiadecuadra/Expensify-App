@@ -116,8 +116,6 @@ const Analysis = () => {
     [expensesByMonth],
   );
 
-  console.log(expensesByMonth);
-
   return (
     <Block>
       <Block color="#FAFAFA">

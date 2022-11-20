@@ -2,9 +2,7 @@ import React, { useContext } from 'react';
 
 import {
   Analysis,
-  Components,
   Home,
-  Profile,
   Register,
   CategoryForm,
   ExpenseForm,
@@ -49,26 +47,12 @@ export default () => {
           <Stack.Screen
             name="CategoryForm"
             component={CategoryForm}
-            options={{
-              ...screenOptions.components,
-              headerTitle: () => (
-                <Text p white>
-                  {t('navigation.add_category')}
-                </Text>
-              ),
-            }}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="ExpenseForm"
             component={ExpenseForm}
-            options={{
-              ...screenOptions.components,
-              headerTitle: () => (
-                <Text p white>
-                  {t('navigation.add_expense')}
-                </Text>
-              ),
-            }}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="CategoryDetails"
@@ -88,19 +72,9 @@ export default () => {
             }}
           />
           <Stack.Screen
-            name="Components"
-            component={Components}
-            options={screenOptions.components}
-          />
-          <Stack.Screen
-            name="Articles"
+            name="Analytics"
             component={Analysis}
-            options={{title: t('navigation.articles')}}
-          />
-          <Stack.Screen
-            name="Profile"
-            component={Profile}
-            options={{ headerShown: false }}
+            options={{title: t('navigation.analytics')}}
           />
           <Stack.Screen
             name="Configuration"

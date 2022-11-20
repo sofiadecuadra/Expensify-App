@@ -65,18 +65,28 @@
     "add_expense": "Add expense",
     "categories": "Categories",
     "category_details": "Category details",
+    "analytics": "Analytics",
     "articles": "Articles",
     "rental": "Rental",
     "profile": "Profile",
     "settings": "Settings",
     "register": "Create account",
     "configuration": "Configuration",
-    "extra": "Extra - Automotive"
+    "extra": "Extra - Automotive",
+    "expense_form": {
+      "edit": "Edit expense",
+      "add": "Add expense"
+    },
+    "category_form": {
+      "edit": "Edit category",
+      "add": "Add category"
+    }
   },
   "navigation": {
     "home": "Expensify",
     "components": "Components",
     "categories": "Categories",
+    "analytics": "Analytics",
     "add_category": "Add category",
     "add_expense": "Add expense",
     "category_details": "Category details",

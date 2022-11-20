@@ -3,7 +3,7 @@ import React, { useContext, useLayoutEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { useHeaderHeight } from '@react-navigation/stack';
 
-import { useTheme } from '../hooks/';
+import { useTheme, useTranslation } from '../hooks/';
 import { Block, Button, Image, Input, Text, Modal, Select } from '../components/';
 import { View } from 'react-native';
 import useQueryAuth from '../hooks/useQueryAuth';
@@ -20,12 +20,13 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Calendar } from 'react-native-calendars';
 
 const ExpenseForm = ({ route: { params } }: { route: { params: any } }) => {
+    const { t } = useTranslation();
     const expense = params?.expense;
     const categories = useQueryAuth('categories', api.getCategories, {}).data;
     const { assets, gradients, colors, sizes } = useTheme();
     const [amount, setAmount] = useState(expense ? `${expense.amount}` : '');
     const [openCalendar, setOpenCalendar] = useState(false);
-    const [producedDate, setProducedDate] = useState(expense ? new Date (expense.producedDate) : new Date());
+    const [producedDate, setProducedDate] = useState(expense ? new Date(expense.producedDate) : new Date());
     const [description, setDescription] = useState(expense ? expense.description : '');
     const [categoryId, setCategoryId] = useState(expense ? expense.Category.id : null);
     const [image, setImage] = useState(
@@ -117,8 +118,36 @@ const ExpenseForm = ({ route: { params } }: { route: { params: any } }) => {
             color={colors.card}
             paddingTop={sizes.m}
             paddingHorizontal={sizes.padding}
-            scroll={true}>
+            scroll={true}
+            >
             <Block>
+                <Button
+                    paddingTop={sizes.m}
+                    paddingBottom={sizes.s}
+                    row
+                    flex={0}
+                    justify="flex-start"
+                    onPress={() => {
+                        expense ? navigation.navigate('ExpenseDetails', { expense }) : navigation.navigate('Home')}
+                    }>
+                    <Image
+                        radius={0}
+                        width={10}
+                        height={18}
+                        color={colors.primary}
+                        source={assets.arrow}
+                        transform={[{ rotate: '180deg' }]}
+                    />
+                    <Text p primary marginLeft={sizes.s}>
+                        {t('common.goBack')}
+                    </Text>
+                </Button>
+                <Block align='center'>
+                    <Text h5>
+                        {expense ? t('screens.expense_form.edit') : t('screens.expense_form.add')}
+                    </Text>
+                </Block>
+
                 <Text p semibold marginBottom={sizes.s}>
                     Amount
                 </Text>
@@ -275,14 +304,13 @@ const ExpenseForm = ({ route: { params } }: { route: { params: any } }) => {
                 <Select
                     title="Category"
                     data={selectItems}
-                    selectCategoryId = {setCategoryId}
-                    categoryId = {categoryId}
+                    selectCategoryId={setCategoryId}
+                    categoryId={categoryId}
                 />
                 <Text p semibold marginBottom={sizes.s} marginTop={15}>
                     Produced Date
                 </Text>
                 <Button
-                    light
                     style={{
                         borderWidth: 0.8,
                         borderColor: colors.gray,

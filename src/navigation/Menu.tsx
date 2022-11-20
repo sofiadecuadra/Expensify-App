@@ -16,7 +16,7 @@ import {
 } from '@react-navigation/drawer';
 
 import Screens from './Screens';
-import {Block, Text, Switch, Button, Image, Article} from '../components';
+import {Block, Text, Switch, Button, Image} from '../components';
 import {useData, useTheme, useTranslation} from '../hooks';
 import {AuthContext} from '../context/AuthContext';
 
@@ -75,7 +75,6 @@ const DrawerContent = (
   const {signedIn} = useContext(AuthContext);
   const {navigation} = props;
   const {t} = useTranslation();
-  const {isDark, handleIsDark} = useData();
   const [active, setActive] = useState('Home');
   const {assets, colors, gradients, sizes} = useTheme();
   const labelColor = colors.text;
@@ -88,8 +87,6 @@ const DrawerContent = (
     [navigation, setActive],
   );
 
-  const handleWebLink = useCallback((url) => Linking.openURL(url), []);
-
   // screen list for Drawer menu
   const screens = signedIn
     ? [
@@ -99,13 +96,7 @@ const DrawerContent = (
           to: 'Categories',
           icon: assets.components,
         },
-        {
-          name: t('screens.components'),
-          to: 'Components',
-          icon: assets.components,
-        },
-        {name: t('screens.articles'), to: 'Articles', icon: assets.document},
-        {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
+        {name: t('screens.analytics'), to: 'Analytics', icon: assets.document},
         {
           name: t('screens.configuration'),
           to: 'Configuration',
@@ -174,58 +165,6 @@ const DrawerContent = (
           );
         })}
 
-        <Block
-          flex={0}
-          height={1}
-          marginRight={sizes.md}
-          marginVertical={sizes.sm}
-          gradient={gradients.menu}
-        />
-
-        <Text semibold transform="uppercase" opacity={0.5}>
-          {t('menu.documentation')}
-        </Text>
-
-        <Button
-          row
-          justify="flex-start"
-          marginTop={sizes.sm}
-          marginBottom={sizes.s}
-          onPress={() =>
-            handleWebLink('https://github.com/creativetimofficial')
-          }>
-          <Block
-            flex={0}
-            radius={6}
-            align="center"
-            justify="center"
-            width={sizes.md}
-            height={sizes.md}
-            marginRight={sizes.s}
-            gradient={gradients.white}>
-            <Image
-              radius={0}
-              width={14}
-              height={14}
-              color={colors.black}
-              source={assets.documentation}
-            />
-          </Block>
-          <Text p color={labelColor}>
-            {t('menu.started')}
-          </Text>
-        </Button>
-
-        <Block row justify="space-between" marginTop={sizes.sm}>
-          <Text color={labelColor}>{t('darkMode')}</Text>
-          <Switch
-            checked={isDark}
-            onPress={(checked) => {
-              handleIsDark(checked);
-              Alert.alert(t('pro.title'), t('pro.alert'));
-            }}
-          />
-        </Block>
       </Block>
     </DrawerContentScrollView>
   );

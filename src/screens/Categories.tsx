@@ -15,7 +15,7 @@ const pageSize = 6;
 
 const Categories = ({route: {params}}: {route: {params: any}}) => {
   const [page, setPage] = useState(0);
-  const categoriesCount = useQueryAuth(
+  const categoriesCount = useQueryAuth.useQueryAuth(
     ['categoriesCount'],
     api.getCategoriesCount,
     {},
@@ -23,7 +23,7 @@ const Categories = ({route: {params}}: {route: {params: any}}) => {
   //const pageCount = !categoriesCount ? 0 : Math.ceil(categoriesCount.total / pageSize);
   const {assets, gradients, sizes} = useTheme();
   const {errorMessage, setErrorMessage} = useContext(AlertContext);
-  const categories = useQueryAuth(
+  const categories = useQueryAuth.useQueryAuth(
     ['categories', page, pageSize],
     api.getCategoriesPaginated,
     {},

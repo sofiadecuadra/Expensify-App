@@ -9,7 +9,7 @@ import {ISignIn} from '../screens/SignIn';
 import {Platform} from 'react-native';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.0.180:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.1.3:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
 
@@ -21,10 +21,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse(
-          'http://192.168.0.180:3001/',
-          cookie,
-        );
+        await CookieManager.setFromResponse('http://192.168.1.3:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -43,10 +40,7 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse(
-          'http://192.168.0.180:3001/',
-          cookie,
-        );
+        await CookieManager.setFromResponse('http://192.168.1.3:3001/', cookie);
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -97,8 +91,10 @@ export const api = {
       .get(`/categories/${categoryId}/expenses`)
       .then((response) => response.data);
   },
-  getExpenses: async ({queryKey}: any) => {
-    const [_, fromDate, toDate, page, pageSize] = queryKey;
+  getExpenses: async ({queryKey, pageParam}: any) => {
+    const page = pageParam || 0;
+
+    const [_, fromDate, toDate, pageSize] = queryKey;
     let params = '?';
     params += fromDate ? `startDate=${fromDate.toISOString()}&` : '';
     params += toDate ? `endDate=${toDate.toISOString()}&` : '';
@@ -136,7 +132,6 @@ export const api = {
   },
   modifyExpense: async (data) => {
     const formData = new FormData();
-    console.log(data);
     if (!data.image.alreadyUploaded) {
       formData.append('image', {
         ...data.image,
@@ -180,7 +175,6 @@ export const api = {
   },
   modifyCategory: async (data) => {
     const formData = new FormData();
-    console.log(data);
     if (!data.image.alreadyUploaded) {
       formData.append('image', {
         ...data.image,

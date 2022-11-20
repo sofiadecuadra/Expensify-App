@@ -94,12 +94,12 @@ const Analysis = () => {
   const {sizes} = useTheme();
   const [toDate, setToDate] = useState(getToDate());
   const [fromDate, setFromDate] = useState(getFromDate());
-  const {data: expensesByCategory} = useQueryAuth(
+  const {data: expensesByCategory} = useQueryAuth.useQueryAuth(
     ['categoriesExpenses', fromDate, toDate],
     api.expenseByCategory,
     {},
   );
-  const {data: expensesByMonth} = useQueryAuth(
+  const {data: expensesByMonth} = useQueryAuth.useQueryAuth(
     ['monthExpenses', fromDate, toDate],
     api.expenseByMonth,
     {},

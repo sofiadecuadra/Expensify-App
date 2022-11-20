@@ -54,7 +54,7 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
   const [openDialogBox, setDialogBoxOpen] = useState(false);
   const navigation = useNavigation();
   const {t} = useTranslation();
-  const {data} = useQueryAuth(
+  const {data} = useQueryAuth.useQueryAuth(
     ['categoryExpenses', category.id],
     api.getCategoryExpenses,
     {},

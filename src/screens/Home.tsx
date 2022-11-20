@@ -1,26 +1,38 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, {
+  useEffect,
+  useContext,
+  useState,
+  useReducer,
+  useRef,
+} from 'react';
 
-import { useTheme } from '../hooks/';
-import { Alert } from 'react-native';
+import {useTheme} from '../hooks/';
+import {Alert} from 'react-native';
 
-import { FlatList, View, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
-import { api } from '../services/api-service';
+import {FlatList, View, StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/core';
+import {api} from '../services/api-service';
 
-import { Block, Button, Text, Expense, DateRangePicker, Modal } from '../components/';
+import {
+  Block,
+  Button,
+  Text,
+  Expense,
+  DateRangePicker,
+  Modal,
+} from '../components/';
 import AlertCard from '../components/ErrorCard';
-import { AlertContext } from '../context/AlertContext';
-import useQueryAuth from '../hooks/useQueryAuth';
-import { Icon } from 'react-native-elements';
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import {AlertContext} from '../context/AlertContext';
+import queryAuth from '../hooks/useQueryAuth';
+import {Icon} from 'react-native-elements';
 
 const pageSize = 6;
 
-const Home = ({ route: { params } }: { route: { params: any } }) => {
+const Home = ({route: {params}}: {route: {params: any}}) => {
   useEffect(() => {
     setErrorMessage('');
     if (params?.inviteToken) {
-      navigation.setParams({ inviteToken: undefined });
+      navigation.setParams({inviteToken: undefined});
       Alert.alert(
         'Expensify Invite',
         'Please log out from this account in order to accept this invite.',
@@ -44,34 +56,53 @@ const Home = ({ route: { params } }: { route: { params: any } }) => {
       );
     }
   }, []);
-  const { gradients, colors, sizes } = useTheme();
-  const { errorMessage, setErrorMessage } = useContext(AlertContext);
-  const [fromDate, setFromDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth() + 0, 1));
-  const [toDate, setToDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+  const {gradients, colors, sizes} = useTheme();
+  const {errorMessage, setErrorMessage} = useContext(AlertContext);
+  const [fromDate, setFromDate] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth() + 0, 1),
+  );
+  const [toDate, setToDate] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+  );
 
-  const [page, setPage] = useState(0);
-  const expensesCount = useQueryAuth(['expensesCount', fromDate, toDate], api.getExpensesCount, {}).data;
+  const expensesCount = queryAuth.useQueryAuth(
+    ['expensesCount', fromDate, toDate],
+    api.getExpensesCount,
+    {},
+  ).data;
   //const pageCount = !expensesCount ? 0 : Math.ceil(expensesCount.total / pageSize);
-  const expenses = useQueryAuth(['expenses', fromDate, toDate, page, pageSize], api.getExpenses, {}).data;
+  const {data, fetchNextPage} = queryAuth.useInfiniteQueryAuth(
+    ['expenses', fromDate, toDate, pageSize],
+    api.getExpenses,
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        const pageCount = !expensesCount
+          ? 0
+          : Math.ceil(expensesCount.total / pageSize);
+        if (allPages.length < pageCount) {
+          return allPages.length;
+        }
+        return undefined;
+      },
+    },
+  );
+
+  const expenseData = data?.pages.reduce((acc, val) => acc.concat(val), []);
   const navigation = useNavigation();
   const [openCalendar, setOpenCalendar] = useState(false);
 
   return (
-
     <Block>
-
       <Block
         style={{
           marginTop: 20,
         }}
         align="center">
-
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />
         )}
 
-        <Text center h5 marginHorizontal={sizes.m}
-          paddingBottom={10}>
+        <Text center h5 marginHorizontal={sizes.m} paddingBottom={10}>
           Expenses
         </Text>
         <Button
@@ -79,34 +110,38 @@ const Home = ({ route: { params } }: { route: { params: any } }) => {
           style={{
             borderWidth: 0.8,
             borderColor: colors.gray,
-        }}
+          }}
           height={sizes.xl}
-          onPress={() => setOpenCalendar(true)}
-        >
-          <Text center p marginHorizontal={sizes.m}
-            color="#808080">
+          onPress={() => setOpenCalendar(true)}>
+          <Text center p marginHorizontal={sizes.m} color="#808080">
             {fromDate.toDateString()} - {toDate.toDateString()}
           </Text>
         </Button>
-          <Modal id="Calendar" open={openCalendar} onRequestClose={() => setOpenCalendar(false)}>
+        <Modal
+          id="Calendar"
+          open={openCalendar}
+          onRequestClose={() => setOpenCalendar(false)}>
           <DateRangePicker
             onSuccess={(start, end) => {
               setFromDate(new Date(start + 'T00:00:00'));
               setToDate(new Date(end + 'T00:00:00'));
             }}
-            theme={{ markColor: '#808080', markTextColor: 'white' }} />
+            theme={{markColor: '#808080', markTextColor: 'white'}}
+          />
         </Modal>
         <Block paddingHorizontal={sizes.padding}>
-          <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
+          <Block wrap="wrap" justify="space-between" marginTop={sizes.sm}>
             <FlatList
-              data={expenses}
+              data={expenseData}
               keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
+              onEndReached={() => {
+                fetchNextPage();
+              }}
+              renderItem={({item}) => (
                 <Button
                   onPress={() =>
-                    navigation.navigate('ExpenseDetails', { expense: item })
+                    navigation.navigate('ExpenseDetails', {expense: item})
                   }>
-
                   <Expense item={item} key={`card-${item?.id}`} />
                 </Button>
               )}

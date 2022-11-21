@@ -125,11 +125,7 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
   };
 
   return (
-    <Block
-      color={colors.card}
-      paddingTop={sizes.m}
-      paddingHorizontal={sizes.padding}
-      scroll={true}>
+    <Block color={colors.card} paddingHorizontal={sizes.padding} scroll={true}>
       <Block>
         <Button
           paddingTop={sizes.m}

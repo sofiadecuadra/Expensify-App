@@ -4,6 +4,7 @@ import React, {
   useState,
   useReducer,
   useRef,
+  useLayoutEffect,
 } from 'react';
 
 import {useTheme} from '../hooks/';
@@ -20,11 +21,13 @@ import {
   Expense,
   DateRangePicker,
   Modal,
+  Image,
 } from '../components/';
 import AlertCard from '../components/ErrorCard';
 import {AlertContext} from '../context/AlertContext';
 import queryAuth from '../hooks/useQueryAuth';
 import {Icon} from 'react-native-elements';
+import {useHeaderHeight} from '@react-navigation/stack';
 
 const pageSize = 6;
 
@@ -56,7 +59,25 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
       );
     }
   }, []);
-  const {gradients, colors, sizes} = useTheme();
+
+  const {assets, gradients, colors, sizes} = useTheme();
+  const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackground: () => (
+        <Image
+          radius={0}
+          resizeMode="cover"
+          width={sizes.width}
+          height={headerHeight}
+          source={assets.header}
+        />
+      ),
+    });
+  }, [assets.header, navigation, sizes.width, headerHeight]);
+
   const {errorMessage, setErrorMessage} = useContext(AlertContext);
   const [fromDate, setFromDate] = useState(
     new Date(new Date().getFullYear(), new Date().getMonth() + 0, 1),
@@ -88,7 +109,6 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
   );
 
   const expenseData = data?.pages.reduce((acc, val) => acc.concat(val), []);
-  const navigation = useNavigation();
   const [openCalendar, setOpenCalendar] = useState(false);
 
   return (

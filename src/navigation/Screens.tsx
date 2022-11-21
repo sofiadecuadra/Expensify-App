@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 
 import {
   Analysis,
@@ -11,18 +11,18 @@ import {
   CategoryDetails,
   ExpenseDetails,
 } from '../screens';
-import { useScreenOptions, useTranslation } from '../hooks';
-import { AuthContext } from '../context/AuthContext';
+import {useScreenOptions, useTranslation} from '../hooks';
+import {AuthContext} from '../context/AuthContext';
 
 import Configuration from '../screens/Configuration';
 
 const Stack = createStackNavigator();
-import { createStackNavigator } from '@react-navigation/stack';
-import { Text } from '../components';
+import {createStackNavigator} from '@react-navigation/stack';
+import {Text} from '../components';
 
 export default () => {
-  const { signedIn } = useContext(AuthContext);
-  const { t } = useTranslation();
+  const {signedIn} = useContext(AuthContext);
+  const {t} = useTranslation();
   const screenOptions = useScreenOptions();
 
   return (
@@ -32,32 +32,39 @@ export default () => {
           <Stack.Screen
             name="Home"
             component={Home}
-            options={{ title: t('navigation.home') }}
+            options={{
+              ...screenOptions.components,
+              headerTitle: () => (
+                <Text p white>
+                  {t('navigation.home')}
+                </Text>
+              ),
+            }}
           />
           <Stack.Screen
             name="ExpenseDetails"
             component={ExpenseDetails}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="Register"
             component={Home}
-            options={{ title: t('navigation.home') }}
+            options={{title: t('navigation.home')}}
           />
           <Stack.Screen
             name="CategoryForm"
             component={CategoryForm}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="ExpenseForm"
             component={ExpenseForm}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="CategoryDetails"
             component={CategoryDetails}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="Categories"
@@ -74,7 +81,14 @@ export default () => {
           <Stack.Screen
             name="Analytics"
             component={Analysis}
-            options={{title: t('navigation.analytics')}}
+            options={{
+              ...screenOptions.components,
+              headerTitle: () => (
+                <Text p white>
+                  {t('navigation.analytics')}
+                </Text>
+              ),
+            }}
           />
           <Stack.Screen
             name="Configuration"
@@ -94,12 +108,12 @@ export default () => {
           <Stack.Screen
             name="Register"
             component={Register}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="SignIn"
             component={SignIn}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
         </>
       )}

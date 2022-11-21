@@ -113,23 +113,29 @@ const DrawerContent = (
       renderToHardwareTextureAndroid
       contentContainerStyle={{paddingBottom: sizes.padding}}>
       <Block paddingHorizontal={sizes.padding}>
-        <Block flex={0} row align="center" marginBottom={sizes.l}>
+        <Block
+          flex={1}
+          row
+          gradient={gradients?.light}
+          card
+          align="center"
+          marginBottom={sizes.l}
+          style={{
+            borderRadius: 10,
+            alignItems: 'center',
+            backgroundColor: 'white',
+          }}>
           <Image
             radius={0}
-            width={33}
-            height={33}
+            width={48}
+            height={48}
             color={colors.text}
             source={assets.logo}
-            marginRight={sizes.sm}
+            marginTop={10}
+            marginLeft={30}
           />
-          <Block>
-            <Text size={12} semibold>
-              {t('app.name')}
-            </Text>
-            <Text size={12} semibold>
-              {t('app.native')}
-            </Text>
-          </Block>
+
+          <Text size={16}>{t('app.name')}</Text>
         </Block>
 
         {screens?.map((screen, index) => {
@@ -164,7 +170,6 @@ const DrawerContent = (
             </Button>
           );
         })}
-
       </Block>
     </DrawerContentScrollView>
   );

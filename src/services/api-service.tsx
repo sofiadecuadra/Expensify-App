@@ -73,7 +73,6 @@ export const api = {
   },
   getCategoriesPaginated: async ({queryKey, pageParam}: any) => {
     const page = pageParam || 0;
-    console.log(page);
     const [_, pageSize] = queryKey;
     let params = '?';
     params += page ? `page=${page}&` : 'page=0&';
@@ -107,7 +106,7 @@ export const api = {
       .then((response) => response.data);
   },
   getExpensesCount: async ({queryKey}: any) => {
-    const [_, fromDate, toDate] = queryKey;
+    const [_1, _2, fromDate, toDate] = queryKey;
     let params = '?';
     params += fromDate ? `startDate=${fromDate.toISOString()}&` : '';
     params += toDate ? `endDate=${toDate.toISOString()}` : '';

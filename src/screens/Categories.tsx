@@ -15,7 +15,7 @@ const pageSize = 6;
 
 const Categories = ({route: {params}}: {route: {params: any}}) => {
   const categoriesCount = useQueryAuth.useQueryAuth(
-    ['categoriesCount'],
+    ['categories', 'categoriesCount'],
     api.getCategoriesCount,
     {},
   ).data;

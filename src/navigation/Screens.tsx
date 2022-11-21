@@ -19,9 +19,10 @@ import Configuration from '../screens/Configuration';
 const Stack = createStackNavigator();
 import {createStackNavigator} from '@react-navigation/stack';
 import {Text} from '../components';
+import {StatusBar} from 'expo-status-bar';
 
 export default () => {
-  const {signedIn} = useContext(AuthContext);
+  const {signedIn, isAdmin} = useContext(AuthContext);
   const {t} = useTranslation();
   const screenOptions = useScreenOptions();
 
@@ -51,32 +52,36 @@ export default () => {
             component={Home}
             options={{title: t('navigation.home')}}
           />
-          <Stack.Screen
-            name="CategoryForm"
-            component={CategoryForm}
-            options={{headerShown: false}}
-          />
+          {isAdmin && (
+            <>
+              <Stack.Screen
+                name="CategoryForm"
+                component={CategoryForm}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="Categories"
+                component={Categories}
+                options={{
+                  ...screenOptions.components,
+                  headerTitle: () => (
+                    <Text p white>
+                      {t('navigation.categories')}
+                    </Text>
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="CategoryDetails"
+                component={CategoryDetails}
+                options={{headerShown: false}}
+              />
+            </>
+          )}
           <Stack.Screen
             name="ExpenseForm"
             component={ExpenseForm}
             options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="CategoryDetails"
-            component={CategoryDetails}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Categories"
-            component={Categories}
-            options={{
-              ...screenOptions.components,
-              headerTitle: () => (
-                <Text p white>
-                  {t('navigation.categories')}
-                </Text>
-              ),
-            }}
           />
           <Stack.Screen
             name="Analytics"

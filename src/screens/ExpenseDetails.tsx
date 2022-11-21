@@ -5,11 +5,12 @@ import ImageView from 'react-native-image-viewing';
 import {useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Image, Text, DialogBox, Modal} from '../components/';
 import {Icon} from 'react-native-elements';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import React from 'react';
 import {Pressable, View} from 'react-native';
 import {parseDate} from '../utils/dateParser';
 import {invalidateQueries} from '../../App';
+import {AuthContext} from '../context/AuthContext';
 
 const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
   const {assets, gradients, colors, sizes} = useTheme();
@@ -18,6 +19,7 @@ const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
   const [openImageModal, setOpenImageModal] = useState(false);
   const navigation = useNavigation();
   const {t} = useTranslation();
+  const {isAdmin} = useContext(AuthContext);
 
   const deleteExpense = useMutation(api.deleteExpense, {
     onError: (error: any) => {
@@ -69,14 +71,17 @@ const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
                   {t('home.title')}
                 </Text>
               </Button>
-              <Button
-                round
-                color={colors.white}
-                marginBottom={sizes.base}
-                onPress={() => setDialogBoxOpen(true)}>
-                <Icon name="delete" size={20} color="red" />
-              </Button>
+              {isAdmin && (
+                <Button
+                  round
+                  color={colors.white}
+                  marginBottom={sizes.base}
+                  onPress={() => setDialogBoxOpen(true)}>
+                  <Icon name="delete" size={20} color="red" />
+                </Button>
+              )}
             </Block>
+
             <Block flex={0} align="center">
               <Text h5 center white marginBottom={sizes.sm}>
                 {`${expense?.Category.name}`}
@@ -107,29 +112,31 @@ const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
               <Text p center white marginBottom={sizes.sm}>
                 {`Registered date: ${parseDate(expense?.producedDate)}`}
               </Text>
-              <Block>
-                <Button
-                  gradient={gradients.secondary}
-                  marginBottom={sizes.base}
-                  marginTop={10}
-                  onPress={() => {
-                    navigation.navigate('ExpenseForm', {expense: expense});
-                  }}>
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      paddingHorizontal: 30,
+              {isAdmin && (
+                <Block>
+                  <Button
+                    gradient={gradients.secondary}
+                    marginBottom={sizes.base}
+                    marginTop={10}
+                    onPress={() => {
+                      navigation.navigate('ExpenseForm', {expense: expense});
                     }}>
-                    <Icon name="edit" size={20} color="white" />
-                    <Text marginLeft={3} white bold transform="uppercase">
-                      Edit
-                    </Text>
-                  </View>
-                </Button>
-              </Block>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingHorizontal: 30,
+                      }}>
+                      <Icon name="edit" size={20} color="white" />
+                      <Text marginLeft={3} white bold transform="uppercase">
+                        Edit
+                      </Text>
+                    </View>
+                  </Button>
+                </Block>
+              )}
               <ImageView
                 images={[{uri: expense.image}]}
                 imageIndex={0}

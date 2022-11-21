@@ -19,6 +19,7 @@ import Screens from './Screens';
 import {Block, Text, Switch, Button, Image} from '../components';
 import {useData, useTheme, useTranslation} from '../hooks';
 import {AuthContext} from '../context/AuthContext';
+import {StatusBar} from 'expo-status-bar';
 
 const Drawer = createDrawerNavigator();
 
@@ -62,7 +63,7 @@ const ScreensStack = () => {
           borderWidth: isDrawerOpen ? 1 : 0,
         },
       ])}>
-      {/*  */}
+      <StatusBar style={statusBarColor} />
       <Screens />
     </Animated.View>
   );
@@ -72,7 +73,7 @@ const ScreensStack = () => {
 const DrawerContent = (
   props: DrawerContentComponentProps<DrawerContentOptions>,
 ) => {
-  const {signedIn} = useContext(AuthContext);
+  const {signedIn, isAdmin} = useContext(AuthContext);
   const {navigation} = props;
   const {t} = useTranslation();
   const [active, setActive] = useState('Home');
@@ -91,17 +92,22 @@ const DrawerContent = (
   const screens = signedIn
     ? [
         {name: t('screens.home'), to: 'Home', icon: assets.home},
-        {
-          name: t('screens.categories'),
-          to: 'Categories',
-          icon: assets.components,
-        },
+
         {name: t('screens.analytics'), to: 'Analytics', icon: assets.document},
         {
           name: t('screens.configuration'),
           to: 'Configuration',
           icon: assets.settings,
         },
+        ...(isAdmin
+          ? [
+              {
+                name: t('screens.categories'),
+                to: 'Categories',
+                icon: assets.components,
+              },
+            ]
+          : []),
       ]
     : [{name: t('screens.register'), to: 'Register', icon: assets.register}];
 

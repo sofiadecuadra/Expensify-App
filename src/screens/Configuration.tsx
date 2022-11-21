@@ -1,23 +1,22 @@
-import React, { useContext, useLayoutEffect, useState } from 'react';
-import { Share, View } from 'react-native';
+import React, {useContext, useLayoutEffect, useState} from 'react';
+import {Share, View} from 'react-native';
 
-import { useNavigation } from '@react-navigation/core';
-import { useHeaderHeight } from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/core';
+import {useHeaderHeight} from '@react-navigation/stack';
 
-import { useTheme } from '../hooks/';
-import { Block, Button, Image, Text } from '../components/';
-import { useMutation } from 'react-query';
-import { api } from '../services/api-service';
-import { AuthContext } from '../context/AuthContext';
-import RadioButtonGroup, { RadioButtonItem } from 'expo-radio-button';
-import { AlertContext } from '../context/AlertContext';
+import {useTheme} from '../hooks/';
+import {Block, Button, Image, Text} from '../components/';
+import {useMutation} from 'react-query';
+import {api} from '../services/api-service';
+import {AuthContext} from '../context/AuthContext';
+import RadioButtonGroup, {RadioButtonItem} from 'expo-radio-button';
+import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
 
-// buttons example
 const Buttons = () => {
-  const { gradients, sizes } = useTheme();
+  const {gradients, sizes} = useTheme();
   const [role, setRole] = useState('Member');
-  const { setSuccessMessage, setErrorMessage } = useContext(AlertContext);
+  const {setSuccessMessage, setErrorMessage} = useContext(AlertContext);
 
   const mutation = useMutation(api.createInvite, {
     onError: (error: any) => {
@@ -33,7 +32,7 @@ const Buttons = () => {
 
   const onShare = async (data: any) => {
     try {
-      const { inviteToken } = data;
+      const {inviteToken} = data;
       const url = 'https://ortisp.github.io/Expensify-Invitations/?';
       const inviteLink = url + inviteToken;
       const result = await Share.share({
@@ -55,7 +54,7 @@ const Buttons = () => {
 
   return (
     <Block paddingBottom={10} card>
-      <Block align='center' paddingBottom={10} >
+      <Block align="center" paddingBottom={10}>
         <Text h5 semibold marginBottom={sizes.s}>
           Invites
         </Text>
@@ -64,11 +63,10 @@ const Buttons = () => {
           Select the role of the invitees
         </Text>
         <RadioButtonGroup
-          containerStyle={{ marginBottom: 10 }}
+          containerStyle={{marginBottom: 10}}
           selected={role}
           onSelected={(value: string) => setRole(value)}
-          radioBackground="grey"
-        >
+          radioBackground="grey">
           <RadioButtonItem value="Member" label="Member" />
           <RadioButtonItem value="Administrator" label="Administrator" />
         </RadioButtonGroup>
@@ -78,7 +76,7 @@ const Buttons = () => {
           flex={1}
           gradient={gradients.primary}
           marginBottom={sizes.base}
-          onPress={() => mutation.mutate({ userType: role })}>
+          onPress={() => mutation.mutate({userType: role})}>
           <Text white bold transform="uppercase">
             create invite
           </Text>
@@ -89,12 +87,12 @@ const Buttons = () => {
 };
 
 const Configuration = () => {
-  const { assets, sizes, gradients } = useTheme();
+  const {assets, sizes, gradients} = useTheme();
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const logout = useMutation(api.adminLogout);
-  const { signOut } = useContext(AuthContext);
-  const { errorMessage, successMessage } = useContext(AlertContext);
+  const {signOut, isAdmin} = useContext(AuthContext);
+  const {errorMessage, successMessage} = useContext(AlertContext);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -118,10 +116,8 @@ const Configuration = () => {
         showsVerticalScrollIndicator={false}
         flex={1}
         width="100%"
-        contentContainerStyle={{ paddingVertical: sizes.padding }}>
-        <Block>
-          <Buttons />
-        </Block>
+        contentContainerStyle={{paddingVertical: sizes.padding}}>
+        <Block>{isAdmin && <Buttons />}</Block>
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />
         )}

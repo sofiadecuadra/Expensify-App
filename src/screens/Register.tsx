@@ -10,6 +10,7 @@ import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text} from '../components/';
 import AlertCard from '../components/ErrorCard';
 import {AlertContext} from '../context/AlertContext';
+import {StatusBar} from 'expo-status-bar';
 
 const isAndroid = Platform.OS === 'android';
 export interface IRegistration {
@@ -98,141 +99,146 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
   };
 
   return (
-    <Block safe marginTop={sizes.md}>
-      {errorMessage !== '' && (
-        <AlertCard errorMessage={errorMessage} isSuccess={false} />
-      )}
-      <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{zIndex: 0}}>
-          <Image
-            background
-            resizeMode="cover"
-            padding={sizes.sm}
-            radius={sizes.cardRadius}
-            source={assets.background}
-            height={sizes.height * 0.3}>
-            <Button
-              row
-              flex={0}
-              justify="flex-end"
-              onPress={() => navigation.navigate('SignIn')}>
-              <Image
-                radius={0}
-                width={10}
-                height={18}
-                color={colors.white}
-                source={assets.arrow}
-              />
-              <Text p white marginLeft={sizes.s}>
-                {t('common.signin')}
+    <>
+      <StatusBar style="dark" />
+      <Block safe marginTop={sizes.md}>
+        {errorMessage !== '' && (
+          <AlertCard errorMessage={errorMessage} isSuccess={false} />
+        )}
+        <Block paddingHorizontal={sizes.s}>
+          <Block flex={0} style={{zIndex: 0}}>
+            <Image
+              background
+              resizeMode="cover"
+              padding={sizes.sm}
+              radius={sizes.cardRadius}
+              source={assets.background}
+              height={sizes.height * 0.3}>
+              <Button
+                row
+                flex={0}
+                justify="flex-end"
+                onPress={() => navigation.navigate('SignIn')}>
+                <Image
+                  radius={0}
+                  width={10}
+                  height={18}
+                  color={colors.white}
+                  source={assets.arrow}
+                />
+                <Text p white marginLeft={sizes.s}>
+                  {t('common.signin')}
+                </Text>
+              </Button>
+
+              <Text h4 center white marginBottom={sizes.md}>
+                {t('register.title')}
               </Text>
-            </Button>
+            </Image>
+          </Block>
 
-            <Text h4 center white marginBottom={sizes.md}>
-              {t('register.title')}
-            </Text>
-          </Image>
-        </Block>
-
-        {/* register form */}
-        <Block
-          keyboard
-          behavior={!isAndroid ? 'padding' : 'height'}
-          marginTop={-(sizes.height * 0.2 - sizes.l)}>
+          {/* register form */}
           <Block
-            flex={0}
-            radius={sizes.sm}
-            marginHorizontal="8%"
-            shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
-          >
+            keyboard
+            behavior={!isAndroid ? 'padding' : 'height'}
+            marginTop={-(sizes.height * 0.2 - sizes.l)}>
             <Block
-              blur
               flex={0}
-              intensity={90}
               radius={sizes.sm}
-              overflow="hidden"
-              justify="space-evenly"
-              tint={colors.blurTint}
-              paddingVertical={sizes.sm}>
-              {familyId === -1 ? (
-                <Text p semibold center>
-                  {t('register.subtitle')}
-                </Text>
-              ) : (
-                <Text p semibold center>
-                  {'Register to ' +
-                    registrationData.familyName +
-                    " family with role '" +
-                    (role == 0 ? 'Member' : 'Administrator') +
-                    "'"}
-                </Text>
-              )}
+              marginHorizontal="8%"
+              shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
+            >
+              <Block
+                blur
+                flex={0}
+                intensity={90}
+                radius={sizes.sm}
+                overflow="hidden"
+                justify="space-evenly"
+                tint={colors.blurTint}
+                paddingVertical={sizes.sm}>
+                {familyId === -1 ? (
+                  <Text p semibold center>
+                    {t('register.subtitle')}
+                  </Text>
+                ) : (
+                  <Text p semibold center>
+                    {'Register to ' +
+                      registrationData.familyName +
+                      " family with role '" +
+                      (role == 0 ? 'Member' : 'Administrator') +
+                      "'"}
+                  </Text>
+                )}
 
-              {/* form inputs */}
-              <Block paddingHorizontal={sizes.sm} paddingTop={sizes.sm}>
-                {familyId === -1 && (
+                {/* form inputs */}
+                <Block paddingHorizontal={sizes.sm} paddingTop={sizes.sm}>
+                  {familyId === -1 && (
+                    <Input
+                      autoCapitalize="none"
+                      marginBottom={sizes.m}
+                      label={t('common.familyName')}
+                      placeholder={t('common.familyNamePlaceholder')}
+                      success={Boolean(
+                        registrationData.familyName && isValid.familyName,
+                      )}
+                      danger={Boolean(
+                        registrationData.familyName && !isValid.familyName,
+                      )}
+                      onChangeText={(value) =>
+                        handleChange({familyName: value})
+                      }
+                    />
+                  )}
                   <Input
                     autoCapitalize="none"
                     marginBottom={sizes.m}
-                    label={t('common.familyName')}
-                    placeholder={t('common.familyNamePlaceholder')}
+                    label={t('common.name')}
+                    placeholder={t('common.namePlaceholder')}
+                    success={Boolean(registrationData.name && isValid.name)}
+                    danger={Boolean(registrationData.name && !isValid.name)}
+                    onChangeText={(value) => handleChange({name: value})}
+                  />
+                  <Input
+                    autoCapitalize="none"
+                    marginBottom={sizes.m}
+                    label={t('common.email')}
+                    keyboardType="email-address"
+                    placeholder={t('common.emailPlaceholder')}
+                    success={Boolean(registrationData.email && isValid.email)}
+                    danger={Boolean(registrationData.email && !isValid.email)}
+                    onChangeText={(value) => handleChange({email: value})}
+                  />
+                  <Input
+                    secureTextEntry
+                    autoCapitalize="none"
+                    marginBottom={sizes.m}
+                    label={t('common.password')}
+                    placeholder={t('common.passwordPlaceholder')}
+                    onChangeText={(value) => handleChange({password: value})}
                     success={Boolean(
-                      registrationData.familyName && isValid.familyName,
+                      registrationData.password && isValid.password,
                     )}
                     danger={Boolean(
-                      registrationData.familyName && !isValid.familyName,
+                      registrationData.password && !isValid.password,
                     )}
-                    onChangeText={(value) => handleChange({familyName: value})}
                   />
-                )}
-                <Input
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.name')}
-                  placeholder={t('common.namePlaceholder')}
-                  success={Boolean(registrationData.name && isValid.name)}
-                  danger={Boolean(registrationData.name && !isValid.name)}
-                  onChangeText={(value) => handleChange({name: value})}
-                />
-                <Input
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.email')}
-                  keyboardType="email-address"
-                  placeholder={t('common.emailPlaceholder')}
-                  success={Boolean(registrationData.email && isValid.email)}
-                  danger={Boolean(registrationData.email && !isValid.email)}
-                  onChangeText={(value) => handleChange({email: value})}
-                />
-                <Input
-                  secureTextEntry
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.password')}
-                  placeholder={t('common.passwordPlaceholder')}
-                  onChangeText={(value) => handleChange({password: value})}
-                  success={Boolean(
-                    registrationData.password && isValid.password,
-                  )}
-                  danger={Boolean(
-                    registrationData.password && !isValid.password,
-                  )}
-                />
+                </Block>
+                <Button
+                  onPress={handleSignUp}
+                  marginVertical={sizes.s}
+                  marginHorizontal={sizes.sm}
+                  gradient={gradients.primary}>
+                  <Text bold white transform="uppercase">
+                    {t('common.signup')}
+                  </Text>
+                </Button>
               </Block>
-              <Button
-                onPress={handleSignUp}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                gradient={gradients.primary}>
-                <Text bold white transform="uppercase">
-                  {t('common.signup')}
-                </Text>
-              </Button>
             </Block>
           </Block>
         </Block>
       </Block>
-    </Block>
+    </>
   );
 };
 

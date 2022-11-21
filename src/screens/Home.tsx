@@ -28,6 +28,8 @@ import {AlertContext} from '../context/AlertContext';
 import queryAuth from '../hooks/useQueryAuth';
 import {Icon} from 'react-native-elements';
 import {useHeaderHeight} from '@react-navigation/stack';
+import {StatusBar} from 'expo-status-bar';
+import {useIsDrawerOpen} from '@react-navigation/drawer';
 
 const pageSize = 6;
 
@@ -112,77 +114,79 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
   const [openCalendar, setOpenCalendar] = useState(false);
 
   return (
-    <Block>
-      <Block
-        style={{
-          marginTop: 20,
-        }}
-        align="center">
-        {errorMessage !== '' && (
-          <AlertCard errorMessage={errorMessage} isSuccess={false} />
-        )}
-
-        <Text center h5 marginHorizontal={sizes.m} paddingBottom={10}>
-          Expenses
-        </Text>
-        <Button
-          light
+    <>
+      <Block>
+        <Block
           style={{
-            borderWidth: 0.8,
-            borderColor: colors.gray,
+            marginTop: 20,
           }}
-          height={sizes.xl}
-          onPress={() => setOpenCalendar(true)}>
-          <Text center p marginHorizontal={sizes.m} color="#808080">
-            {fromDate.toDateString()} - {toDate.toDateString()}
+          align="center">
+          {errorMessage !== '' && (
+            <AlertCard errorMessage={errorMessage} isSuccess={false} />
+          )}
+
+          <Text center h5 marginHorizontal={sizes.m} paddingBottom={10}>
+            Expenses
           </Text>
-        </Button>
-        <Modal
-          id="Calendar"
-          open={openCalendar}
-          onRequestClose={() => setOpenCalendar(false)}>
-          <DateRangePicker
-            onSuccess={(start, end) => {
-              setFromDate(new Date(start + 'T00:00:00'));
-              setToDate(new Date(end + 'T00:00:00'));
+          <Button
+            light
+            style={{
+              borderWidth: 0.8,
+              borderColor: colors.gray,
             }}
-            theme={{markColor: '#808080', markTextColor: 'white'}}
-          />
-        </Modal>
-        <Block paddingHorizontal={sizes.padding}>
-          <Block wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-            <FlatList
-              data={expenseData}
-              keyExtractor={(item) => item.id.toString()}
-              onEndReached={() => {
-                fetchNextPage();
+            height={sizes.xl}
+            onPress={() => setOpenCalendar(true)}>
+            <Text center p marginHorizontal={sizes.m} color="#808080">
+              {fromDate.toDateString()} - {toDate.toDateString()}
+            </Text>
+          </Button>
+          <Modal
+            id="Calendar"
+            open={openCalendar}
+            onRequestClose={() => setOpenCalendar(false)}>
+            <DateRangePicker
+              onSuccess={(start, end) => {
+                setFromDate(new Date(start + 'T00:00:00'));
+                setToDate(new Date(end + 'T00:00:00'));
               }}
-              renderItem={({item}) => (
-                <Button
-                  onPress={() =>
-                    navigation.navigate('ExpenseDetails', {expense: item})
-                  }>
-                  <Expense item={item} key={`card-${item?.id}`} />
-                </Button>
-              )}
+              theme={{markColor: '#808080', markTextColor: 'white'}}
             />
+          </Modal>
+          <Block paddingHorizontal={sizes.padding}>
+            <Block wrap="wrap" justify="space-between" marginTop={sizes.sm}>
+              <FlatList
+                data={expenseData}
+                keyExtractor={(item) => item.id.toString()}
+                onEndReached={() => {
+                  fetchNextPage();
+                }}
+                renderItem={({item}) => (
+                  <Button
+                    onPress={() =>
+                      navigation.navigate('ExpenseDetails', {expense: item})
+                    }>
+                    <Expense item={item} key={`card-${item?.id}`} />
+                  </Button>
+                )}
+              />
+            </Block>
           </Block>
         </Block>
+        <Block
+          marginRight={5}
+          bottom={sizes.m}
+          position="absolute"
+          right={sizes.m}>
+          <Button
+            round
+            gradient={gradients.primary}
+            marginBottom={sizes.base}
+            onPress={() => navigation.navigate('ExpenseForm')}>
+            <Icon name="add" size={20} color="white" />
+          </Button>
+        </Block>
       </Block>
-      <Block
-        marginRight={5}
-        bottom={sizes.m}
-        position="absolute"
-        right={sizes.m}>
-        <Button
-          round
-          gradient={gradients.primary}
-          marginBottom={sizes.base}
-          onPress={() => navigation.navigate('ExpenseForm')}>
-          <Icon name="add" size={20} color="white" />
-        </Button>
-      </Block>
-    </Block>
+    </>
   );
 };
 

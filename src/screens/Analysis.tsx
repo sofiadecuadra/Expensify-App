@@ -1,13 +1,17 @@
-import React, { useMemo, useState, useLayoutEffect } from 'react';
-import { Block, Text, Modal, DateRangePicker, Button, Image } from '../components';
-import {useNavigation} from '@react-navigation/core';
+import React, {useMemo, useState, useLayoutEffect} from 'react';
 import {
-  BarChart,
-  PieChart,
-} from 'react-native-chart-kit';
-import { useWindowDimensions } from 'react-native';
-import { useQueryAuth, useTheme } from '../hooks';
-import { api } from '../services/api-service';
+  Block,
+  Text,
+  Modal,
+  DateRangePicker,
+  Button,
+  Image,
+} from '../components';
+import {useNavigation} from '@react-navigation/core';
+import {BarChart, PieChart} from 'react-native-chart-kit';
+import {useWindowDimensions} from 'react-native';
+import {useQueryAuth, useTheme} from '../hooks';
+import {api} from '../services/api-service';
 import {useHeaderHeight} from '@react-navigation/stack';
 
 const availableColors = [
@@ -77,10 +81,12 @@ const getMonth = (number) => {
 
 const parseChartMonthData = (data) => {
   if (!data) return [];
-  let result = { labels: [], datasets: [] };
+  let result = {labels: [], datasets: []};
+  let weekCount = 0;
   for (let item of data) {
+    weekCount++;
     if (item.month) result.labels.push(getMonth(item.month));
-    else result.labels.push(item.week);
+    else result.labels.push('Week ' + weekCount);
     result.datasets.push({
       data: [Number.parseInt(item.amount)],
     });
@@ -88,23 +94,26 @@ const parseChartMonthData = (data) => {
   return result;
 };
 
-
 const Analysis = () => {
-  const { sizes, colors, assets } = useTheme();
-  const [toDate, setToDate] = useState(getToDate());
-  const [fromDate, setFromDate] = useState(getFromDate());
+  const {sizes, colors, assets} = useTheme();
+  const [fromDate, setFromDate] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth() + 0, 1),
+  );
+  const [toDate, setToDate] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+  );
   const [openCalendar, setOpenCalendar] = useState(false);
-  const { data: expensesByCategory } = useQueryAuth.useQueryAuth(
+  const {data: expensesByCategory} = useQueryAuth.useQueryAuth(
     ['categoriesExpenses', fromDate, toDate],
     api.expenseByCategory,
     {},
   );
-  const { data: expensesByMonth } = useQueryAuth.useQueryAuth(
+  const {data: expensesByMonth} = useQueryAuth.useQueryAuth(
     ['monthExpenses', fromDate, toDate],
     api.expenseByMonth,
     {},
   );
-  const { width } = useWindowDimensions();
+  const {width} = useWindowDimensions();
 
   const parsedChartCategoryData = useMemo(
     () => parseChartCategoryData(expensesByCategory),
@@ -132,11 +141,14 @@ const Analysis = () => {
       ),
     });
   }, [assets.header, navigation, sizes.width, headerHeight]);
-  
 
   return (
     <Block>
-      <Block flex={0} row center style={{
+      <Block
+        flex={0}
+        row
+        center
+        style={{
           marginTop: 20,
           marginBottom: 20,
         }}>
@@ -152,7 +164,7 @@ const Analysis = () => {
             {fromDate.toDateString()} - {toDate.toDateString()}
           </Text>
         </Button>
-        </Block>
+      </Block>
       <Modal
         id="Calendar"
         open={openCalendar}
@@ -162,18 +174,14 @@ const Analysis = () => {
             setFromDate(new Date(start + 'T00:00:00'));
             setToDate(new Date(end + 'T00:00:00'));
           }}
-          theme={{ markColor: '#808080', markTextColor: 'white' }}
+          theme={{markColor: '#808080', markTextColor: 'white'}}
         />
       </Modal>
       <Text center h5 marginHorizontal={sizes.m} paddingBottom={10}>
         Expenses distribution by category
       </Text>
       {parsedChartCategoryData.length > 0 ? (
-        <Block
-          card
-          flex={0}
-          marginBottom={sizes.sm}
-          marginHorizontal={10}>
+        <Block card flex={0} marginBottom={sizes.sm} marginHorizontal={10}>
           <PieChart
             data={parsedChartCategoryData}
             width={width - 20}
@@ -211,7 +219,6 @@ const Analysis = () => {
       ) : (
         <Text center>No data to display on the current period.</Text>
       )}
-
     </Block>
   );
 };

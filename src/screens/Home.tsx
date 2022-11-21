@@ -70,7 +70,7 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
     api.getExpensesCount,
     {},
   ).data;
-  //const pageCount = !expensesCount ? 0 : Math.ceil(expensesCount.total / pageSize);
+
   const {data, fetchNextPage} = queryAuth.useInfiniteQueryAuth(
     ['expenses', fromDate, toDate, pageSize],
     api.getExpenses,

@@ -71,13 +71,15 @@ export const api = {
       return response.data;
     });
   },
-  getCategoriesPaginated: async ({queryKey}: any) => {
-    const [_, page, pageSize] = queryKey;
+  getCategoriesPaginated: async ({queryKey, pageParam}: any) => {
+    const page = pageParam || 0;
+    console.log(page);
+    const [_, pageSize] = queryKey;
     let params = '?';
     params += page ? `page=${page}&` : 'page=0&';
     params += pageSize ? `pageSize=${pageSize}` : 'pageSize=6';
     return await axiosInstance
-      .get('/categories')
+      .get('/categories' + params)
       .then((response) => response.data);
   },
   getCategoriesCount: async () => {

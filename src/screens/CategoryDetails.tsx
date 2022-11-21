@@ -62,8 +62,6 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
 
   const parsedChartMonthData = useMemo(() => parseChartMonthData(data), [data]);
 
-  console.log(parsedChartMonthData);
-
   const deleteCategory = useMutation(api.deleteCategory, {
     onError: (error: any) => {
       console.log(error);

@@ -14,20 +14,32 @@ import {Icon} from 'react-native-elements';
 const pageSize = 6;
 
 const Categories = ({route: {params}}: {route: {params: any}}) => {
-  const [page, setPage] = useState(0);
   const categoriesCount = useQueryAuth.useQueryAuth(
     ['categoriesCount'],
     api.getCategoriesCount,
     {},
   ).data;
-  //const pageCount = !categoriesCount ? 0 : Math.ceil(categoriesCount.total / pageSize);
+
   const {assets, gradients, sizes} = useTheme();
   const {errorMessage, setErrorMessage} = useContext(AlertContext);
-  const categories = useQueryAuth.useQueryAuth(
-    ['categories', page, pageSize],
+  const {data, fetchNextPage} = useQueryAuth.useInfiniteQueryAuth(
+    ['categories', pageSize],
     api.getCategoriesPaginated,
-    {},
-  ).data;
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        const pageCount = !categoriesCount
+          ? 0
+          : Math.ceil(categoriesCount.total / pageSize);
+        if (allPages.length < pageCount) {
+          return allPages.length;
+        }
+        return undefined;
+      },
+    },
+  );
+
+  const categoriesData = data?.pages.reduce((acc, val) => acc.concat(val), []);
+
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
@@ -64,10 +76,13 @@ const Categories = ({route: {params}}: {route: {params: any}}) => {
 
         {/* products list */}
         <Block paddingHorizontal={sizes.padding}>
-          <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
+          <Block wrap="wrap" justify="space-between" marginTop={sizes.sm}>
             <FlatList
-              data={categories}
+              data={categoriesData}
               keyExtractor={(item) => item.id.toString()}
+              onEndReached={() => {
+                fetchNextPage();
+              }}
               renderItem={({item}) => (
                 <Button
                   onPress={() =>

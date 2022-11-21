@@ -9,6 +9,7 @@ import {useMemo, useState} from 'react';
 import React from 'react';
 import {View} from 'react-native';
 import {BarChart} from 'react-native-chart-kit';
+import {invalidateQueries} from '../../App';
 
 const getMonth = (number) => {
   const months = [
@@ -67,7 +68,7 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
       console.log(error);
     },
     onSuccess: () => {
-      // TODO: invalidateQueries(['categories']);
+      invalidateQueries(['categories']);
       navigation.navigate('Categories');
     },
   });

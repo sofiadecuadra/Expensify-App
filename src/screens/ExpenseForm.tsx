@@ -18,6 +18,7 @@ import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Calendar} from 'react-native-calendars';
+import {invalidateQueries} from '../../App';
 
 const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
   const {t} = useTranslation();
@@ -75,7 +76,7 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
       setErrorMessage(error.response.data.message);
     },
     onSuccess: () => {
-      // TODO: invalidateQueries(['categories']);
+      invalidateQueries(['expenses']);
       setErrorMessage('');
       navigation.navigate('Home');
     },
@@ -86,6 +87,7 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
       setErrorMessage(error.response.data.message);
     },
     onSuccess: (data) => {
+      invalidateQueries(['expenses']);
       setErrorMessage('');
       navigation.navigate('Home');
     },

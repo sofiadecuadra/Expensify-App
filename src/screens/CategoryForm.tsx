@@ -1,25 +1,26 @@
-import React, { useContext, useLayoutEffect, useState } from 'react';
+import React, {useContext, useLayoutEffect, useState} from 'react';
 
-import { useNavigation } from '@react-navigation/core';
-import { useHeaderHeight } from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/core';
+import {useHeaderHeight} from '@react-navigation/stack';
 
-import { useTheme, useTranslation } from '../hooks/';
-import { Block, Button, Image, Input, Text } from '../components/';
-import { TouchableOpacity, View } from 'react-native';
+import {useTheme, useTranslation} from '../hooks/';
+import {Block, Button, Image, Input, Text} from '../components/';
+import {TouchableOpacity, View} from 'react-native';
 import {
   launchCamera,
   launchImageLibrary,
   MediaType,
 } from 'react-native-image-picker';
-import { useMutation } from 'react-query';
-import { api } from '../services/api-service';
-import { AlertContext } from '../context/AlertContext';
+import {useMutation} from 'react-query';
+import {api} from '../services/api-service';
+import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
+import {invalidateQueries} from '../../App';
 
-const CategoryForm = ({ route: { params } }: { route: { params: any } }) => {
-  const { t } = useTranslation();
+const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
+  const {t} = useTranslation();
   const category = params?.category;
-  const { assets, gradients, colors, sizes } = useTheme();
+  const {assets, gradients, colors, sizes} = useTheme();
   const [name, setName] = useState(category ? category.name : '');
   const [monthlyBudget, setMonthlyBudget] = useState(
     category ? `${category.monthlyBudget}` : '',
@@ -31,10 +32,10 @@ const CategoryForm = ({ route: { params } }: { route: { params: any } }) => {
     category
       ? category.image.uri
         ? category.image
-        : { uri: category.image, alreadyUploaded: true }
+        : {uri: category.image, alreadyUploaded: true}
       : '',
   );
-  const { errorMessage, successMessage, setSuccessMessage, setErrorMessage } =
+  const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
 
   const navigation = useNavigation();
@@ -60,6 +61,7 @@ const CategoryForm = ({ route: { params } }: { route: { params: any } }) => {
       setErrorMessage(error.response.data.message);
     },
     onSuccess: () => {
+      invalidateQueries(['categories']);
       setErrorMessage('');
       setSuccessMessage('Category created successfully! ');
     },
@@ -71,6 +73,7 @@ const CategoryForm = ({ route: { params } }: { route: { params: any } }) => {
       setErrorMessage(error.response.data.message);
     },
     onSuccess: (data) => {
+      invalidateQueries(['categories']);
       setErrorMessage('');
       setSuccessMessage('Category updated successfully! ');
     },
@@ -119,23 +122,27 @@ const CategoryForm = ({ route: { params } }: { route: { params: any } }) => {
           flex={0}
           justify="flex-start"
           onPress={() => {
-            category ? navigation.navigate('CategoryDetails', { category }) : navigation.navigate('Categories')}
-        }>
+            category
+              ? navigation.navigate('CategoryDetails', {category})
+              : navigation.navigate('Categories');
+          }}>
           <Image
             radius={0}
             width={10}
             height={18}
             color={colors.primary}
             source={assets.arrow}
-            transform={[{ rotate: '180deg' }]}
+            transform={[{rotate: '180deg'}]}
           />
           <Text p primary marginLeft={sizes.s}>
             {t('common.goBack')}
           </Text>
         </Button>
-        <Block align='center'>
+        <Block align="center">
           <Text h5>
-            {category ? t('screens.category_form.edit') : t('screens.category_form.add')}
+            {category
+              ? t('screens.category_form.edit')
+              : t('screens.category_form.add')}
           </Text>
         </Block>
         <Text p semibold marginBottom={sizes.s}>
@@ -164,7 +171,7 @@ const CategoryForm = ({ route: { params } }: { route: { params: any } }) => {
           }}>
           {!image ? (
             <>
-              <View style={{ flex: 1 }}>
+              <View style={{flex: 1}}>
                 <Button
                   onPress={async () => {
                     const type: MediaType = 'photo';
@@ -200,11 +207,11 @@ const CategoryForm = ({ route: { params } }: { route: { params: any } }) => {
                     </Block>
                   </Block>
                 </Button>
-                <Text style={{ marginTop: 15, alignSelf: 'center' }} size={11}>
+                <Text style={{marginTop: 15, alignSelf: 'center'}} size={11}>
                   {'Upload image from gallery'}
                 </Text>
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={{flex: 1}}>
                 <Button
                   onPress={async () => {
                     const type: MediaType = 'photo';
@@ -240,7 +247,7 @@ const CategoryForm = ({ route: { params } }: { route: { params: any } }) => {
                     </Block>
                   </Block>
                 </Button>
-                <Text style={{ marginTop: 15, alignSelf: 'center' }} size={11}>
+                <Text style={{marginTop: 15, alignSelf: 'center'}} size={11}>
                   {'Open camera'}
                 </Text>
               </View>

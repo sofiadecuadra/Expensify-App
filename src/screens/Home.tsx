@@ -66,7 +66,7 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
   );
 
   const expensesCount = queryAuth.useQueryAuth(
-    ['expensesCount', fromDate, toDate],
+    ['expenses', 'expensesCount', fromDate, toDate],
     api.getExpensesCount,
     {},
   ).data;

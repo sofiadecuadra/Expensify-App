@@ -123,29 +123,47 @@ const Analysis = () => {
           Expense distribution by category
         </Text>
         {parsedChartCategoryData.length > 0 ? (
-          <PieChart
-            data={parsedChartCategoryData}
-            width={width}
-            height={220}
-            chartConfig={chartConfig}
-            accessor={'total'}
-            backgroundColor={'transparent'}
-          />
-        ) : null}
+          <Block
+            card
+            flex={0}
+            row={true}
+            marginBottom={sizes.sm}
+            marginHorizontal={10}>
+            <PieChart
+              data={parsedChartCategoryData}
+              width={width - 20}
+              height={220}
+              chartConfig={chartConfig}
+              accessor={'total'}
+              backgroundColor={'transparent'}
+            />
+          </Block>
+        ) : (
+          <Text>No data to display on the current period.</Text>
+        )}
         <Text h5 semibold marginVertical={sizes.s} center>
-          Expense distribution by category
+          Expense distribution by month/week
         </Text>
         {expensesByMonth?.length > 0 ? (
-          <BarChart
-            style={chartConfig}
-            data={parsedChartMonthData}
-            width={width}
-            height={300}
-            yAxisLabel="$"
-            chartConfig={chartConfig}
-            verticalLabelRotation={15}
-          />
-        ) : null}
+          <Block
+            card
+            flex={0}
+            row={true}
+            marginBottom={sizes.sm}
+            marginHorizontal={10}>
+            <BarChart
+              style={chartConfig}
+              data={parsedChartMonthData}
+              width={width - 30}
+              height={300}
+              yAxisLabel="$"
+              chartConfig={chartConfig}
+              verticalLabelRotation={15}
+            />
+          </Block>
+        ) : (
+          <Text>No data to display on the current period.</Text>
+        )}
       </Block>
     </Block>
   );

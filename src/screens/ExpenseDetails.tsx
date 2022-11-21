@@ -1,13 +1,13 @@
 import {useNavigation} from '@react-navigation/core';
 import {api} from '../services/api-service';
 import {useMutation} from 'react-query';
-
+import ImageView from 'react-native-image-viewing';
 import {useTheme, useTranslation} from '../hooks/';
-import {Block, Button, Image, Text, DialogBox} from '../components/';
+import {Block, Button, Image, Text, DialogBox, Modal} from '../components/';
 import {Icon} from 'react-native-elements';
 import {useState} from 'react';
 import React from 'react';
-import {View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {parseDate} from '../utils/dateParser';
 import {invalidateQueries} from '../../App';
 
@@ -15,6 +15,7 @@ const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
   const {assets, gradients, colors, sizes} = useTheme();
   const expense = params.expense;
   const [openDialogBox, setDialogBoxOpen] = useState(false);
+  const [openImageModal, setOpenImageModal] = useState(false);
   const navigation = useNavigation();
   const {t} = useTranslation();
 
@@ -63,6 +64,7 @@ const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
                   source={assets.arrow}
                   transform={[{rotate: '180deg'}]}
                 />
+
                 <Text p white marginLeft={sizes.s}>
                   {t('home.title')}
                 </Text>
@@ -79,15 +81,20 @@ const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
               <Text h5 center white marginBottom={sizes.sm}>
                 {`${expense?.Category.name}`}
               </Text>
-              <Image
-                resizeMode="cover"
-                source={{uri: expense.image}}
-                style={{
-                  height: sizes.width / 2.435,
-                  width: sizes.width / 2.435,
-                }}
-                marginBottom={sizes.sm}
-              />
+              <Pressable
+                onPress={() => {
+                  setOpenImageModal(true);
+                }}>
+                <Image
+                  resizeMode="cover"
+                  source={{uri: expense.image}}
+                  style={{
+                    height: sizes.width / 2.435,
+                    width: sizes.width / 2.435,
+                  }}
+                  marginBottom={sizes.sm}
+                />
+              </Pressable>
               <Text p center white marginBottom={sizes.sm}>
                 {`${expense?.User.name} added '${expense?.description}'`}
               </Text>
@@ -123,6 +130,12 @@ const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
                   </View>
                 </Button>
               </Block>
+              <ImageView
+                images={[{uri: expense.image}]}
+                imageIndex={0}
+                visible={openImageModal}
+                onRequestClose={() => setOpenImageModal(false)}
+              />
             </Block>
           </Image>
         </Block>

@@ -81,7 +81,14 @@ export default () => {
           <Stack.Screen
             name="Analytics"
             component={Analysis}
-            options={{title: t('navigation.analytics')}}
+            options={{
+              ...screenOptions.components,
+              headerTitle: () => (
+                <Text p white>
+                  {t('navigation.analytics')}
+                </Text>
+              ),
+            }}
           />
           <Stack.Screen
             name="Configuration"

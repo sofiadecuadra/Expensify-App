@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
-import { Block, Text, Modal, DateRangePicker, Button } from '../components';
+import React, { useMemo, useState, useLayoutEffect } from 'react';
+import { Block, Text, Modal, DateRangePicker, Button, Image } from '../components';
+import {useNavigation} from '@react-navigation/core';
 import {
   BarChart,
   PieChart,
@@ -7,6 +8,7 @@ import {
 import { useWindowDimensions } from 'react-native';
 import { useQueryAuth, useTheme } from '../hooks';
 import { api } from '../services/api-service';
+import {useHeaderHeight} from '@react-navigation/stack';
 
 const availableColors = [
   '#cb0c9f',
@@ -86,8 +88,9 @@ const parseChartMonthData = (data) => {
   return result;
 };
 
+
 const Analysis = () => {
-  const { sizes, colors } = useTheme();
+  const { sizes, colors, assets } = useTheme();
   const [toDate, setToDate] = useState(getToDate());
   const [fromDate, setFromDate] = useState(getFromDate());
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -112,6 +115,24 @@ const Analysis = () => {
     () => parseChartMonthData(expensesByMonth),
     [expensesByMonth],
   );
+
+  const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackground: () => (
+        <Image
+          radius={0}
+          resizeMode="cover"
+          width={sizes.width}
+          height={headerHeight}
+          source={assets.header}
+        />
+      ),
+    });
+  }, [assets.header, navigation, sizes.width, headerHeight]);
+  
 
   return (
     <Block>

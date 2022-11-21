@@ -1,16 +1,12 @@
-import React, {useMemo, useState} from 'react';
-import {Block, Text} from '../components';
+import React, { useMemo, useState } from 'react';
+import { Block, Text, Modal, DateRangePicker, Button } from '../components';
 import {
-  LineChart,
   BarChart,
   PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
 } from 'react-native-chart-kit';
-import {Dimensions, useWindowDimensions} from 'react-native';
-import {useQueryAuth, useTheme} from '../hooks';
-import {api} from '../services/api-service';
+import { useWindowDimensions } from 'react-native';
+import { useQueryAuth, useTheme } from '../hooks';
+import { api } from '../services/api-service';
 
 const availableColors = [
   '#cb0c9f',
@@ -79,7 +75,7 @@ const getMonth = (number) => {
 
 const parseChartMonthData = (data) => {
   if (!data) return [];
-  let result = {labels: [], datasets: []};
+  let result = { labels: [], datasets: [] };
   for (let item of data) {
     if (item.month) result.labels.push(getMonth(item.month));
     else result.labels.push(item.week);
@@ -91,20 +87,21 @@ const parseChartMonthData = (data) => {
 };
 
 const Analysis = () => {
-  const {sizes} = useTheme();
+  const { sizes, colors } = useTheme();
   const [toDate, setToDate] = useState(getToDate());
   const [fromDate, setFromDate] = useState(getFromDate());
-  const {data: expensesByCategory} = useQueryAuth.useQueryAuth(
+  const [openCalendar, setOpenCalendar] = useState(false);
+  const { data: expensesByCategory } = useQueryAuth.useQueryAuth(
     ['categoriesExpenses', fromDate, toDate],
     api.expenseByCategory,
     {},
   );
-  const {data: expensesByMonth} = useQueryAuth.useQueryAuth(
+  const { data: expensesByMonth } = useQueryAuth.useQueryAuth(
     ['monthExpenses', fromDate, toDate],
     api.expenseByMonth,
     {},
   );
-  const {width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   const parsedChartCategoryData = useMemo(
     () => parseChartCategoryData(expensesByCategory),
@@ -118,53 +115,82 @@ const Analysis = () => {
 
   return (
     <Block>
-      <Block color="#FAFAFA">
-        <Text h5 semibold marginVertical={sizes.s} center>
-          Expense distribution by category
-        </Text>
-        {parsedChartCategoryData.length > 0 ? (
-          <Block
-            card
-            flex={0}
-            row={true}
-            marginBottom={sizes.sm}
-            marginHorizontal={10}>
-            <PieChart
-              data={parsedChartCategoryData}
-              width={width - 20}
-              height={220}
-              chartConfig={chartConfig}
-              accessor={'total'}
-              backgroundColor={'transparent'}
-            />
-          </Block>
-        ) : (
-          <Text>No data to display on the current period.</Text>
-        )}
-        <Text h5 semibold marginVertical={sizes.s} center>
-          Expense distribution by month/week
-        </Text>
-        {expensesByMonth?.length > 0 ? (
-          <Block
-            card
-            flex={0}
-            row={true}
-            marginBottom={sizes.sm}
-            marginHorizontal={10}>
-            <BarChart
-              style={chartConfig}
-              data={parsedChartMonthData}
-              width={width - 30}
-              height={300}
-              yAxisLabel="$"
-              chartConfig={chartConfig}
-              verticalLabelRotation={15}
-            />
-          </Block>
-        ) : (
-          <Text>No data to display on the current period.</Text>
-        )}
-      </Block>
+      <Block flex={0} row center style={{
+          marginTop: 20,
+          marginBottom: 20,
+        }}>
+        <Button
+          light
+          style={{
+            borderWidth: 0.8,
+            borderColor: colors.gray,
+          }}
+          height={sizes.xl}
+          onPress={() => setOpenCalendar(true)}>
+          <Text center p marginHorizontal={sizes.m} color="#808080">
+            {fromDate.toDateString()} - {toDate.toDateString()}
+          </Text>
+        </Button>
+        </Block>
+      <Modal
+        id="Calendar"
+        open={openCalendar}
+        onRequestClose={() => setOpenCalendar(false)}>
+        <DateRangePicker
+          onSuccess={(start, end) => {
+            setFromDate(new Date(start + 'T00:00:00'));
+            setToDate(new Date(end + 'T00:00:00'));
+          }}
+          theme={{ markColor: '#808080', markTextColor: 'white' }}
+        />
+      </Modal>
+      <Text center h5 marginHorizontal={sizes.m} paddingBottom={10}>
+        Expenses distribution by category
+      </Text>
+      {parsedChartCategoryData.length > 0 ? (
+        <Block
+          card
+          flex={0}
+          marginBottom={sizes.sm}
+          marginHorizontal={10}>
+          <PieChart
+            data={parsedChartCategoryData}
+            width={width - 20}
+            height={220}
+            chartConfig={chartConfig}
+            accessor={'total'}
+            backgroundColor={'transparent'}
+          />
+        </Block>
+      ) : (
+        <Text center>No data to display on the current period.</Text>
+      )}
+
+      <Text h5 semibold marginVertical={sizes.s} center>
+        Expense distribution by month/week
+      </Text>
+
+      {expensesByMonth?.length > 0 ? (
+        <Block
+          card
+          flex={0}
+          row={true}
+          marginBottom={sizes.sm}
+          marginHorizontal={10}>
+          <BarChart
+            style={chartConfig}
+            data={parsedChartMonthData}
+            width={width - 30}
+            height={300}
+            yAxisLabel="$"
+            chartConfig={chartConfig}
+            verticalLabelRotation={15}
+          />
+        </Block>
+      ) : (
+        <Text center>No data to display on the current period.</Text>
+      )}
+
     </Block>
   );
 };

@@ -109,7 +109,7 @@ const Configuration = () => {
   }, [assets.header, navigation, sizes.width, headerHeight]);
 
   return (
-    <Block safe>
+    <Block>
       <Block
         paddingHorizontal={sizes.padding}
         scroll
@@ -125,20 +125,22 @@ const Configuration = () => {
           <AlertCard errorMessage={successMessage} isSuccess={true} />
         )}
       </Block>
-      <Button
-        onPress={() => {
-          logout.mutate();
-          signOut();
-        }}
-        style={{
-          paddingHorizontal: sizes.padding,
-        }}
-        gradient={gradients.dark}
-        marginBottom={10}>
-        <Text white bold transform="uppercase">
-          Log out
-        </Text>
-      </Button>
+      <Block safe>
+        <Button
+          onPress={() => {
+            logout.mutate();
+            signOut();
+          }}
+          style={{
+            paddingHorizontal: sizes.padding,
+          }}
+          gradient={gradients.dark}
+          marginBottom={10}>
+          <Text white bold transform="uppercase">
+            Log out
+          </Text>
+        </Button>
+      </Block>
     </Block>
   );
 };

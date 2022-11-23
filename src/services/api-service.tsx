@@ -1,24 +1,31 @@
 import axios from 'axios';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
-//import dotenv from 'dotenv';
 import {IRegistration} from '../screens/Register';
-//dotenv.config();
 import CookieManager from '@react-native-cookies/cookies';
 import {ISignIn} from '../screens/SignIn';
 import {Platform} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.4:3001/', //TODO Deshardcodear
+  baseURL: 'http://192.168.1.3:3001/',
   withCredentials: true,
 });
 
 export const createAxiosInstance = (ip: any) => {
+  const url = 'http://' + ip + ':3001/';
+  console.log('Created axios instance with: ' + url);
+
   axiosInstance = axios.create({
-    baseURL: 'http://' + ip + ':3001/', //TODO Deshardcodear
+    baseURL: url,
     withCredentials: true,
   });
 };
+
+(async () => {
+  const ip = (await AsyncStorage.getItem('ip')) ?? '192.168.1.3';
+  createAxiosInstance(ip);
+})();
 
 export const api = {
   adminSignup: async (data: IRegistration) => {
@@ -44,7 +51,6 @@ export const api = {
     });
   },
   signIn: async (data: ISignIn) => {
-    console.log(axiosInstance.defaults.baseURL);
     return await axiosInstance
       .post('/users/sign-in', data)
       .then(async (response) => {

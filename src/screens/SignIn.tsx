@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/core';
 import {useMutation, useQuery} from 'react-query';
 import {api, createAxiosInstance} from '../services/api-service';
 import {AuthContext} from '../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Input, Image, Text} from '../components/';
@@ -64,6 +65,7 @@ const SignIn = ({route: {params}}: {route: {params: any}}) => {
   const onShowHiddenOptions = () => {
     Prompt.show('Configuration', "Please enter the backend's ip", (ip) => {
       createAxiosInstance(ip);
+      AsyncStorage.setItem('ip', ip);
     });
   };
 

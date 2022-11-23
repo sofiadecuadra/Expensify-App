@@ -93,13 +93,6 @@ const DrawerContent = (
   const screens = signedIn
     ? [
         {name: t('screens.home'), to: 'Home', icon: assets.home},
-
-        {name: t('screens.analytics'), to: 'Analytics', icon: assets.document},
-        {
-          name: t('screens.configuration'),
-          to: 'Configuration',
-          icon: assets.settings,
-        },
         ...(isAdmin
           ? [
               {
@@ -109,6 +102,12 @@ const DrawerContent = (
               },
             ]
           : []),
+        {name: t('screens.analytics'), to: 'Analytics', icon: assets.document},
+        {
+          name: t('screens.configuration'),
+          to: 'Configuration',
+          icon: assets.settings,
+        },
       ]
     : [{name: t('screens.register'), to: 'Register', icon: assets.register}];
 

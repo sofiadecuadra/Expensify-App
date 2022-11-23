@@ -12,6 +12,7 @@ import {AuthContext} from '../context/AuthContext';
 import RadioButtonGroup, {RadioButtonItem} from 'expo-radio-button';
 import {AlertContext} from '../context/AlertContext';
 import AlertCard from '../components/ErrorCard';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const Buttons = () => {
   const {gradients, sizes} = useTheme();
@@ -125,7 +126,7 @@ const Configuration = () => {
           <AlertCard errorMessage={successMessage} isSuccess={true} />
         )}
       </Block>
-      <Block safe>
+      <SafeAreaView>
         <Button
           onPress={() => {
             logout.mutate();
@@ -134,13 +135,12 @@ const Configuration = () => {
           style={{
             paddingHorizontal: sizes.padding,
           }}
-          gradient={gradients.dark}
-          marginBottom={10}>
+          gradient={gradients.dark}>
           <Text white bold transform="uppercase">
             Log out
           </Text>
         </Button>
-      </Block>
+      </SafeAreaView>
     </Block>
   );
 };

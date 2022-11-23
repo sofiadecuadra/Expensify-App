@@ -71,12 +71,11 @@ const SignIn = ({route: {params}}: {route: {params: any}}) => {
 
   return (
     <>
+      {errorMessage !== '' && (
+        <AlertCard errorMessage={errorMessage} isSuccess={false} />
+      )}
       <StatusBar style="dark" />
       <Block safe marginTop={sizes.md}>
-        {errorMessage !== '' && (
-          <AlertCard errorMessage={errorMessage} isSuccess={false} />
-        )}
-
         <Block paddingHorizontal={sizes.s}>
           <Block flex={0} style={{zIndex: 0}}>
             <Image
@@ -127,7 +126,7 @@ const SignIn = ({route: {params}}: {route: {params: any}}) => {
               <Block
                 blur
                 flex={0}
-                intensity={90}
+                intensity={100}
                 radius={sizes.sm}
                 overflow="hidden"
                 justify="space-evenly"
@@ -147,6 +146,7 @@ const SignIn = ({route: {params}}: {route: {params: any}}) => {
                     placeholder={t('common.emailPlaceholder')}
                     onChangeText={(value) => handleChange({email: value})}
                   />
+
                   <Input
                     secureTextEntry
                     autoCapitalize="none"

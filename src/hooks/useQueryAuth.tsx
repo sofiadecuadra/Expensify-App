@@ -21,9 +21,10 @@ const useQueryAuth = (queryKey, queryFn, options) => {
 const useInfiniteQueryAuth = (queryKey, queryFn, options) => {
   const {signOut} = useContext(AuthContext);
   const onErrorToken = (error) => {
+    console.log('Error:', {queryKey, queryFn, options}, {error});
     if (
-      error.response.data.errorType === 'TOKEN_ERROR' ||
-      error.response.status === 401
+      error?.response?.data?.errorType === 'TOKEN_ERROR' ||
+      error?.response?.status === 401
     ) {
       signOut();
       return;

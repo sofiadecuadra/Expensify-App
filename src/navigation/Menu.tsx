@@ -28,6 +28,7 @@ const ScreensStack = () => {
   const {colors} = useTheme();
   const isDrawerOpen = useIsDrawerOpen();
   const animation = useRef(new Animated.Value(0)).current;
+  const statusBarColor = isDrawerOpen ? 'dark' : 'light';
 
   const scale = animation.interpolate({
     inputRange: [0, 1],
@@ -92,13 +93,6 @@ const DrawerContent = (
   const screens = signedIn
     ? [
         {name: t('screens.home'), to: 'Home', icon: assets.home},
-
-        {name: t('screens.analytics'), to: 'Analytics', icon: assets.document},
-        {
-          name: t('screens.configuration'),
-          to: 'Configuration',
-          icon: assets.settings,
-        },
         ...(isAdmin
           ? [
               {
@@ -108,6 +102,12 @@ const DrawerContent = (
               },
             ]
           : []),
+        {name: t('screens.analytics'), to: 'Analytics', icon: assets.document},
+        {
+          name: t('screens.configuration'),
+          to: 'Configuration',
+          icon: assets.settings,
+        },
       ]
     : [{name: t('screens.register'), to: 'Register', icon: assets.register}];
 

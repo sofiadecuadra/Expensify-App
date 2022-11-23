@@ -37,7 +37,6 @@ const Categories = ({route: {params}}: {route: {params: any}}) => {
       },
     },
   );
-
   const categoriesData = data?.pages.reduce((acc, val) => acc.concat(val), []);
 
   const navigation = useNavigation();

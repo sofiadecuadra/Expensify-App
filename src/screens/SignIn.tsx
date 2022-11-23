@@ -1,16 +1,18 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {Platform} from 'react-native';
+import {Platform, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {useMutation, useQuery} from 'react-query';
-import {api} from '../services/api-service';
+import {api, createAxiosInstance} from '../services/api-service';
 import {AuthContext} from '../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {useTheme, useTranslation} from '../hooks/';
-import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text} from '../components/';
 import AlertCard from '../components/ErrorCard';
 import {AlertContext} from '../context/AlertContext';
 import {StatusBar} from 'expo-status-bar';
+import Prompt from 'react-native-simple-prompt';
+import axios from 'axios';
 
 const isAndroid = Platform.OS === 'android';
 export interface ISignIn {
@@ -60,6 +62,13 @@ const SignIn = ({route: {params}}: {route: {params: any}}) => {
     }
   };
 
+  const onShowHiddenOptions = () => {
+    Prompt.show('Configuration', "Please enter the backend's ip", (ip) => {
+      createAxiosInstance(ip);
+      AsyncStorage.setItem('ip', ip);
+    });
+  };
+
   return (
     <>
       <StatusBar style="dark" />
@@ -95,13 +104,17 @@ const SignIn = ({route: {params}}: {route: {params: any}}) => {
                 </Text>
               </Button>
 
-              <Text h4 center white marginBottom={sizes.md}>
-                {t('signIn.title')}
-              </Text>
+              <Pressable
+                onLongPress={() => {
+                  onShowHiddenOptions();
+                }}>
+                <Text h4 center white marginBottom={sizes.md}>
+                  {t('signIn.title')}
+                </Text>
+              </Pressable>
             </Image>
           </Block>
 
-          {/* register form */}
           <Block
             keyboard
             behavior={!isAndroid ? 'padding' : 'height'}
@@ -110,8 +123,7 @@ const SignIn = ({route: {params}}: {route: {params: any}}) => {
               flex={0}
               radius={sizes.sm}
               marginHorizontal="8%"
-              shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
-            >
+              shadow={!isAndroid}>
               <Block
                 blur
                 flex={0}
@@ -153,6 +165,7 @@ const SignIn = ({route: {params}}: {route: {params: any}}) => {
                     {t('common.signin')}
                   </Text>
                 </Button>
+                <Prompt></Prompt>
               </Block>
             </Block>
           </Block>

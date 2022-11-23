@@ -19,7 +19,6 @@ import Configuration from '../screens/Configuration';
 const Stack = createStackNavigator();
 import {createStackNavigator} from '@react-navigation/stack';
 import {Text} from '../components';
-import {StatusBar} from 'expo-status-bar';
 
 export default () => {
   const {signedIn, isAdmin} = useContext(AuthContext);
@@ -50,7 +49,14 @@ export default () => {
           <Stack.Screen
             name="Register"
             component={Home}
-            options={{title: t('navigation.home')}}
+            options={{
+              ...screenOptions.components,
+              headerTitle: () => (
+                <Text p white>
+                  {t('navigation.home')}
+                </Text>
+              ),
+            }}
           />
           {isAdmin && (
             <>

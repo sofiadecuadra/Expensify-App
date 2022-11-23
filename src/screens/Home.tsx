@@ -28,8 +28,6 @@ import {AlertContext} from '../context/AlertContext';
 import queryAuth from '../hooks/useQueryAuth';
 import {Icon} from 'react-native-elements';
 import {useHeaderHeight} from '@react-navigation/stack';
-import {StatusBar} from 'expo-status-bar';
-import {useIsDrawerOpen} from '@react-navigation/drawer';
 
 const pageSize = 6;
 
@@ -160,6 +158,9 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
                 onEndReached={() => {
                   fetchNextPage();
                 }}
+                ListEmptyComponent={() => (
+                  <Text center>No data to display on the current period.</Text>
+                )}
                 renderItem={({item}) => (
                   <Button
                     onPress={() =>

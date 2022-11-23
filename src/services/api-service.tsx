@@ -8,10 +8,17 @@ import CookieManager from '@react-native-cookies/cookies';
 import {ISignIn} from '../screens/SignIn';
 import {Platform} from 'react-native';
 
-export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.3:3001/', //TODO Deshardcodear
+let axiosInstance = axios.create({
+  baseURL: 'http://192.168.1.4:3001/', //TODO Deshardcodear
   withCredentials: true,
 });
+
+export const createAxiosInstance = (ip: any) => {
+  axiosInstance = axios.create({
+    baseURL: 'http://' + ip + ':3001/', //TODO Deshardcodear
+    withCredentials: true,
+  });
+};
 
 export const api = {
   adminSignup: async (data: IRegistration) => {
@@ -21,7 +28,10 @@ export const api = {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.1.3:3001/', cookie);
+        await CookieManager.setFromResponse(
+          axiosInstance.defaults.baseURL ?? 'http://192.168.1.3:3001/',
+          cookie,
+        );
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -34,13 +44,17 @@ export const api = {
     });
   },
   signIn: async (data: ISignIn) => {
+    console.log(axiosInstance.defaults.baseURL);
     return await axiosInstance
       .post('/users/sign-in', data)
       .then(async (response) => {
         const cookie: string = response.headers['set-cookie']
           ? response.headers['set-cookie'].toString()
           : '';
-        await CookieManager.setFromResponse('http://192.168.1.3:3001/', cookie);
+        await CookieManager.setFromResponse(
+          axiosInstance.defaults.baseURL ?? 'http://192.168.1.3:3001/',
+          cookie,
+        );
         const token = await registerForPushNotificationsAsync();
         api.updateToken({token});
         return response;
@@ -131,7 +145,7 @@ export const api = {
       .post('/expenses', formData, config)
       .then((response) => response.data);
   },
-  modifyExpense: async (data) => {
+  modifyExpense: async (data: any) => {
     const formData = new FormData();
     if (!data.image.alreadyUploaded) {
       formData.append('image', {
@@ -174,7 +188,7 @@ export const api = {
       .post('/categories', formData, config)
       .then((response) => response.data);
   },
-  modifyCategory: async (data) => {
+  modifyCategory: async (data: any) => {
     const formData = new FormData();
     if (!data.image.alreadyUploaded) {
       formData.append('image', {

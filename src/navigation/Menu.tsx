@@ -28,6 +28,7 @@ const ScreensStack = () => {
   const {colors} = useTheme();
   const isDrawerOpen = useIsDrawerOpen();
   const animation = useRef(new Animated.Value(0)).current;
+  const statusBarColor = isDrawerOpen ? 'dark' : 'light';
 
   const scale = animation.interpolate({
     inputRange: [0, 1],

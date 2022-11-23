@@ -109,7 +109,7 @@ const Configuration = () => {
   }, [assets.header, navigation, sizes.width, headerHeight]);
 
   return (
-    <Block>
+    <Block safe>
       <Block
         paddingHorizontal={sizes.padding}
         scroll

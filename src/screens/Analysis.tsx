@@ -81,15 +81,13 @@ const getMonth = (number) => {
 
 const parseChartMonthData = (data) => {
   if (!data) return [];
-  let result = {labels: [], datasets: []};
+  let result = {labels: [], datasets: [{data: []}]};
   let weekCount = 0;
   for (let item of data) {
     weekCount++;
     if (item.month) result.labels.push(getMonth(item.month));
     else result.labels.push('Week ' + weekCount);
-    result.datasets.push({
-      data: [Number.parseInt(item.amount)],
-    });
+    result.datasets[0].data.push(Number.parseInt(item.amount));
   }
   return result;
 };
@@ -142,6 +140,8 @@ const Analysis = () => {
     });
   }, [assets.header, navigation, sizes.width, headerHeight]);
 
+  console.log(expensesByMonth);
+  console.log(parsedChartMonthData);
   return (
     <Block>
       <Block
@@ -208,7 +208,7 @@ const Analysis = () => {
           marginHorizontal={10}>
           <BarChart
             style={chartConfig}
-            data={parsedChartMonthData}
+            data={parsedChartMonthData ?? {datasets: [], labels: []}}
             width={width - 30}
             height={300}
             yAxisLabel="$"

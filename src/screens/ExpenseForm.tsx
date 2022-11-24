@@ -230,7 +230,6 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
                     const type: MediaType = 'photo';
                     const options = {
                       includeBase64: true,
-                      saveToPhotos: true,
                       mediaType: type,
                       includeExtra: true,
                     };

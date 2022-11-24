@@ -2,7 +2,6 @@ import React, {useContext, useLayoutEffect, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/core';
 import {useHeaderHeight} from '@react-navigation/stack';
-
 import {useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Image, Input, Text} from '../components/';
 import {TouchableOpacity, View} from 'react-native';
@@ -217,18 +216,21 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
                     const type: MediaType = 'photo';
                     const options = {
                       includeBase64: true,
-                      saveToPhotos: true,
                       mediaType: type,
                       includeExtra: true,
                     };
-                    const result = await launchCamera(options);
-                    const parsedImage = {
-                      size: result.assets[0].fileSize,
-                      name: result.assets[0].fileName,
-                      mimetype: result.assets[0].type,
-                      uri: result.assets[0].uri,
-                    };
-                    setImage(parsedImage);
+                    launchCamera(options)
+                      .then((result) => {
+                        console.log(result);
+                        const parsedImage = {
+                          size: result.assets[0].fileSize,
+                          name: result.assets[0].fileName,
+                          mimetype: result.assets[0].type,
+                          uri: result.assets[0].uri,
+                        };
+                        setImage(parsedImage);
+                      })
+                      .catch((err) => console.log('Err ', {err}));
                   }}>
                   <Block row align="center">
                     <Block

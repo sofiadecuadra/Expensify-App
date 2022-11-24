@@ -126,7 +126,7 @@ const Configuration = () => {
           <AlertCard errorMessage={successMessage} isSuccess={true} />
         )}
       </Block>
-      <SafeAreaView>
+      <SafeAreaView style={{marginBottom: 10}}>
         <Button
           onPress={() => {
             logout.mutate();

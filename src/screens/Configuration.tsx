@@ -17,16 +17,14 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 const Buttons = () => {
   const {gradients, sizes} = useTheme();
   const [role, setRole] = useState('Member');
-  const {setSuccessMessage, setErrorMessage} = useContext(AlertContext);
+  const {setErrorMessage} = useContext(AlertContext);
 
   const mutation = useMutation(api.createInvite, {
     onError: (error: any) => {
       setErrorMessage(error.response.data.message);
-      setSuccessMessage('');
     },
     onSuccess: (data) => {
       onShare(data.data);
-      setSuccessMessage('Invites sent successfully! ');
       setErrorMessage('');
     },
   });
@@ -40,16 +38,11 @@ const Buttons = () => {
         message: `Hey, I am inviting you to join my family on expensify. Please use this link to register: ${inviteLink}`,
       });
       if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
       } else if (result.action === Share.dismissedAction) {
         // dismissed
       }
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   };
 
@@ -93,7 +86,7 @@ const Configuration = () => {
   const headerHeight = useHeaderHeight();
   const logout = useMutation(api.adminLogout);
   const {signOut, isAdmin} = useContext(AuthContext);
-  const {errorMessage, successMessage} = useContext(AlertContext);
+  const {errorMessage} = useContext(AlertContext);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -121,9 +114,6 @@ const Configuration = () => {
         <Block>{isAdmin && <Buttons />}</Block>
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />
-        )}
-        {successMessage !== '' && (
-          <AlertCard errorMessage={successMessage} isSuccess={true} />
         )}
       </Block>
       <SafeAreaView style={{marginBottom: 10}}>

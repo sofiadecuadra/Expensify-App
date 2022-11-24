@@ -5,11 +5,14 @@ import {useMutation} from 'react-query';
 import {useQueryAuth, useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Image, Text, DialogBox} from '../components/';
 import {Icon} from 'react-native-elements';
-import {useMemo, useState} from 'react';
+import {useContext, useMemo, useState} from 'react';
 import React from 'react';
 import {View} from 'react-native';
 import {BarChart} from 'react-native-chart-kit';
 import {invalidateQueries} from '../../App';
+import AlertCard from '../components/ErrorCard';
+import {AuthContext} from '../context/AuthContext';
+import {AlertContext} from '../context/AlertContext';
 
 const getMonth = (number) => {
   const months = [
@@ -58,6 +61,7 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
     api.getCategoryExpenses,
     {},
   );
+  const {successMessage} = useContext(AlertContext);
 
   const parsedChartMonthData = useMemo(() => parseChartMonthData(data), [data]);
 
@@ -73,6 +77,9 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
 
   return (
     <Block safe marginTop={sizes.md}>
+      {successMessage !== '' && (
+        <AlertCard errorMessage={successMessage} isSuccess={true} />
+      )}
       <Block
         scroll
         paddingHorizontal={sizes.s}

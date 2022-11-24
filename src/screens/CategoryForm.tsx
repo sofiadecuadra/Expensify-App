@@ -34,7 +34,7 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
         : {uri: category.image, alreadyUploaded: true}
       : '',
   );
-  const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
+  const {errorMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
 
   const navigation = useNavigation();
@@ -75,6 +75,7 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
       invalidateQueries(['categories']);
       setErrorMessage('');
       setSuccessMessage('Category updated successfully! ');
+      navigation.goBack();
     },
   });
 
@@ -312,9 +313,6 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
         />
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />
-        )}
-        {successMessage !== '' && (
-          <AlertCard errorMessage={successMessage} isSuccess={true} />
         )}
         <Block>
           <Button

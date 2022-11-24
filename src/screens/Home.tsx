@@ -58,7 +58,7 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
         },
       );
     }
-  }, []);
+  }, [params?.inviteToken]);
 
   const {assets, gradients, colors, sizes} = useTheme();
   const navigation = useNavigation();

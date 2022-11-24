@@ -123,9 +123,7 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
           flex={0}
           justify="flex-start"
           onPress={() => {
-            category
-              ? navigation.navigate('CategoryDetails', {category})
-              : navigation.navigate('Categories');
+            navigation.goBack();
           }}>
           <Image
             radius={0}

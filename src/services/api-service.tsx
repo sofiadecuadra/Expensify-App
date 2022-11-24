@@ -45,6 +45,7 @@ export const api = {
       });
   },
   adminLogout: async () => {
+    api.updateToken({token: null});
     return await axiosInstance.post('/users/log-out').then(async (response) => {
       await CookieManager.clearAll();
       return response;
@@ -84,7 +85,18 @@ export const api = {
   inviteSignup: async (data: any) => {
     return await axiosInstance
       .post('/users/invitations', {...data})
-      .then((response) => response);
+      .then(async (response) => {
+        const cookie: string = response.headers['set-cookie']
+          ? response.headers['set-cookie'].toString()
+          : '';
+        await CookieManager.setFromResponse(
+          axiosInstance.defaults.baseURL ?? 'http://192.168.1.3:3001/',
+          cookie,
+        );
+        const token = await registerForPushNotificationsAsync();
+        api.updateToken({token});
+        return response;
+      });
   },
   getCategories: async () => {
     return await axiosInstance.get('/categories').then((response) => {

@@ -81,7 +81,7 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
       invalidateQueries(['expenses']);
       setErrorMessage('');
       setSuccessMessage('Expense added successfully!');
-      navigation.navigate('Home');
+      navigation.goBack();
     },
   });
 
@@ -143,9 +143,7 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
           flex={0}
           justify="flex-start"
           onPress={() => {
-            expense
-              ? navigation.navigate('ExpenseDetails', {expense})
-              : navigation.navigate('Home');
+            navigation.goBack();
           }}>
           <Image
             radius={0}

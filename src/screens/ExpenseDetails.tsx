@@ -76,7 +76,6 @@ const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
                   source={assets.arrow}
                   transform={[{rotate: '180deg'}]}
                 />
-
                 <Text p white marginLeft={sizes.s}>
                   {t('home.title')}
                 </Text>

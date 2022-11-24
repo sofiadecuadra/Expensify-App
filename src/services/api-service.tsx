@@ -244,7 +244,7 @@ export const api = {
   },
   updateToken: async (data: any) => {
     return await axiosInstance
-      .put('/users/update-token', data)
+      .put('/users/token', data)
       .then((response) => response.data);
   },
   expenseByCategory: async ({queryKey}: any) => {
@@ -267,29 +267,29 @@ export const api = {
   },
 };
 const registerForPushNotificationsAsync = async () => {
-  //   if (Device.isDevice) {
-  //     const {status: existingStatus} = await Notifications.getPermissionsAsync();
-  //     let finalStatus = existingStatus;
-  //     if (existingStatus !== 'granted') {
-  //       const {status} = await Notifications.requestPermissionsAsync();
-  //       finalStatus = status;
-  //     }
-  //     if (finalStatus !== 'granted') {
-  //       alert('Failed to get push token for push notification!');
-  //       return;
-  //     }
-  //     const token = (await Notifications.getExpoPushTokenAsync()).data;
-  //     if (Platform.OS === 'android') {
-  //       Notifications.setNotificationChannelAsync('default', {
-  //         name: 'default',
-  //         importance: Notifications.AndroidImportance.MAX,
-  //         vibrationPattern: [0, 250, 250, 250],
-  //         lightColor: '#FF231F7C',
-  //       });
-  //     }
-  //     return token;
-  //   } else {
-  //     alert('Must use physical device for Push Notifications');
-  //     return null;
-  //   }
+  if (Device.isDevice) {
+    const {status: existingStatus} = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const {status} = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+    return token;
+  } else {
+    alert('Must use physical device for Push Notifications');
+    return null;
+  }
 };

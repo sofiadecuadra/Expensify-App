@@ -60,10 +60,7 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
         ],
         {
           cancelable: true,
-          onDismiss: () =>
-            Alert.alert(
-              'This alert was dismissed by tapping outside of the alert dialog.',
-            ),
+          onDismiss: () => {},
         },
       );
     }

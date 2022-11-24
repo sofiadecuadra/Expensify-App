@@ -65,8 +65,8 @@ const Button = ({
   top,
   bottom,
   haptic = true,
-  vibrate,
-  vibrateRepeat,
+  vibrate = null,
+  vibrateRepeat = null,
   onPress,
   ...props
 }: IButtonProps) => {
@@ -173,10 +173,10 @@ const Button = ({
     (event) => {
       onPress?.(event);
 
-      /* vibrate onPress */
-      if (vibrate) {
-        Vibration.vibrate(vibrate, vibrateRepeat);
-      }
+      //   /* vibrate onPress */
+      //   if (vibrate) {
+      //     Vibration.vibrate(vibrate, vibrateRepeat);
+      //   }
 
       /* haptic feedback onPress */
       if (haptic) {

@@ -52,7 +52,8 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
     return {id: category.id, name: category.name};
   });
 
-  const {errorMessage, setErrorMessage} = useContext(AlertContext);
+  const {errorMessage, setErrorMessage, setSuccessMessage} =
+    useContext(AlertContext);
 
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
@@ -74,10 +75,12 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
   const addExpense = useMutation(api.addExpense, {
     onError: (error: any) => {
       setErrorMessage(error.response.data.message);
+      setSuccessMessage('');
     },
     onSuccess: () => {
       invalidateQueries(['expenses']);
       setErrorMessage('');
+      setSuccessMessage('Expense added successfully!');
       navigation.navigate('Home');
     },
   });
@@ -85,11 +88,13 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
   const modifyExpense = useMutation(api.modifyExpense, {
     onError: (error, variables, context) => {
       setErrorMessage(error.response.data.message);
+      setSuccessMessage('');
     },
     onSuccess: (data) => {
       invalidateQueries(['expenses']);
       setErrorMessage('');
-      navigation.navigate('Home');
+      setSuccessMessage('Expense modified successfully!');
+      navigation.goBack();
     },
   });
 
@@ -125,7 +130,11 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
   };
 
   return (
-    <Block color={colors.card} paddingHorizontal={sizes.padding} scroll={true}>
+    <Block
+      color={colors.card}
+      paddingHorizontal={sizes.padding}
+      paddingTop={sizes.m}
+      scroll={true}>
       <Block>
         <Button
           paddingTop={sizes.m}
@@ -230,7 +239,6 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
                     const type: MediaType = 'photo';
                     const options = {
                       includeBase64: true,
-                      saveToPhotos: true,
                       mediaType: type,
                       includeExtra: true,
                     };
@@ -337,7 +345,7 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
           onRequestClose={() => setOpenCalendar(false)}>
           <Calendar
             onDayPress={(day) => {
-              setProducedDate(new Date(day.dateString + 'T00:00:00'));
+              setProducedDate(new Date(day.dateString + 'T06:00:01'));
               setOpenCalendar(false);
             }}
           />

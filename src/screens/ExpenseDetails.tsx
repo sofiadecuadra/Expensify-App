@@ -11,6 +11,8 @@ import {Pressable, View} from 'react-native';
 import {parseDate} from '../utils/dateParser';
 import {invalidateQueries} from '../../App';
 import {AuthContext} from '../context/AuthContext';
+import {AlertContext} from '../context/AlertContext';
+import AlertCard from '../components/ErrorCard';
 
 const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
   const {assets, gradients, colors, sizes} = useTheme();
@@ -20,19 +22,27 @@ const ExpenseDetails = ({route: {params}}: {route: {params: any}}) => {
   const navigation = useNavigation();
   const {t} = useTranslation();
   const {isAdmin} = useContext(AuthContext);
+  const {successMessage, setSuccessMessage, setErrorMessage} =
+    useContext(AlertContext);
 
   const deleteExpense = useMutation(api.deleteExpense, {
     onError: (error: any) => {
-      console.log(error);
+      setErrorMessage('Error deleting expense');
+      setSuccessMessage('');
     },
     onSuccess: () => {
       invalidateQueries(['expenses']);
+      setErrorMessage('');
+      setSuccessMessage('Expense deleted successfully!');
       navigation.navigate('Home');
     },
   });
 
   return (
     <Block safe marginTop={sizes.md}>
+      {successMessage !== '' && (
+        <AlertCard errorMessage={successMessage} isSuccess={true} />
+      )}
       <Block
         scroll
         paddingHorizontal={sizes.s}

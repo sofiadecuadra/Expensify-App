@@ -71,6 +71,7 @@ const Register = ({route: {params}}: {route: {params: any}}) => {
     inviteData ? api.inviteSignup : api.adminSignup,
     {
       onSuccess: (data: any) => {
+        navigation.setParams({inviteToken: undefined});
         signIn(data.data);
       },
       onError: (data: any) => {

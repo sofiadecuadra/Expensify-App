@@ -1,5 +1,11 @@
-import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
-import {FlatList} from 'react-native';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
+import {FlatList, RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {api} from '../services/api-service';
 
@@ -20,31 +26,32 @@ const Categories = ({route: {params}}: {route: {params: any}}) => {
     {},
   ).data;
 
+  const onRefresh = useCallback(() => {
+    refetch();
+  }, []);
+
   const {assets, gradients, sizes} = useTheme();
-  const {errorMessage, setErrorMessage} = useContext(AlertContext);
-  const {data, fetchNextPage} = useQueryAuth.useInfiniteQueryAuth(
-    ['categories', pageSize],
-    api.getCategoriesPaginated,
-    {
-      getNextPageParam: (lastPage, allPages) => {
-        const pageCount = !categoriesCount
-          ? 0
-          : Math.ceil(categoriesCount.total / pageSize);
-        if (allPages.length < pageCount) {
-          return allPages.length;
-        }
-        return undefined;
+  const {errorMessage, successMessage} = useContext(AlertContext);
+  const {data, fetchNextPage, refetch, isFetching} =
+    useQueryAuth.useInfiniteQueryAuth(
+      ['categories', pageSize],
+      api.getCategoriesPaginated,
+      {
+        getNextPageParam: (lastPage, allPages) => {
+          const pageCount = !categoriesCount
+            ? 0
+            : Math.ceil(categoriesCount.total / pageSize);
+          if (allPages.length < pageCount) {
+            return allPages.length;
+          }
+          return undefined;
+        },
       },
-    },
-  );
+    );
   const categoriesData = data?.pages.reduce((acc, val) => acc.concat(val), []);
 
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
-
-  useEffect(() => {
-    setErrorMessage('');
-  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -62,13 +69,16 @@ const Categories = ({route: {params}}: {route: {params: any}}) => {
 
   return (
     <Block>
+      {successMessage !== '' && (
+        <AlertCard errorMessage={successMessage} isSuccess={true} />
+      )}
+      {errorMessage !== '' && (
+        <AlertCard errorMessage={errorMessage} isSuccess={false} />
+      )}
       <Block
         style={{
           marginTop: 20,
         }}>
-        {errorMessage !== '' && (
-          <AlertCard errorMessage={errorMessage} isSuccess={false} />
-        )}
         <Text center h5 marginHorizontal={sizes.m}>
           Your categories
         </Text>
@@ -77,6 +87,9 @@ const Categories = ({route: {params}}: {route: {params: any}}) => {
         <Block paddingHorizontal={sizes.padding}>
           <Block wrap="wrap" justify="space-between" marginTop={sizes.sm}>
             <FlatList
+              refreshControl={
+                <RefreshControl refreshing={isFetching} onRefresh={onRefresh} />
+              }
               data={categoriesData}
               keyExtractor={(item) => item.id.toString()}
               onEndReached={() => {

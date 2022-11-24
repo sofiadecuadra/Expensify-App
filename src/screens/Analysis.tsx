@@ -81,15 +81,13 @@ const getMonth = (number) => {
 
 const parseChartMonthData = (data) => {
   if (!data) return [];
-  let result = {labels: [], datasets: []};
+  let result = {labels: [], datasets: [{data: []}]};
   let weekCount = 0;
   for (let item of data) {
     weekCount++;
     if (item.month) result.labels.push(getMonth(item.month));
     else result.labels.push('Week ' + weekCount);
-    result.datasets.push({
-      data: [Number.parseInt(item.amount)],
-    });
+    result.datasets[0].data.push(Number.parseInt(item.amount));
   }
   return result;
 };
@@ -171,8 +169,8 @@ const Analysis = () => {
         onRequestClose={() => setOpenCalendar(false)}>
         <DateRangePicker
           onSuccess={(start, end) => {
-            setFromDate(new Date(start + 'T00:00:00'));
-            setToDate(new Date(end + 'T00:00:00'));
+            setFromDate(new Date(start + 'T06:00:01'));
+            setToDate(new Date(end + 'T06:00:01'));
           }}
           theme={{markColor: '#808080', markTextColor: 'white'}}
         />
@@ -208,7 +206,7 @@ const Analysis = () => {
           marginHorizontal={10}>
           <BarChart
             style={chartConfig}
-            data={parsedChartMonthData}
+            data={parsedChartMonthData ?? {datasets: [], labels: []}}
             width={width - 30}
             height={300}
             yAxisLabel="$"

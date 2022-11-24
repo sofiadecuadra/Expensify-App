@@ -5,11 +5,14 @@ import {useMutation} from 'react-query';
 import {useQueryAuth, useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Image, Text, DialogBox} from '../components/';
 import {Icon} from 'react-native-elements';
-import {useMemo, useState} from 'react';
+import {useContext, useMemo, useState} from 'react';
 import React from 'react';
 import {View} from 'react-native';
 import {BarChart} from 'react-native-chart-kit';
 import {invalidateQueries} from '../../App';
+import AlertCard from '../components/ErrorCard';
+import {AuthContext} from '../context/AuthContext';
+import {AlertContext} from '../context/AlertContext';
 
 const getMonth = (number) => {
   const months = [
@@ -31,13 +34,11 @@ const getMonth = (number) => {
 
 const parseChartMonthData = (data) => {
   if (!data) return [];
-  let result = {labels: [], datasets: []};
+  let result = {labels: [], datasets: [{data: []}]};
   for (let item of data) {
     if (item.month) result.labels.push(getMonth(item.month));
     else result.labels.push(item.week);
-    result.datasets.push({
-      data: [Number.parseInt(item.total)],
-    });
+    result.datasets[0].data.push(Number.parseInt(item.total));
   }
   return result;
 };
@@ -60,21 +61,29 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
     api.getCategoryExpenses,
     {},
   );
+  const {successMessage, setSuccessMessage, setErrorMessage} =
+    useContext(AlertContext);
 
   const parsedChartMonthData = useMemo(() => parseChartMonthData(data), [data]);
 
   const deleteCategory = useMutation(api.deleteCategory, {
     onError: (error: any) => {
-      console.log(error);
+      setErrorMessage('Error deleting category');
+      setSuccessMessage('');
     },
     onSuccess: () => {
       invalidateQueries(['categories']);
+      setErrorMessage('');
+      setSuccessMessage('Category deleted successfully!');
       navigation.navigate('Categories');
     },
   });
 
   return (
     <Block safe marginTop={sizes.md}>
+      {successMessage !== '' && (
+        <AlertCard errorMessage={successMessage} isSuccess={true} />
+      )}
       <Block
         scroll
         paddingHorizontal={sizes.s}
@@ -162,7 +171,7 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
                   </View>
                 </Button>
               </Block>
-              {parsedChartMonthData.datasets?.length > 0 ? (
+              {parsedChartMonthData.labels?.length > 0 ? (
                 <>
                   <Text p white>
                     {`Expenses by month`}

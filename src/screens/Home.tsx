@@ -5,10 +5,11 @@ import React, {
   useReducer,
   useRef,
   useLayoutEffect,
+  useCallback,
 } from 'react';
 
 import {useTheme} from '../hooks/';
-import {Alert} from 'react-native';
+import {Alert, RefreshControl} from 'react-native';
 
 import {FlatList, View, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
@@ -32,6 +33,14 @@ import {useHeaderHeight} from '@react-navigation/stack';
 const pageSize = 6;
 
 const Home = ({route: {params}}: {route: {params: any}}) => {
+  const {assets, gradients, colors, sizes} = useTheme();
+  const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
+
+  const onRefresh = useCallback(() => {
+    refetch();
+  }, []);
+
   useEffect(() => {
     setErrorMessage('');
     if (params?.inviteToken) {
@@ -58,11 +67,7 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
         },
       );
     }
-  }, []);
-
-  const {assets, gradients, colors, sizes} = useTheme();
-  const navigation = useNavigation();
-  const headerHeight = useHeaderHeight();
+  }, [params?.inviteToken]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -78,7 +83,8 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
     });
   }, [assets.header, navigation, sizes.width, headerHeight]);
 
-  const {errorMessage, setErrorMessage} = useContext(AlertContext);
+  const {errorMessage, successMessage, setErrorMessage} =
+    useContext(AlertContext);
   const [fromDate, setFromDate] = useState(
     new Date(new Date().getFullYear(), new Date().getMonth() + 0, 1),
   );
@@ -92,21 +98,22 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
     {},
   ).data;
 
-  const {data, fetchNextPage} = queryAuth.useInfiniteQueryAuth(
-    ['expenses', fromDate, toDate, pageSize],
-    api.getExpenses,
-    {
-      getNextPageParam: (lastPage, allPages) => {
-        const pageCount = !expensesCount
-          ? 0
-          : Math.ceil(expensesCount.total / pageSize);
-        if (allPages.length < pageCount) {
-          return allPages.length;
-        }
-        return undefined;
+  const {data, fetchNextPage, refetch, isFetching} =
+    queryAuth.useInfiniteQueryAuth(
+      ['expenses', fromDate, toDate, pageSize],
+      api.getExpenses,
+      {
+        getNextPageParam: (lastPage, allPages) => {
+          const pageCount = !expensesCount
+            ? 0
+            : Math.ceil(expensesCount.total / pageSize);
+          if (allPages.length < pageCount) {
+            return allPages.length;
+          }
+          return undefined;
+        },
       },
-    },
-  );
+    );
 
   const expenseData = data?.pages.reduce((acc, val) => acc.concat(val), []);
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -114,15 +121,17 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
   return (
     <>
       <Block>
+        {errorMessage !== '' && (
+          <AlertCard errorMessage={errorMessage} isSuccess={false} />
+        )}
+        {successMessage !== '' && (
+          <AlertCard errorMessage={successMessage} isSuccess={true} />
+        )}
         <Block
           style={{
             marginTop: 20,
           }}
           align="center">
-          {errorMessage !== '' && (
-            <AlertCard errorMessage={errorMessage} isSuccess={false} />
-          )}
-
           <Text center h5 marginHorizontal={sizes.m} paddingBottom={10}>
             Expenses
           </Text>
@@ -144,8 +153,8 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
             onRequestClose={() => setOpenCalendar(false)}>
             <DateRangePicker
               onSuccess={(start, end) => {
-                setFromDate(new Date(start + 'T00:00:00'));
-                setToDate(new Date(end + 'T00:00:00'));
+                setFromDate(new Date(start + 'T06:00:01'));
+                setToDate(new Date(end + 'T06:00:01'));
               }}
               theme={{markColor: '#808080', markTextColor: 'white'}}
             />
@@ -153,6 +162,12 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
           <Block paddingHorizontal={sizes.padding}>
             <Block wrap="wrap" justify="space-between" marginTop={sizes.sm}>
               <FlatList
+                refreshControl={
+                  <RefreshControl
+                    refreshing={isFetching}
+                    onRefresh={onRefresh}
+                  />
+                }
                 data={expenseData}
                 keyExtractor={(item) => item.id.toString()}
                 onEndReached={() => {

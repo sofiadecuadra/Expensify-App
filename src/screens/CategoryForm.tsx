@@ -2,7 +2,6 @@ import React, {useContext, useLayoutEffect, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/core';
 import {useHeaderHeight} from '@react-navigation/stack';
-
 import {useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Image, Input, Text} from '../components/';
 import {TouchableOpacity, View} from 'react-native';
@@ -35,7 +34,7 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
         : {uri: category.image, alreadyUploaded: true}
       : '',
   );
-  const {errorMessage, successMessage, setSuccessMessage, setErrorMessage} =
+  const {errorMessage, setSuccessMessage, setErrorMessage} =
     useContext(AlertContext);
 
   const navigation = useNavigation();
@@ -64,6 +63,7 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
       invalidateQueries(['categories']);
       setErrorMessage('');
       setSuccessMessage('Category created successfully! ');
+      navigation.goBack();
     },
   });
 
@@ -76,6 +76,7 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
       invalidateQueries(['categories']);
       setErrorMessage('');
       setSuccessMessage('Category updated successfully! ');
+      navigation.goBack();
     },
   });
 
@@ -217,18 +218,20 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
                     const type: MediaType = 'photo';
                     const options = {
                       includeBase64: true,
-                      saveToPhotos: true,
                       mediaType: type,
                       includeExtra: true,
                     };
-                    const result = await launchCamera(options);
-                    const parsedImage = {
-                      size: result.assets[0].fileSize,
-                      name: result.assets[0].fileName,
-                      mimetype: result.assets[0].type,
-                      uri: result.assets[0].uri,
-                    };
-                    setImage(parsedImage);
+                    launchCamera(options)
+                      .then((result) => {
+                        const parsedImage = {
+                          size: result.assets[0].fileSize,
+                          name: result.assets[0].fileName,
+                          mimetype: result.assets[0].type,
+                          uri: result.assets[0].uri,
+                        };
+                        setImage(parsedImage);
+                      })
+                      .catch((err) => console.log('Err ', {err}));
                   }}>
                   <Block row align="center">
                     <Block
@@ -310,9 +313,6 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
         />
         {errorMessage !== '' && (
           <AlertCard errorMessage={errorMessage} isSuccess={false} />
-        )}
-        {successMessage !== '' && (
-          <AlertCard errorMessage={successMessage} isSuccess={true} />
         )}
         <Block>
           <Button

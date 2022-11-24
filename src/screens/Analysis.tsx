@@ -171,8 +171,8 @@ const Analysis = () => {
         onRequestClose={() => setOpenCalendar(false)}>
         <DateRangePicker
           onSuccess={(start, end) => {
-            setFromDate(new Date(start + 'T00:00:00'));
-            setToDate(new Date(end + 'T00:00:00'));
+            setFromDate(new Date(start + 'T06:00:01'));
+            setToDate(new Date(end + 'T06:00:01'));
           }}
           theme={{markColor: '#808080', markTextColor: 'white'}}
         />

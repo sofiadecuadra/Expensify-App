@@ -31,13 +31,11 @@ const getMonth = (number) => {
 
 const parseChartMonthData = (data) => {
   if (!data) return [];
-  let result = {labels: [], datasets: []};
+  let result = {labels: [], datasets: [{data: []}]};
   for (let item of data) {
     if (item.month) result.labels.push(getMonth(item.month));
     else result.labels.push(item.week);
-    result.datasets.push({
-      data: [Number.parseInt(item.total)],
-    });
+    result.datasets[0].data.push(Number.parseInt(item.total));
   }
   return result;
 };
@@ -162,7 +160,7 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
                   </View>
                 </Button>
               </Block>
-              {parsedChartMonthData.datasets?.length > 0 ? (
+              {parsedChartMonthData.labels?.length > 0 ? (
                 <>
                   <Text p white>
                     {`Expenses by month`}

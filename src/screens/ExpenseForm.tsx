@@ -336,7 +336,7 @@ const ExpenseForm = ({route: {params}}: {route: {params: any}}) => {
           onRequestClose={() => setOpenCalendar(false)}>
           <Calendar
             onDayPress={(day) => {
-              setProducedDate(new Date(day.dateString + 'T00:00:00'));
+              setProducedDate(new Date(day.dateString + 'T06:00:01'));
               setOpenCalendar(false);
             }}
           />

@@ -5,10 +5,11 @@ import React, {
   useReducer,
   useRef,
   useLayoutEffect,
+  useCallback,
 } from 'react';
 
 import {useTheme} from '../hooks/';
-import {Alert} from 'react-native';
+import {Alert, RefreshControl} from 'react-native';
 
 import {FlatList, View, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
@@ -32,6 +33,14 @@ import {useHeaderHeight} from '@react-navigation/stack';
 const pageSize = 6;
 
 const Home = ({route: {params}}: {route: {params: any}}) => {
+  const {assets, gradients, colors, sizes} = useTheme();
+  const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
+
+  const onRefresh = useCallback(() => {
+    refetch();
+  }, []);
+
   useEffect(() => {
     setErrorMessage('');
     if (params?.inviteToken) {
@@ -59,10 +68,6 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
       );
     }
   }, [params?.inviteToken]);
-
-  const {assets, gradients, colors, sizes} = useTheme();
-  const navigation = useNavigation();
-  const headerHeight = useHeaderHeight();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -93,21 +98,22 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
     {},
   ).data;
 
-  const {data, fetchNextPage} = queryAuth.useInfiniteQueryAuth(
-    ['expenses', fromDate, toDate, pageSize],
-    api.getExpenses,
-    {
-      getNextPageParam: (lastPage, allPages) => {
-        const pageCount = !expensesCount
-          ? 0
-          : Math.ceil(expensesCount.total / pageSize);
-        if (allPages.length < pageCount) {
-          return allPages.length;
-        }
-        return undefined;
+  const {data, fetchNextPage, refetch, isFetching} =
+    queryAuth.useInfiniteQueryAuth(
+      ['expenses', fromDate, toDate, pageSize],
+      api.getExpenses,
+      {
+        getNextPageParam: (lastPage, allPages) => {
+          const pageCount = !expensesCount
+            ? 0
+            : Math.ceil(expensesCount.total / pageSize);
+          if (allPages.length < pageCount) {
+            return allPages.length;
+          }
+          return undefined;
+        },
       },
-    },
-  );
+    );
 
   const expenseData = data?.pages.reduce((acc, val) => acc.concat(val), []);
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -156,6 +162,12 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
           <Block paddingHorizontal={sizes.padding}>
             <Block wrap="wrap" justify="space-between" marginTop={sizes.sm}>
               <FlatList
+                refreshControl={
+                  <RefreshControl
+                    refreshing={isFetching}
+                    onRefresh={onRefresh}
+                  />
+                }
                 data={expenseData}
                 keyExtractor={(item) => item.id.toString()}
                 onEndReached={() => {

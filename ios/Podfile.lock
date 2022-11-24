@@ -5,6 +5,8 @@ PODS:
     - ExpoModulesCore
   - EXBlur (11.1.0):
     - ExpoModulesCore
+  - EXCamera (12.2.0):
+    - ExpoModulesCore
   - EXConstants (13.1.1):
     - ExpoModulesCore
   - EXDevice (4.2.0):
@@ -448,6 +450,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXApplication (from `../node_modules/expo-application/ios`)
   - EXBlur (from `../node_modules/expo-blur/ios`)
+  - EXCamera (from `../node_modules/expo-camera/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXDevice (from `../node_modules/expo-device/ios`)
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
@@ -523,6 +526,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-application/ios"
   EXBlur:
     :path: "../node_modules/expo-blur/ios"
+  EXCamera:
+    :path: "../node_modules/expo-camera/ios"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
   EXDevice:
@@ -647,6 +652,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   EXApplication: d6562af1204162e0ac46d341a7d4e5dc720b33de
   EXBlur: f594bc6b57fc241e906a29e00fb8e54b20c374a8
+  EXCamera: 2cbc8206cb520562c1527fe565aa9f00df8e5e8f
   EXConstants: fdbe52259365b6a6faaa5e99a3b82cfa6bc2eb61
   EXDevice: 0115b360059ccd32c1701744e374e3259ffbdd3c
   EXErrorRecovery: 3ce46e5d42e53c0371ff048a7f0cbc959968ef4a

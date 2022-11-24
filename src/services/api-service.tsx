@@ -45,6 +45,7 @@ export const api = {
       });
   },
   adminLogout: async () => {
+    api.updateToken({token: null});
     return await axiosInstance.post('/users/log-out').then(async (response) => {
       await CookieManager.clearAll();
       return response;
@@ -84,7 +85,18 @@ export const api = {
   inviteSignup: async (data: any) => {
     return await axiosInstance
       .post('/users/invitations', {...data})
-      .then((response) => response);
+      .then(async (response) => {
+        const cookie: string = response.headers['set-cookie']
+          ? response.headers['set-cookie'].toString()
+          : '';
+        await CookieManager.setFromResponse(
+          axiosInstance.defaults.baseURL ?? 'http://192.168.1.3:3001/',
+          cookie,
+        );
+        const token = await registerForPushNotificationsAsync();
+        api.updateToken({token});
+        return response;
+      });
   },
   getCategories: async () => {
     return await axiosInstance.get('/categories').then((response) => {
@@ -232,7 +244,7 @@ export const api = {
   },
   updateToken: async (data: any) => {
     return await axiosInstance
-      .put('/users/update-token', data)
+      .put('/users/token', data)
       .then((response) => response.data);
   },
   expenseByCategory: async ({queryKey}: any) => {
@@ -255,29 +267,29 @@ export const api = {
   },
 };
 const registerForPushNotificationsAsync = async () => {
-  //   if (Device.isDevice) {
-  //     const {status: existingStatus} = await Notifications.getPermissionsAsync();
-  //     let finalStatus = existingStatus;
-  //     if (existingStatus !== 'granted') {
-  //       const {status} = await Notifications.requestPermissionsAsync();
-  //       finalStatus = status;
-  //     }
-  //     if (finalStatus !== 'granted') {
-  //       alert('Failed to get push token for push notification!');
-  //       return;
-  //     }
-  //     const token = (await Notifications.getExpoPushTokenAsync()).data;
-  //     if (Platform.OS === 'android') {
-  //       Notifications.setNotificationChannelAsync('default', {
-  //         name: 'default',
-  //         importance: Notifications.AndroidImportance.MAX,
-  //         vibrationPattern: [0, 250, 250, 250],
-  //         lightColor: '#FF231F7C',
-  //       });
-  //     }
-  //     return token;
-  //   } else {
-  //     alert('Must use physical device for Push Notifications');
-  //     return null;
-  //   }
+  if (Device.isDevice) {
+    const {status: existingStatus} = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const {status} = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+    return token;
+  } else {
+    alert('Must use physical device for Push Notifications');
+    return null;
+  }
 };

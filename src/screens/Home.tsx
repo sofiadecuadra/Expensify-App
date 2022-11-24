@@ -78,7 +78,8 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
     });
   }, [assets.header, navigation, sizes.width, headerHeight]);
 
-  const {errorMessage, setErrorMessage} = useContext(AlertContext);
+  const {errorMessage, successMessage, setErrorMessage} =
+    useContext(AlertContext);
   const [fromDate, setFromDate] = useState(
     new Date(new Date().getFullYear(), new Date().getMonth() + 0, 1),
   );
@@ -114,15 +115,17 @@ const Home = ({route: {params}}: {route: {params: any}}) => {
   return (
     <>
       <Block>
+        {errorMessage !== '' && (
+          <AlertCard errorMessage={errorMessage} isSuccess={false} />
+        )}
+        {successMessage !== '' && (
+          <AlertCard errorMessage={successMessage} isSuccess={true} />
+        )}
         <Block
           style={{
             marginTop: 20,
           }}
           align="center">
-          {errorMessage !== '' && (
-            <AlertCard errorMessage={errorMessage} isSuccess={false} />
-          )}
-
           <Text center h5 marginHorizontal={sizes.m} paddingBottom={10}>
             Expenses
           </Text>

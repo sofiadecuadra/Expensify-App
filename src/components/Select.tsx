@@ -16,7 +16,9 @@ const getSelectedPosition = (categories, categoryId) => {
 const Select = ({title, data, selectCategoryId, categoryId}) => {
   const {colors, sizes} = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(categoryId ? getSelectedPosition(data, categoryId) : -1);
+  const [selected, setSelected] = useState(
+    categoryId ? getSelectedPosition(data, categoryId) : -1,
+  );
   const selectedValue = selected != -1 ? data[selected].name : '';
 
   useEffect(() => {
@@ -43,7 +45,7 @@ const Select = ({title, data, selectCategoryId, categoryId}) => {
       {isOpen && (
         <View
           style={{
-            borderColor: colors.gray,
+            borderColor: data.length == 0 ? colors.danger : colors.gray,
             borderWidth: 1,
             borderRadius: 10,
             justifyContent: 'center',
@@ -68,8 +70,18 @@ const Select = ({title, data, selectCategoryId, categoryId}) => {
               </Text>
             </TouchableOpacity>
           ))}
+          {data.length == 0 ? (
+            <TouchableOpacity
+              style={{
+                width: '100%',
+                paddingVertical: 7,
+              }}>
+              <Text paddingLeft={15} size={16} color={colors.danger}>
+                Please add a category
+              </Text>
+            </TouchableOpacity>
+          ) : null}
         </View>
-        
       )}
     </>
   );

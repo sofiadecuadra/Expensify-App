@@ -61,16 +61,20 @@ const CategoryDetails = ({route: {params}}: {route: {params: any}}) => {
     api.getCategoryExpenses,
     {},
   );
-  const {successMessage} = useContext(AlertContext);
+  const {successMessage, setSuccessMessage, setErrorMessage} =
+    useContext(AlertContext);
 
   const parsedChartMonthData = useMemo(() => parseChartMonthData(data), [data]);
 
   const deleteCategory = useMutation(api.deleteCategory, {
     onError: (error: any) => {
-      console.log(error);
+      setErrorMessage('Error deleting category');
+      setSuccessMessage('');
     },
     onSuccess: () => {
       invalidateQueries(['categories']);
+      setErrorMessage('');
+      setSuccessMessage('Category deleted successfully!');
       navigation.navigate('Categories');
     },
   });

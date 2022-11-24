@@ -34,13 +34,9 @@ const Buttons = () => {
       const {inviteToken} = data;
       const url = 'https://ortisp.github.io/Expensify-Invitations/?';
       const inviteLink = url + inviteToken;
-      const result = await Share.share({
+      await Share.share({
         message: `Hey, I am inviting you to join my family on expensify. Please use this link to register: ${inviteLink}`,
       });
-      if (result.action === Share.sharedAction) {
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
     } catch (error) {
       console.log(error.message);
     }

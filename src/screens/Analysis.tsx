@@ -140,8 +140,6 @@ const Analysis = () => {
     });
   }, [assets.header, navigation, sizes.width, headerHeight]);
 
-  console.log(expensesByMonth);
-  console.log(parsedChartMonthData);
   return (
     <Block>
       <Block

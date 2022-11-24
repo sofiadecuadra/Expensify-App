@@ -63,6 +63,7 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
       invalidateQueries(['categories']);
       setErrorMessage('');
       setSuccessMessage('Category created successfully! ');
+      navigation.goBack();
     },
   });
 
@@ -222,7 +223,6 @@ const CategoryForm = ({route: {params}}: {route: {params: any}}) => {
                     };
                     launchCamera(options)
                       .then((result) => {
-                        console.log(result);
                         const parsedImage = {
                           size: result.assets[0].fileSize,
                           name: result.assets[0].fileName,

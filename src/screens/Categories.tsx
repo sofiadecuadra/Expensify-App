@@ -21,7 +21,7 @@ const Categories = ({route: {params}}: {route: {params: any}}) => {
   ).data;
 
   const {assets, gradients, sizes} = useTheme();
-  const {errorMessage, setErrorMessage} = useContext(AlertContext);
+  const {errorMessage, successMessage} = useContext(AlertContext);
   const {data, fetchNextPage} = useQueryAuth.useInfiniteQueryAuth(
     ['categories', pageSize],
     api.getCategoriesPaginated,
@@ -42,10 +42,6 @@ const Categories = ({route: {params}}: {route: {params: any}}) => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
-  useEffect(() => {
-    setErrorMessage('');
-  }, []);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       headerBackground: () => (
@@ -62,13 +58,16 @@ const Categories = ({route: {params}}: {route: {params: any}}) => {
 
   return (
     <Block>
+      {successMessage !== '' && (
+        <AlertCard errorMessage={successMessage} isSuccess={true} />
+      )}
+      {errorMessage !== '' && (
+        <AlertCard errorMessage={errorMessage} isSuccess={false} />
+      )}
       <Block
         style={{
           marginTop: 20,
         }}>
-        {errorMessage !== '' && (
-          <AlertCard errorMessage={errorMessage} isSuccess={false} />
-        )}
         <Text center h5 marginHorizontal={sizes.m}>
           Your categories
         </Text>
